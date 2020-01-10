@@ -5,6 +5,13 @@
     <UserSecretsId>aspnet-HardwareStore-37CD5E63-B08B-4610-BD68-93BCEF527DDA</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20200110145655_AddProductsTable.cs" />
+    <Compile Remove="Data\Migrations\20200110145655_AddProductsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200110150047_AddGalleriesImageAndImageGalleriesTables.cs" />
+    <Compile Remove="Data\Migrations\20200110150047_AddGalleriesImageAndImageGalleriesTables.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />

@@ -4,14 +4,16 @@ using HardwareStore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HardwareStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200110141940_AddSectionsAndCategoriesTables")]
+    partial class AddSectionsAndCategoriesTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,29 +21,7 @@ namespace HardwareStore.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Brand", b =>
-                {
-                    b.Property<int>("BrandId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ImageId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.HasKey("BrandId");
-
-                    b.HasIndex("ImageId");
-
-                    b.ToTable("Brands");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Category", b =>
+            modelBuilder.Entity("HardwareStore.Models.Db_Models.Category", b =>
                 {
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
@@ -63,96 +43,7 @@ namespace HardwareStore.Data.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Gallery", b =>
-                {
-                    b.Property<int>("GalleryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.HasKey("GalleryId");
-
-                    b.ToTable("Galleries");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Image", b =>
-                {
-                    b.Property<int>("ImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ImageId");
-
-                    b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.ImageGallery", b =>
-                {
-                    b.Property<int>("GalleryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ImageId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Order")
-                        .HasColumnType("int");
-
-                    b.HasKey("GalleryId", "ImageId");
-
-                    b.HasIndex("ImageId");
-
-                    b.ToTable("ImageGalleries");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Product", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BrandId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("GalleryId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRecommended")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.HasKey("ProductId");
-
-                    b.HasIndex("BrandId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("GalleryId");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Section", b =>
+            modelBuilder.Entity("HardwareStore.Models.Db_Models.Section", b =>
                 {
                     b.Property<int>("SectionId")
                         .ValueGeneratedOnAdd()
@@ -372,56 +263,13 @@ namespace HardwareStore.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Brand", b =>
+            modelBuilder.Entity("HardwareStore.Models.Db_Models.Category", b =>
                 {
-                    b.HasOne("HardwareStore.Models.DbModels.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Category", b =>
-                {
-                    b.HasOne("HardwareStore.Models.DbModels.Section", "Section")
+                    b.HasOne("HardwareStore.Models.Db_Models.Section", "Section")
                         .WithMany("Categories")
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.ImageGallery", b =>
-                {
-                    b.HasOne("HardwareStore.Models.DbModels.Gallery", "Gallery")
-                        .WithMany("ImageGalleries")
-                        .HasForeignKey("GalleryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HardwareStore.Models.DbModels.Image", "Image")
-                        .WithMany("ImageGalleries")
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Product", b =>
-                {
-                    b.HasOne("HardwareStore.Models.DbModels.Brand", "Brand")
-                        .WithMany()
-                        .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HardwareStore.Models.DbModels.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HardwareStore.Models.DbModels.Gallery", "Gallery")
-                        .WithMany()
-                        .HasForeignKey("GalleryId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
