@@ -12,7 +12,7 @@ namespace HardwareStore.Models.DbModels
         public int TagId { get; set; }
 
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
-        [StringLength(30, MinimumLength = 3, ErrorMessage = DatabaseErrorMessage.MinimumStringLength)]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = DatabaseErrorMessage.MinimumStringLength)]
         public string Name { get; set; }
 
         public ICollection<TagValue> TagValues { get; set; }
