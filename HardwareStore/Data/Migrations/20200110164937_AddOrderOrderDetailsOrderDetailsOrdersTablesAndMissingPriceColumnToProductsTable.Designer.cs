@@ -4,14 +4,16 @@ using HardwareStore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HardwareStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200110164937_AddOrderOrderDetailsOrderDetailsOrdersTablesAndMissingPriceColumnToProductsTable")]
+    partial class AddOrderOrderDetailsOrderDetailsOrdersTablesAndMissingPriceColumnToProductsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,39 +242,6 @@ namespace HardwareStore.Data.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderDetailsOrders");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Post", b =>
-                {
-                    b.Property<int>("PostId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasMaxLength(100000);
-
-                    b.Property<int?>("GalleryId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("PublicationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.HasKey("PostId");
-
-                    b.HasIndex("GalleryId");
-
-                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.Product", b =>
@@ -697,13 +666,6 @@ namespace HardwareStore.Data.Migrations
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Post", b =>
-                {
-                    b.HasOne("HardwareStore.Models.DbModels.Gallery", "Gallery")
-                        .WithMany()
-                        .HasForeignKey("GalleryId");
                 });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.Product", b =>

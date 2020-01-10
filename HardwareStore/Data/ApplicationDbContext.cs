@@ -20,6 +20,12 @@ namespace HardwareStore.Data
         public DbSet<Tag> Tags { get; set; }
         public DbSet<TagValue> TagValues { get; set; }
         public DbSet<ProductTags> ProductTags { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetails> OrderDetails { get; set; }
+        public DbSet<OrderDetailsOrder> OrderDetailsOrders { get; set; }
+        public DbSet<Post> Posts { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -34,6 +40,9 @@ namespace HardwareStore.Data
 
             builder.Entity<ProductTags>()
                 .HasKey(d => new {d.ProductId, d.TagId});
+
+            builder.Entity<OrderDetailsOrder>()
+                .HasKey(d => new {d.OrderDetailsId, d.OrderId});
 
             base.OnModelCreating(builder);
         }

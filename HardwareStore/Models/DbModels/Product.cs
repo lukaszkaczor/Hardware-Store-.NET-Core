@@ -16,6 +16,10 @@ namespace HardwareStore.Models.DbModels
         public string Name { get; set; }
 
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
+        [DataType(DataType.Currency)]
+        public double Price { get; set; }
+
+        [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         public bool IsRecommended { get; set; }
 
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]

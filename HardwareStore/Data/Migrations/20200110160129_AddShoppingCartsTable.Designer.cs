@@ -4,58 +4,22 @@ using HardwareStore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HardwareStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200110160129_AddShoppingCartsTable")]
+    partial class AddShoppingCartsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Address", b =>
-                {
-                    b.Property<int>("AddressId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AddressLine")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CustomerName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IdentityUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AddressId");
-
-                    b.HasIndex("IdentityUserId");
-
-                    b.ToTable("Addresses");
-                });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.Brand", b =>
                 {
@@ -155,126 +119,6 @@ namespace HardwareStore.Data.Migrations
                     b.ToTable("ImageGalleries");
                 });
 
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("IdentityUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrderStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PayingMethod")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShippingMethod")
-                        .HasColumnType("int");
-
-                    b.Property<double>("TotalPrice")
-                        .HasColumnType("float");
-
-                    b.Property<string>("TrackingNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("OrderId");
-
-                    b.HasIndex("AddressId");
-
-                    b.HasIndex("IdentityUserId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.OrderDetails", b =>
-                {
-                    b.Property<int>("OrderDetailsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("PricePerItem")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderDetailsId");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderDetails");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.OrderDetailsOrder", b =>
-                {
-                    b.Property<int>("OrderDetailsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderDetailsId", "OrderId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderDetailsOrders");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Post", b =>
-                {
-                    b.Property<int>("PostId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasMaxLength(100000);
-
-                    b.Property<int?>("GalleryId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("PublicationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.HasKey("PostId");
-
-                    b.HasIndex("GalleryId");
-
-                    b.ToTable("Posts");
-                });
-
             modelBuilder.Entity("HardwareStore.Models.DbModels.Product", b =>
                 {
                     b.Property<int>("ProductId")
@@ -298,9 +142,6 @@ namespace HardwareStore.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
 
                     b.HasKey("ProductId");
 
@@ -612,15 +453,6 @@ namespace HardwareStore.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Address", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
-                        .WithMany()
-                        .HasForeignKey("IdentityUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("HardwareStore.Models.DbModels.Brand", b =>
                 {
                     b.HasOne("HardwareStore.Models.DbModels.Image", "Image")
@@ -652,58 +484,6 @@ namespace HardwareStore.Data.Migrations
                         .HasForeignKey("ImageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Order", b =>
-                {
-                    b.HasOne("HardwareStore.Models.DbModels.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
-                        .WithMany()
-                        .HasForeignKey("IdentityUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.OrderDetails", b =>
-                {
-                    b.HasOne("HardwareStore.Models.DbModels.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HardwareStore.Models.DbModels.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.OrderDetailsOrder", b =>
-                {
-                    b.HasOne("HardwareStore.Models.DbModels.OrderDetails", "OrderDetails")
-                        .WithMany("OrderDetailsOrder")
-                        .HasForeignKey("OrderDetailsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HardwareStore.Models.DbModels.Order", "Order")
-                        .WithMany("OrderDetailsOrder")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.Post", b =>
-                {
-                    b.HasOne("HardwareStore.Models.DbModels.Gallery", "Gallery")
-                        .WithMany()
-                        .HasForeignKey("GalleryId");
                 });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.Product", b =>

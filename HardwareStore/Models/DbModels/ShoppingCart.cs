@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using HardwareStore.Models.ModelsConfig;
 using Microsoft.AspNetCore.Identity;
 
 namespace HardwareStore.Models.DbModels
@@ -11,18 +12,16 @@ namespace HardwareStore.Models.DbModels
     {
         public int ShoppingCartId { get; set; }
 
-        //[NotMapped]
-        //[ForeignKey("ApplicationUserId")]
-        public virtual IdentityUser ApplicationUser { get; set; }
-        public string ApplicationUserId { get; set; }
-        //public Userid NAME { get; set; }
+        [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
+        public string IdentityUserId { get; set; }
+        public virtual IdentityUser IdentityUser { get; set; }
 
-
-
-        public virtual Product Product { get; set; }
+        [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         public int ProductId { get; set; }
+        public virtual Product Product { get; set; }
 
         [Range(1, int.MaxValue)]
-        public int Count { get; set; }
+        [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
+        public int Quantity { get; set; }
     }
 }
