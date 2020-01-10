@@ -12,7 +12,7 @@ namespace HardwareStore.Data.Migrations
                 {
                     ProductId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(maxLength: 30, nullable: false),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
                     IsRecommended = table.Column<bool>(nullable: false),
                     BrandId = table.Column<int>(nullable: false),
                     GalleryId = table.Column<int>(nullable: true),

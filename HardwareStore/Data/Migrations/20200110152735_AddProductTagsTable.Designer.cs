@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HardwareStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200110150507_AddProductsTable")]
-    partial class AddProductsTable
+    [Migration("20200110152735_AddProductTagsTable")]
+    partial class AddProductTagsTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -140,8 +140,8 @@ namespace HardwareStore.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("ProductId");
 
@@ -152,6 +152,21 @@ namespace HardwareStore.Data.Migrations
                     b.HasIndex("GalleryId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.ProductTags", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ProductTags");
                 });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.Section", b =>
@@ -172,6 +187,44 @@ namespace HardwareStore.Data.Migrations
                     b.HasKey("SectionId");
 
                     b.ToTable("Sections");
+                });
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.Tag", b =>
+                {
+                    b.Property<int>("TagId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
+
+                    b.HasKey("TagId");
+
+                    b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.TagValue", b =>
+                {
+                    b.Property<int>("TagValueId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TagValueId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("TagValues");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -424,6 +477,30 @@ namespace HardwareStore.Data.Migrations
                     b.HasOne("HardwareStore.Models.DbModels.Gallery", "Gallery")
                         .WithMany()
                         .HasForeignKey("GalleryId");
+                });
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.ProductTags", b =>
+                {
+                    b.HasOne("HardwareStore.Models.DbModels.Product", "Product")
+                        .WithMany("ProductTags")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HardwareStore.Models.DbModels.Tag", "Tag")
+                        .WithMany("ProductTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.TagValue", b =>
+                {
+                    b.HasOne("HardwareStore.Models.DbModels.Tag", "Tag")
+                        .WithMany("TagValues")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

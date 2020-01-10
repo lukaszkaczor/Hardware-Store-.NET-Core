@@ -7,14 +7,16 @@ using HardwareStore.Models.ModelsConfig;
 
 namespace HardwareStore.Models.DbModels
 {
-    public class Gallery
+    public class Tag
     {
-        public int GalleryId { get; set; }
+        public int TagId { get; set; }
 
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
-        [StringLength(100, MinimumLength = 3, ErrorMessage = DatabaseErrorMessage.MinimumStringLength)]
+        [StringLength(30, MinimumLength = 3, ErrorMessage = DatabaseErrorMessage.MinimumStringLength)]
         public string Name { get; set; }
 
-        public virtual ICollection<ImageGallery> ImageGalleries { get; set; }
+        public ICollection<TagValue> TagValues { get; set; }
+
+        public virtual ICollection<ProductTags> ProductTags { get; set; }
     }
 }

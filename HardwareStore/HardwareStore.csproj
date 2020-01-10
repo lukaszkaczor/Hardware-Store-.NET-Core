@@ -10,6 +10,10 @@
     <Compile Remove="Data\Migrations\20200110145655_AddProductsTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200110150047_AddGalleriesImageAndImageGalleriesTables.cs" />
     <Compile Remove="Data\Migrations\20200110150047_AddGalleriesImageAndImageGalleriesTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200110151122_AddProductsTable.cs" />
+    <Compile Remove="Data\Migrations\20200110151122_AddProductsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200110151205_AddProductsTable.cs" />
+    <Compile Remove="Data\Migrations\20200110151205_AddProductsTable.Designer.cs" />
   </ItemGroup>
 
 

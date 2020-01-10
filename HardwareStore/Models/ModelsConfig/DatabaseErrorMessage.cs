@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Threading.Tasks;
 
-namespace HardwareStore.Models.ConfigModels
+namespace HardwareStore.Models.ModelsConfig
 {
     public class DatabaseErrorMessage
     {

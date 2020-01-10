@@ -17,6 +17,9 @@ namespace HardwareStore.Data
         public DbSet<ImageGallery> ImageGalleries { get; set; }
         public DbSet<Gallery> Galleries { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<TagValue> TagValues { get; set; }
+        public DbSet<ProductTags> ProductTags { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -28,6 +31,9 @@ namespace HardwareStore.Data
         {
             builder.Entity<ImageGallery>()
                 .HasKey(c => new {c.GalleryId, c.ImageId});
+
+            builder.Entity<ProductTags>()
+                .HasKey(d => new {d.ProductId, d.TagId});
 
             base.OnModelCreating(builder);
         }

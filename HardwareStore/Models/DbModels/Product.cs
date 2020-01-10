@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using HardwareStore.Models.ConfigModels;
+using HardwareStore.Models.ModelsConfig;
 
 namespace HardwareStore.Models.DbModels
 {
@@ -12,7 +12,7 @@ namespace HardwareStore.Models.DbModels
         public int ProductId { get; set; }
 
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
-        [StringLength(30, MinimumLength = 3, ErrorMessage = DatabaseErrorMessage.MinimumStringLength)]
+        [StringLength(256, MinimumLength = 3, ErrorMessage = DatabaseErrorMessage.MinimumStringLength)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
@@ -29,6 +29,6 @@ namespace HardwareStore.Models.DbModels
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 
-        //public virtual ICollection<ProductTags> ProductTags { get; set; }
+        public virtual ICollection<ProductTags> ProductTags { get; set; }
     }
 }
