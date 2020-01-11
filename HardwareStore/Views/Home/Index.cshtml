@@ -1,8 +1,125 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using System.Security.Cryptography.X509Certificates
+@using System.Threading
+@using HardwareStore.Data
+@using HardwareStore.ViewModels
+@using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal.Account
+@using Microsoft.EntityFrameworkCore
+@model HardwareStore.ViewModels.Home.HomeIndexViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@{
+    ViewData["Title"] = "Index";
+
+}
+@*@Html.Partial("_Navbar", Model.AllSections.ToList())*@
+
+
+@*<div class="content">
+    <h1 class="hotShotCaption">Okazja Dnia</h1>
+    <a href="" class="hotShotBorder">
+        <div class="hotShot">
+            <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRaEEJBB_Salbr9l971Pl3p1a3qVVbt2ZrwE1r3sGEVzIvRF1mTWMBbkV-IdwG8sNM7MzRKPDoMB5lBlyn8vzTjKvshJsnkpwI2YBCZTimbY9eOO8pnvp-d&usqp=CAc"
+                 alt="">
+            <h2 class="hotShotProductName">AMD Ryzen 1700</h2>
+            <div class="prices">
+                <span class="oldPrice">1200zł</span>
+                <span class="newPrice">600zł</span>
+            </div>
+            <div class="info">
+                <span>sprzedano <span class="soldValue">43</span> </span>
+                <span>pozostało <span class="leftValue">100</span> </span>
+            </div>
+            <div class="progressBar">
+                <div class="progress"></div>
+            </div>
+            <h2 class="timeCaption">Oferta kończy się za:</h2>
+            <h2 class="timeLeft">05:29:03</h2>
+        </div>
+    </a>
+
+    <a href="#" class="newsCaption">Nowości</a>
+    <div class="slider">
+        <div class="left-arrow">
+            <div class="arrow"><i class="fas fa-angle-left"></i></div>
+        </div>*@
+
+
+
+        @*@foreach (var item in Model.Posts)
+        {
+            if (item.Image != null)
+            {
+                <a href="@Url.Action("Details", "Posts", new {id = item.PostId})" class="imgHolder @cssClass">
+                    <img class="img" src="@item.Image.Value" alt="">
+                </a>
+
+                cssClass = "imgHidden";
+            }
+        }*@
+
+        @*<div class="right-arrow">
+            <div class="arrow"><i class="fas fa-angle-right"></i></div>
+        </div>
+        <div class="dotHolder">
+        </div>
+    </div>
+
+    <h1 class="bestsellersCaption">Bestsellery</h1>
+    <div class="bestsellers">*@
+        @*@for (int i = 0; i < Model.Bestsellers.Count; i++)
+        {
+            <a href="@Url.Action("Details", "Products", new { @id = Model.Bestsellers[i].ProductId})" class="product">
+                <img src="@Model.BestsellersImages[i].Value" alt="@Model.BestsellersImages[i].Name">
+                <h3>@Model.Bestsellers[i].Name</h3>
+                <h4>@(Model.Bestsellers[i].Price)zł</h4>
+            </a>
+        }*@
+    @*</div>
+
+    <h1 class="brandsCaption">Strefa Marek</h1>
+
+    <div class="brands">
+        <button class="prev"><i class="fas fa-arrow-left"></i></button>
+        <button class="next"><i class="fas fa-arrow-right"></i></button>*@
+
+        @*@foreach (var item in Model.Brands)
+        {
+            <a href="@Url.Action("Search", "Products", new { Text = item.Name, @Filter = 0})" class="brand">
+                <img src="@ImageManager.retrieveOneImageFromDB(item.Image).Value"
+                     alt="@item.Image.Name">
+            </a>
+        }*@
+
+
+    @*</div>
+
+    <h1 class="recommendedCaption">Polecane</h1>
+    <div class="recommended">*@
+
+
+
+        @*@for (int i = 0; i < Model.RecommendedProducts.Count; i++)
+        {
+            <a href="@Url.Action("Details", "Products", new { id = Model.RecommendedProducts[i].ProductId })" class="product">
+                <img src="@Model.RecommendedImages[i].Value" alt="@Model.RecommendedImages[i].Name">
+                <h3>@Model.RecommendedProducts[i].Name</h3>
+                <h4>@Model.RecommendedProducts[i].Price zł</h4>
+            </a>
+        }*@
+
+    @*</div>
+
+    <h1 class="postsCaption">Informacje</h1>
+    <div class="posts">*@
+
+        @*@foreach (var post in Model.Posts)
+        {
+            <div class="post">
+                <h1>@post.Title<a href="@Url.Action("Details", "Posts", new { @id = post.PostId})">[>>]</a></h1>
+            </div>
+        }*@
+    
+
+        @*<a href="" class="morePosts">Pokaż wszystkie</a>
+    </div>
+
+</div>*@

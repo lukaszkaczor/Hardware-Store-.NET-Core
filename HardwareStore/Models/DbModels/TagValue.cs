@@ -17,5 +17,9 @@ namespace HardwareStore.Models.DbModels
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         public int TagId { get; set; }
         public Tag Tag { get; set; }
+
+        [Required]
+        public Product Product { get; set; }
+        public int ProductId { get; set; }
     }
 }

@@ -383,7 +383,7 @@ namespace HardwareStore.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(30)")
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
                     b.HasKey("TagId");
@@ -398,6 +398,9 @@ namespace HardwareStore.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TagId")
                         .HasColumnType("int");
 
@@ -406,6 +409,8 @@ namespace HardwareStore.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TagValueId");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("TagId");
 
@@ -757,6 +762,12 @@ namespace HardwareStore.Data.Migrations
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.TagValue", b =>
                 {
+                    b.HasOne("HardwareStore.Models.DbModels.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HardwareStore.Models.DbModels.Tag", "Tag")
                         .WithMany("TagValues")
                         .HasForeignKey("TagId")

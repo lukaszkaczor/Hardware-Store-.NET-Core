@@ -1,0 +1,45 @@
+﻿@model List<HardwareStore.ViewModels.Product.SetTagsToProductViewModel>
+
+@{
+    ViewData["Title"] = "SetTags";
+}
+
+<h1>Specifykacja</h1>
+
+@if (ViewBag.IsNew == true)
+{
+    <h1>greeeeeeeeeeeeeeee</h1>
+}
+
+@using (Html.BeginForm("SetTags", "Products", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.SingleOrDefault().TagName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SingleOrDefault().Value)
+                    <button type="submit">Zapisz</button>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model[i].TagName)
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(d => Model[i].Value)
+                        @Html.HiddenFor(d => Model[i].TagId)
+                        @Html.HiddenFor(d => Model[i].TagValueId)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
