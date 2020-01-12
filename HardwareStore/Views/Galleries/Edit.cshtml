@@ -1,0 +1,120 @@
+﻿@model HardwareStore.ViewModels.Galleries.GalleryViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edytuj galerię "@Model.Gallery.Name"</h1>
+
+@Html.ActionLink("Dodaj zdjęcie", "AddImageToGallery", "Galleries", new {id = Model.Gallery.GalleryId})
+
+<table class="table">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Images[0].Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Images[0].Url)
+        </th>
+        <th>Edytuj</th>
+    </tr>
+
+    @for (var i = 0; i < Model.Images.Count; i++)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Images[i].Name)
+            </td>
+            <td>
+                @*<img src="@Model.Images[i].Url" style="width:50px" />*@
+                @Html.DisplayFor(d=>d.Images[i].Url)
+            </td>
+            <td>
+                @using (Html.BeginForm("DeleteImageFromGallery", "Galleries"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(d => d.Gallery.GalleryId)
+                    @Html.Hidden("ImageID", Model.Images[i].ImageId);
+                    <button type="submit">Usuń</button>
+                }
+
+                @using (Html.BeginForm("AdjustPositionOfImageInGallery", "Galleries"))
+                {
+                    <button type="submit">^</button>
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(d => d.Gallery.GalleryId)
+                    @Html.Hidden("Order", Model.ImageGalleries[i].Order);
+                    @Html.Hidden("adjustType", false)
+                }
+
+                @using (Html.BeginForm("AdjustPositionOfImageInGallery", "Galleries"))
+                {
+                    <button type="submit">v</button>
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(d => d.Gallery.GalleryId)
+                    @Html.Hidden("Order", Model.ImageGalleries[i].Order);
+                    @Html.Hidden("adjustType", true)
+                }
+
+                @using (Html.BeginForm("SetPositionOfImageInGallery", "Galleries"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("Order", Model.ImageGalleries[i].Order)
+                    @Html.TextBox("newValue", Model.ImageGalleries[i].Order, new { @type = "number", min = 1, max = Model.ImageGalleries.Max(d => d.Order) })
+                    @Html.Hidden("GalleryId", Model.ImageGalleries[i].GalleryId)
+                    @Html.Hidden("ImageId", Model.ImageGalleries[i].ImageId)
+                    <button type="submit">=></button>
+                }
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<h4>Gallery</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="GalleryId" />
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>*@
+

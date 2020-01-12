@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HardwareStore.Models.DbModels;
+using HardwareStore.Models.TransferModels;
 
 namespace HardwareStore.ViewModels.Product
 {
     public class SetTagsToProductViewModel
     {
-        //public List<Tag> Tags { get; set; }
-        //public List<TagValue> TagValues { get; set; }
-        public int TagId { get; set; }
-        public string TagName { get; set; }
-        public string Value { get; set; }
-        public int TagValueId { get; set; }
+        public List<TagTransferModel> TagTransferModels { get; set; }
+
+        public int ProductId { get; set; }
+        public bool IsNew { get; set; }
     }
 }

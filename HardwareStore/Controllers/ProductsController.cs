@@ -7,13 +7,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HardwareStore.Data;
 using HardwareStore.Models.DbModels;
+using HardwareStore.Models.ModelsConfig;
+using HardwareStore.Models.TransferModels;
 using HardwareStore.ViewModels.Product;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Primitives;
 
 namespace HardwareStore.Controllers
 {
-    
+    [Authorize(Roles = AppRole.Admin)]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -98,8 +101,6 @@ namespace HardwareStore.Controllers
         }
 
         // POST: Products/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Price,IsRecommended,BrandId,GalleryId,CategoryId")] Product product)
@@ -167,46 +168,52 @@ namespace HardwareStore.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> SetTags(int id, bool isNew)
+        public IActionResult SetTags(int id, bool isNew)
         {
             if (!_context.Products.Any(d=>d.ProductId == id))
             {
                 return NotFound();
             }
 
-            var model = new List<SetTagsToProductViewModel>();
+            var model = new SetTagsToProductViewModel();
             var tags = _context.Tags.Include(d => d.TagValues).ToList();
             var tagValues = _context.TagValues.Where(d => d.ProductId == id).ToList();
             
+            var list = new List<TagTransferModel>();
+
             foreach (var tag in tags)
             {
-                model.Add(new SetTagsToProductViewModel()
+                list.Add(new TagTransferModel()
                 {
                     TagId = tag.TagId,
                     TagName = tag.Name,
                     Value = tagValues.SingleOrDefault(d => d.TagId == tag.TagId)?.Value ?? String.Empty,
                     TagValueId = tagValues.SingleOrDefault(d => d.TagId == tag.TagId)?.TagValueId ?? 0,
+                    //ProductId = id,
+                    //IsNew = true,
                 });
+
             }
 
-            model = model.OrderBy(d => d.TagName).ToList();
-            ViewBag.IsNew = isNew;
+            model.TagTransferModels = list;
+            model.IsNew = isNew;
+            model.ProductId = id;
 
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SetTags(List<SetTagsToProductViewModel> tags, int id)
+        public async Task<IActionResult> SetTags(SetTagsToProductViewModel model)
         {
             var productTags = _context.ProductTags.ToList();
-            var tagValues = _context.TagValues.Where(d => d.ProductId == id);
+            var tagValues = _context.TagValues.Where(d => d.ProductId == model.ProductId);
 
-            foreach (var tag in tags)
+            foreach (var tag in model.TagTransferModels)
             {
                 var tagValue = new TagValue()
                 {
-                    ProductId = id,
+                    ProductId = model.ProductId,
                     TagId = tag.TagId,
                     Value = tag.Value,
                     TagValueId = tag.TagValueId
@@ -239,12 +246,18 @@ namespace HardwareStore.Controllers
                         TagId = tagValue.TagId
                     });
                 }
-                else if (value !=null)
+                else if (value != null)
                 {
                     value.Value = tagValue.Value;
                 }
 
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
+                _context.SaveChanges();
+            }
+
+            if (model.IsNew)
+            {
+                return RedirectToAction("Create", "Galleries", new {id = model.ProductId});
             }
 
             return RedirectToAction(nameof(SetTags));

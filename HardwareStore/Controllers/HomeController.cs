@@ -43,7 +43,7 @@ namespace HardwareStore.Controllers
 
 
 
-            return RedirectToAction("Index", "Products");
+            return RedirectToAction("Edit", "Galleries", new {id = 3});
             //return View();
         }
 

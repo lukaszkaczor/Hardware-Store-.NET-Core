@@ -1,0 +1,18 @@
+﻿@model HardwareStore.ViewModels.Galleries.AddImageToGalleryViewModel
+@{
+    ViewData["Title"] = "AddImageToGallery";
+}
+
+<h1>AddImageToGallery</h1>
+
+@using (Html.BeginForm("AddImageToGallery", "Galleries", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.DropDownListFor(d => d.Image.ImageId, new SelectList(Model.Images, "ImageId", "Name"), "Zdjęcie")
+    @Html.TextBoxFor(d=>d.Image.Url)
+    @Html.LabelFor(d => d.ImageGallery.Order)
+    @Html.TextBoxFor(d => d.ImageGallery.Order, new { @type = "number", max = Model.ImageGallery.Order, min = 1 })
+    @Html.HiddenFor(d => d.Gallery.GalleryId)
+    @Html.HiddenFor(d=>d.ImageGallery.ImageId)
+    <button type="submit">Wyślij</button>
+}

@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HardwareStore.Data;
 using HardwareStore.Models.DbModels;
+using HardwareStore.Models.ModelsConfig;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HardwareStore.Controllers
 {
+    [Authorize(Roles = AppRole.Admin)]
     public class ImagesController : Controller
     {
         private readonly ApplicationDbContext _context;
