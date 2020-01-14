@@ -215,46 +215,85 @@ namespace HardwareStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddImageToGallery(AddImageToGalleryViewModel model)
         {
+            //if (!ModelState.IsValid) return NotFound();
+            
             var image = model.Image;
 
-            var imageAlreadyExists = await _context.Images.FirstOrDefaultAsync(d=>d.Url == model.Image.Url);
+            var imageFromDb = await _context.Images.FirstOrDefaultAsync(d=>d.Url == model.Image.Url);
 
-            if (imageAlreadyExists == null)
+            if (imageFromDb == null)
             {
                 await _context.Images.AddAsync(image);
                 await _context.SaveChangesAsync();
-                imageAlreadyExists = image;
+                imageFromDb = image;
             }
 
-            var imgGalleryAlreadyExists = _context.ImageGalleries.Where(d => d.GalleryId == model.Gallery.GalleryId).Any(d => d.ImageId == imageAlreadyExists.ImageId);
+            var imgGalleryAlreadyExists = _context.ImageGalleries.Where(d => d.GalleryId == model.Gallery.GalleryId).Any(d => d.ImageId == imageFromDb.ImageId);
 
             if (!imgGalleryAlreadyExists)
             {
                 var imgGallery = new ImageGallery()
                 {
                     GalleryId = model.Gallery.GalleryId,
-                    ImageId = imageAlreadyExists.ImageId,
+                    ImageId = imageFromDb.ImageId,
                     Order = model.ImageGallery.Order
                 };
                 await _context.ImageGalleries.AddAsync(imgGallery);
                 await _context.SaveChangesAsync();
 
-                var orderedGalleries = GalleryManager.SetOrderOfImageGalleries(_context, imgGallery, model.ImageGallery.Order ?? 1);
 
-                await LoopFor(orderedGalleries);
+                var orderedGalleries = GalleryManager.SetOrderOfImageGalleries(_context, imgGallery);
+
+                await AddToDbContextAndSaveAsync(orderedGalleries);
             }
 
             return RedirectToAction("Edit", new { id = model.Gallery.GalleryId });
         }
 
-        public async Task LoopFor(List<ImageGallery> orderedGalleries)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetPositionOfImageInGallery(int galleryId, int order, int imageId)
+        {
+            var thisGallery = await _context.ImageGalleries.Where(d => d.GalleryId == galleryId)
+                .SingleOrDefaultAsync(d => d.ImageId == imageId);
+
+            if (thisGallery == null) return NotFound();
+
+            thisGallery.Order = order;
+
+            var galleries = GalleryManager.SetOrderOfImageGalleries(_context, thisGallery);
+            await AddToDbContextAndSaveAsync(galleries);
+
+            return RedirectToAction("Edit", new { id = galleryId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteImageFromGallery(int galleryId, int imageId)
+        {
+            var galleryToDelete = await _context.ImageGalleries.Where(d => d.GalleryId == galleryId)
+                .SingleOrDefaultAsync(d => d.ImageId == imageId);
+
+            if (galleryToDelete == null) return NotFound();
+
+            _context.ImageGalleries.Remove(galleryToDelete);
+            await _context.SaveChangesAsync();
+
+            var galleries = GalleryManager.Order(_context, _context.ImageGalleries.ToList());
+            await AddToDbContextAndSaveAsync(galleries);
+
+
+            return RedirectToAction("Edit", new { id = galleryId });
+        }
+
+        public async Task AddToDbContextAndSaveAsync(List<ImageGallery> orderedGalleries)
         {
             foreach (var gallery in orderedGalleries)
             {
-                var gg = await _context.ImageGalleries.Where(d => d.GalleryId == gallery.GalleryId)
+                var galleryToOverwrite = await _context.ImageGalleries.Where(d => d.GalleryId == gallery.GalleryId)
                     .SingleOrDefaultAsync(d => d.ImageId == gallery.ImageId);
 
-                gg = gallery;
+                galleryToOverwrite = gallery;
             }
             await _context.SaveChangesAsync();
         }
