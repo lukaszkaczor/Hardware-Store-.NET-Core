@@ -43,8 +43,8 @@ namespace HardwareStore.Controllers
 
 
 
-            return RedirectToAction("Edit", "Galleries", new {id = 3});
-            //return View();
+            //return RedirectToAction("Edit", "Galleries", new {id = 3});
+            return View();
         }
 
         public IActionResult Privacy()
