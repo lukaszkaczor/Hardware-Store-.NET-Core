@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HardwareStore.Data;
 using HardwareStore.Models.DbModels;
 using HardwareStore.Models.ModelsConfig;
+using HardwareStore.ViewModels.Galleries;
 using Microsoft.AspNetCore.Authorization;
 
 namespace HardwareStore.Controllers
@@ -53,8 +54,6 @@ namespace HardwareStore.Controllers
         }
 
         // POST: Images/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ImageId,Name,Url")] Image image)
@@ -85,8 +84,6 @@ namespace HardwareStore.Controllers
         }
 
         // POST: Images/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ImageId,Name,Url")] Image image)

@@ -19,6 +19,7 @@ namespace HardwareStore.Models
             if (imageGallery.Order < 1)
                 imageGallery.Order = 1;
 
+
             var imageGalleries = context.ImageGalleries.Where(d => d.GalleryId == imageGallery.GalleryId).OrderBy(d => d.Order).ToList();
             var thisGallery = imageGalleries.Where(d => d.ImageId == imageGallery.ImageId).SingleOrDefault(d => d.Order == imageGallery.Order);
 
@@ -27,10 +28,16 @@ namespace HardwareStore.Models
             imageGalleries.Remove(thisGallery);
 
             if (imageGallery.Order > imageGalleries.Max(d => d.Order))
-                thisGallery.Order = imageGalleries.Max(d => d.Order);
+                thisGallery.Order = imageGalleries.Max(d => d.Order) + 1;
 
-            imageGalleries.Insert(imageGallery.Order - 1 ?? imageGalleries.Count, thisGallery);
-
+            if (imageGalleries.Count > 0)
+            {
+                imageGalleries.Insert(imageGallery.Order - 1 ?? imageGalleries.Count, thisGallery);
+            }
+            else
+            {
+                imageGalleries.Add(imageGallery);
+            }
 
             return Order(context, imageGalleries);
         }

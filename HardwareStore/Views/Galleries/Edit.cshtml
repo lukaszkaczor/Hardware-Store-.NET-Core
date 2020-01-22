@@ -6,10 +6,12 @@
 }
 
 @*<h1>Edytuj galerię "@Model.Gallery.Name"</h1>*@
-<h1 style="margin-bottom: 50px">Edytuj galerię @Html.TextBoxFor(d => d.Gallery.Name, new { @class = "galleryName" })</h1>
+<h1 style="margin-bottom: 50px"><a href="@Url.Action("Index", "Galleries")"><i class="fas fa-arrow-left"></i></a> Edytuj galerię @Html.TextBoxFor(d => d.Gallery.Name, new { @class = "galleryName" })</h1>
 @Html.HiddenFor(d=>d.Gallery.GalleryId, new { id = "galleryId"})
 
 @Html.ActionLink("Dodaj zdjęcie", "AddImageToGallery", "Galleries", new { id = Model.Gallery.GalleryId })
+<br/>
+@Html.ActionLink("Wybierz zdjęcie z listy", "ImageList", "Galleries", new { id = Model.Gallery.GalleryId })
 
 <table class="table">
     <tr>

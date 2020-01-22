@@ -8,10 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using HardwareStore.Data;
 using HardwareStore.Models;
 using HardwareStore.Models.DbModels;
+using HardwareStore.Models.ModelsConfig;
 using HardwareStore.ViewModels.Galleries;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HardwareStore.Controllers
 {
+    [Authorize(Roles = AppRole.Admin)]
     public class GalleriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -186,22 +189,22 @@ namespace HardwareStore.Controllers
             if (editedGallery == null)
                 return NotFound();
 
-            var images =
-                from image in _context.Images
-                join imgGallery in _context.ImageGalleries on image.ImageId equals imgGallery.ImageId
-                join galleries in _context.Galleries on imgGallery.GalleryId equals galleries.GalleryId
-                where imgGallery.GalleryId == id
-                orderby imgGallery.Order
-                select image;
+            //var images =
+            //    from image in _context.Images
+            //    join imgGallery in _context.ImageGalleries on image.imageId equals imgGallery.imageId
+            //    join galleries in _context.Galleries on imgGallery.GalleryId equals galleries.GalleryId
+            //    where imgGallery.GalleryId == id
+            //    orderby imgGallery.Order
+            //    select image;
 
-            var filteredImages = _context.Images.Where(d => images.All(s => s.ImageId != d.ImageId)).ToList();
+            //var filteredImages = _context.Images.Where(d => images.All(s => s.imageId != d.imageId)).ToList();
 
             var orderValue = _context.ImageGalleries.Where(d => d.GalleryId == id).Max(d => d.Order) + 1 ?? 1;
 
             var model = new AddImageToGalleryViewModel()
             {
                 Gallery = editedGallery,
-                Images = filteredImages,
+                //Images = filteredImages,
                 ImageGallery = new ImageGallery()
                 {
                     Order = orderValue
@@ -213,11 +216,16 @@ namespace HardwareStore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddImageToGallery(AddImageToGalleryViewModel model)
+        public async Task<IActionResult> AddImageToGallery(AddImageToGalleryViewModel model, int imageId)
         {
-            //if (!ModelState.IsValid) return NotFound();
-            
+            //True when request comes from ImageList.cshtml
+            if (imageId > 0)
+            {
+                model.Image = await _context.Images.SingleOrDefaultAsync(d => d.ImageId == imageId);
+                model.ImageGallery.Order += 1;
+            }
             var image = model.Image;
+
 
             var imageFromDb = await _context.Images.FirstOrDefaultAsync(d=>d.Url == model.Image.Url);
 
@@ -284,6 +292,42 @@ namespace HardwareStore.Controllers
 
 
             return RedirectToAction("Edit", new { id = galleryId });
+        }
+
+        public async Task<IActionResult> ImageList(int id)
+        {
+            var images =
+                from image in _context.Images
+                join imgGallery in _context.ImageGalleries on image.ImageId equals imgGallery.ImageId
+                join galleries in _context.Galleries on imgGallery.GalleryId equals galleries.GalleryId
+                where imgGallery.GalleryId == id
+                orderby imgGallery.Order
+                select image;
+
+            var filteredImages = await _context.Images.Where(d => images.All(s => s.ImageId != d.ImageId)).ToListAsync();
+
+
+            var imgGal = await _context.ImageGalleries.Where(d => d.GalleryId == id).OrderByDescending(d => d.Order)
+                .FirstOrDefaultAsync();
+
+            if (imgGal == null)
+            {
+                imgGal = new ImageGallery()
+                {
+                    GalleryId = id,
+                    Order = 1
+                };
+            }
+
+            var model = new AddImageToGalleryViewModel()
+            {
+                Images = filteredImages,
+                Gallery = await _context.Galleries.SingleOrDefaultAsync(d => d.GalleryId == id),
+                ImageGallery = imgGal
+            };
+
+            //return RedirectToAction(nameof(ImageList), filteredImages);
+            return View(model);
         }
 
         public async Task AddToDbContextAndSaveAsync(List<ImageGallery> orderedGalleries)

@@ -32,7 +32,6 @@ namespace HardwareStore.Controllers
 
         public async Task<IActionResult> Index()
         {
-      
 
 
 
@@ -43,8 +42,8 @@ namespace HardwareStore.Controllers
 
 
 
-            //return RedirectToAction("Edit", "Galleries", new {id = 3});
-            return View();
+            return RedirectToAction("ImageList", "Galleries", new { id = 3 });
+            //return View();
         }
 
         public IActionResult Privacy()

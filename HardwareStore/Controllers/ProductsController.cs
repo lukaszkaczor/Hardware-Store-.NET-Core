@@ -30,6 +30,10 @@ namespace HardwareStore.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Products.Include(p => p.Brand).Include(p => p.Category).Include(p => p.Gallery);
+            var model =
+                from item in _context.Products
+                where item.ProductId > 1
+                select item;
             return View(await applicationDbContext.ToListAsync());
         }
 
