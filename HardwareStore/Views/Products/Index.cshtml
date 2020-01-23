@@ -48,7 +48,15 @@
                 @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Gallery.Name)
+                @if (item.Gallery != null)
+                {
+                    @Html.ActionLink(item.Gallery.Name, "Edit", "Galleries", new {id = item.GalleryId})
+                }
+                else
+                {
+                    <a href="@Url.Action("Create", "Galleries", new {id = item.ProductId })"><i class="fas fa-plus"></i></a>
+                    @*@Html.ActionLink(">Dodaj<", "Edit");*@
+                }
             </td>
             <td>@Html.ActionLink("Edytuj Tagi", "SetTags", "Products", new { id = item.ProductId})</td>
             <td>

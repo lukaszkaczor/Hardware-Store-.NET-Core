@@ -12,6 +12,6 @@ namespace HardwareStore.ViewModels.Product
         public List<TagTransferModel> TagTransferModels { get; set; }
 
         public int ProductId { get; set; }
-        public bool IsNew { get; set; }
+        public bool HasGallery { get; set; }
     }
 }

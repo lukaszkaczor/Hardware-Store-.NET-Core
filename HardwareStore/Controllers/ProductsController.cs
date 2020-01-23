@@ -30,11 +30,12 @@ namespace HardwareStore.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Products.Include(p => p.Brand).Include(p => p.Category).Include(p => p.Gallery);
-            var model =
-                from item in _context.Products
-                where item.ProductId > 1
-                select item;
-            return View(await applicationDbContext.ToListAsync());
+            //var model =
+            //    from item in _context.Products
+            //    where item.ProductId > 1
+            //    select item;
+            var model = await applicationDbContext.ToListAsync();
+            return View(model);
         }
 
         // GET: Products/Details/5
@@ -72,12 +73,18 @@ namespace HardwareStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductId,Name,Price,IsRecommended,BrandId,GalleryId,CategoryId")] Product product)
         {
+            var hasGallery = false;
             if (ModelState.IsValid)
             {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));
-                return RedirectToAction("SetTags", new { id = product.ProductId, isNew = true });
+
+                if (product.GalleryId > 0)
+                {
+                    hasGallery = true;
+                }
+
+                return RedirectToAction("SetTags", new { id = product.ProductId, hasGallery });
             }
             ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "Name", product.BrandId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
@@ -172,7 +179,7 @@ namespace HardwareStore.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult SetTags(int id, bool isNew)
+        public IActionResult SetTags(int id, bool hasGallery)
         {
             if (!_context.Products.Any(d=>d.ProductId == id))
             {
@@ -193,14 +200,12 @@ namespace HardwareStore.Controllers
                     TagName = tag.Name,
                     Value = tagValues.SingleOrDefault(d => d.TagId == tag.TagId)?.Value ?? String.Empty,
                     TagValueId = tagValues.SingleOrDefault(d => d.TagId == tag.TagId)?.TagValueId ?? 0,
-                    //ProductId = id,
-                    //IsNew = true,
                 });
 
             }
 
             model.TagTransferModels = list;
-            model.IsNew = isNew;
+            model.HasGallery = hasGallery;
             model.ProductId = id;
 
             return View(model);
@@ -259,12 +264,12 @@ namespace HardwareStore.Controllers
                 _context.SaveChanges();
             }
 
-            if (model.IsNew)
+            if (!model.HasGallery)
             {
                 return RedirectToAction("Create", "Galleries", new {id = model.ProductId});
             }
 
-            return RedirectToAction(nameof(SetTags));
+            return RedirectToAction(nameof(Details), new{id = model.ProductId});
         }
 
         private bool ProductExists(int id)

@@ -59,9 +59,14 @@ namespace HardwareStore.Controllers
 
             var product = await _context.Products.SingleOrDefaultAsync(d => d.ProductId == id);
 
-            var model = new Gallery()
+            var model = new CreateGalleryViewModel()
             {
-                Name = product.Name + "_gallery"
+                Gallery = new Gallery()
+                {
+                    Name = product.Name + "_gallery"
+                },
+                ProductId = product.ProductId
+                //Product = product
             };
 
             return View(model);
@@ -70,15 +75,23 @@ namespace HardwareStore.Controllers
         // POST: Galleries/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GalleryId,Name")] Gallery gallery)
+        public async Task<IActionResult> Create(CreateGalleryViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(gallery);
+                _context.Add(model.Gallery);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Edit), new { id = gallery.GalleryId });
+
+                if (model.ProductId > 1)
+                {
+                    var product = await _context.Products.SingleOrDefaultAsync(d => d.ProductId == model.ProductId);
+                    product.GalleryId = model.Gallery.GalleryId;
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Edit), new { id = model.Gallery.GalleryId });
             }
-            return View(gallery);
+            return View(model);
         }
 
         // GET: Galleries/Edit/5
