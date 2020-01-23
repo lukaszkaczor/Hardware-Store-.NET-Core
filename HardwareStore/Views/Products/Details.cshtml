@@ -1,54 +1,123 @@
-﻿@model HardwareStore.Models.DbModels.Product
+﻿@*@model HardwareStore.Models.DbModels.Product*@
+@model HardwareStore.ViewModels.Product.ProductDetailsViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewBag.Title = @Model.Product.Name;
+    ViewBag.DisableMainStyles = true;
+    Layout = "_UserLayout";
 }
 
-<h1>Details</h1>
+<link rel="stylesheet" href="~/css/product.css" />
 
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsRecommended)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsRecommended)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Brand)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Brand.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gallery)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gallery.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Name)
-        </dd>
-    </dl>
+
+<div class="productContent">
+
+    <div class="searchInfo">
+        <div class="path">
+            <a href="@Url.Action("Index", "Home")">Kompex</a>
+            <div class="break">></div>
+            <a href="">@Model.Product.Brand.Name</a>
+            <div class="break">></div>
+            <a href="">@Model.Product.Category.Name</a>
+            <div class="break">></div>
+            <a href="">@Model.Product.Brand.Name</a>
+        </div>
+    </div>
+
+
+    <div class="slider">
+        <div class="left-arrow">
+            <div class="arrow"><i class="fas fa-angle-left"></i></div>
+        </div>
+        @{var className = "imgShow"; }
+        @foreach (var image in Model.Images)
+        {
+            <div class="imgHolder @className">
+
+                <img class="img"
+                     src="@image.Url" alt="@image.Name">
+            </div>
+
+            className = "imgHidden";
+        }
+
+
+        <div class="right-arrow">
+            <div class="arrow"><i class="fas fa-angle-right"></i></div>
+        </div>
+        <div class="dotHolder">
+        </div>
+    </div>
+
+    <div class="productNameHolder">
+        <h1 class="productName">@Model.Product.Name</h1>
+        <div class="ratings">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(21 opinii)</span>
+        </div>
+        <h2 class="price">@(Model.Product.Price)zł</h2>
+
+        @using (Html.BeginForm("AddToCart", "ShoppingCart", FormMethod.Post, new { @class = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="number" name="quantity" value="1">
+            @Html.HiddenFor(d => d.Product.ProductId)
+            <button type="submit">Dodaj do koszyka</button>
+        }
+
+
+        <div class="shortSpec">
+            <h1><span>Procesor:</span> Intel Core i7-9750H</h1>
+            <h1><span>Grafika:</span> NVIDIA GeForce GTX 1660Ti</h1>
+            <h1><span>Pamięć:</span> 16 GB</h1>
+            <h1><span>Typ ekranu:</span> Matowy, LED</h1>
+        </div>
+
+        <div class="additionalInfo">
+            <div class="row">
+                <div class="iconHolder"><i class="far fa-clock"></i></div>
+                <div class="info">
+                    <h3>Kup teraz, otrzymasz jutro</h3>
+                    <h4>Zapłać w ciągu 35min 25sek.</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="iconHolder"><i class="fas fa-truck"></i></div>
+                <div class="info">
+                    <h3>Darmowa dostawa</h3>
+                    <h4>Dowiedz się więcej</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="iconHolder"><i class="fas fa-undo-alt"></i></div>
+                <div class="info">
+                    <h3>Zwrot w ciągu 14 dni</h3>
+                    <h4>Możesz zwrócić produkt do 10 dni roboczych od jego otrzymania</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="iconHolder"><i class="fas fa-headset"></i></div>
+                <div class="info">
+                    <h3>Pomoc techniczna</h3>
+                    <h4>W razie jakichkolwiek pytań skontaktuj się z naszą <a href="#">pomocą techniczną</a></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="specCaption">Specyfikacja</h1>
+    <table class="specification">
+
+        @foreach (var item in Model.Tags)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Value</td>
+            </tr>
+        }
+    </table>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+

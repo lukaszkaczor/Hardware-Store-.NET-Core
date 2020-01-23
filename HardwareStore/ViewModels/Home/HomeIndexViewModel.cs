@@ -9,13 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HardwareStore.ViewModels.Home
 {
-    public class HomeIndexViewModel : ViewModel
+    public class HomeIndexViewModel
     {
-        public IEnumerable<Brand> Brands { get; set; }
-
-        public HomeIndexViewModel(ApplicationDbContext context) : base(context)
-        {
-            Brands = context.Brands.ToList();
-        }
+        public List<Brand> Brands { get; set; }
+        public List<Models.DbModels.Product> RecommendedProducts { get; set; }
+        public List<Image> RecommendedImages { get; set; }
     }
 }

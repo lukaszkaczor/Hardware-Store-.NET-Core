@@ -8,12 +8,13 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "_UserLayout";
 
 }
 @*@Html.Partial("_Navbar", Model.AllSections.ToList())*@
 
 
-@*<div class="content">
+<div class="content">
     <h1 class="hotShotCaption">Okazja Dnia</h1>
     <a href="" class="hotShotBorder">
         <div class="hotShot">
@@ -40,7 +41,7 @@
     <div class="slider">
         <div class="left-arrow">
             <div class="arrow"><i class="fas fa-angle-left"></i></div>
-        </div>*@
+        </div>
 
 
 
@@ -56,7 +57,7 @@
             }
         }*@
 
-        @*<div class="right-arrow">
+       <div class="right-arrow">
             <div class="arrow"><i class="fas fa-angle-right"></i></div>
         </div>
         <div class="dotHolder">
@@ -64,7 +65,7 @@
     </div>
 
     <h1 class="bestsellersCaption">Bestsellery</h1>
-    <div class="bestsellers">*@
+    <div class="bestsellers">
         @*@for (int i = 0; i < Model.Bestsellers.Count; i++)
         {
             <a href="@Url.Action("Details", "Products", new { @id = Model.Bestsellers[i].ProductId})" class="product">
@@ -73,43 +74,39 @@
                 <h4>@(Model.Bestsellers[i].Price)zł</h4>
             </a>
         }*@
-    @*</div>
+    </div>
 
     <h1 class="brandsCaption">Strefa Marek</h1>
 
     <div class="brands">
         <button class="prev"><i class="fas fa-arrow-left"></i></button>
-        <button class="next"><i class="fas fa-arrow-right"></i></button>*@
+        <button class="next"><i class="fas fa-arrow-right"></i></button>
 
-        @*@foreach (var item in Model.Brands)
+        @foreach (var item in Model.Brands)
         {
             <a href="@Url.Action("Search", "Products", new { Text = item.Name, @Filter = 0})" class="brand">
-                <img src="@ImageManager.retrieveOneImageFromDB(item.Image).Value"
-                     alt="@item.Image.Name">
+                <img src="@item.Image.Url"
+                     alt="@item.Name">
             </a>
-        }*@
+        }
 
 
-    @*</div>
+    </div>
 
     <h1 class="recommendedCaption">Polecane</h1>
-    <div class="recommended">*@
-
-
-
-        @*@for (int i = 0; i < Model.RecommendedProducts.Count; i++)
+    <div class="recommended">
+        @for (int i = 0; i < Model.RecommendedProducts.Count; i++)
         {
             <a href="@Url.Action("Details", "Products", new { id = Model.RecommendedProducts[i].ProductId })" class="product">
-                <img src="@Model.RecommendedImages[i].Value" alt="@Model.RecommendedImages[i].Name">
+                <img src="@Model.RecommendedImages[i].Url" alt="@Model.RecommendedImages[i].Name">
                 <h3>@Model.RecommendedProducts[i].Name</h3>
                 <h4>@Model.RecommendedProducts[i].Price zł</h4>
             </a>
-        }*@
-
-    @*</div>
+        }
+    </div>
 
     <h1 class="postsCaption">Informacje</h1>
-    <div class="posts">*@
+    <div class="posts">
 
         @*@foreach (var post in Model.Posts)
         {
@@ -119,7 +116,7 @@
         }*@
     
 
-        @*<a href="" class="morePosts">Pokaż wszystkie</a>
+      <a href="" class="morePosts">Pokaż wszystkie</a>
     </div>
 
-</div>*@
+</div>

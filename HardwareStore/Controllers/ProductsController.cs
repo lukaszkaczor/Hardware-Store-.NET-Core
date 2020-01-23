@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HardwareStore.Data;
+using HardwareStore.Models;
 using HardwareStore.Models.DbModels;
 using HardwareStore.Models.ModelsConfig;
 using HardwareStore.Models.TransferModels;
@@ -30,33 +32,39 @@ namespace HardwareStore.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Products.Include(p => p.Brand).Include(p => p.Category).Include(p => p.Gallery);
-            //var model =
-            //    from item in _context.Products
-            //    where item.ProductId > 1
-            //    select item;
+
             var model = await applicationDbContext.ToListAsync();
             return View(model);
         }
 
         // GET: Products/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             var product = await _context.Products
                 .Include(p => p.Brand)
                 .Include(p => p.Category)
                 .Include(p => p.Gallery)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
+
             if (product == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+
+            var model = new ProductDetailsViewModel()
+            {
+                Product = product,
+                Tags = await TagManager.GetTagNameWithValues(_context, product),
+                Images = await ImageManager.GetImagesForProduct(_context, (int)id)
+            };
+
+            return View(model);
         }
 
         // GET: Products/Create
@@ -270,6 +278,34 @@ namespace HardwareStore.Controllers
             }
 
             return RedirectToAction(nameof(Details), new{id = model.ProductId});
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> Search(string Text, int Filter)
+        {
+            var products = _context.Products.Where(d => d.Name.Contains(Text.Trim())).ToList();
+            products.AddRange(_context.Products.Include(d => d.Brand).Where(d => d.Brand.Name.Contains(Text.Trim())));
+            products = products.Distinct().ToList();
+           
+            var imageList = new List<Image>();
+            var tagList = new List<List<TagNameWithValue>>();
+
+            foreach (var item in products)
+            {
+                imageList.Add(await ImageManager.GetFirstImageForProduct(_context, item.ProductId));
+                tagList.Add(await TagManager.GetTagNameWithValues(_context, item));
+            }
+
+            var model = new ProductListViewModel()
+            {
+                SearchText = Text,
+                Products = products,
+                Images = imageList,
+                TagsValuesList = tagList
+            };
+
+            return View(model);
         }
 
         private bool ProductExists(int id)

@@ -32,7 +32,20 @@ namespace HardwareStore.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var products = await _context.Products.Where(d => d.IsRecommended).ToListAsync();
+            var images = new List<Image>();
 
+            foreach (var product in products)
+            {
+                images.Add(await ImageManager.GetFirstImageForProduct(_context, product.ProductId));
+            }
+
+            var model = new HomeIndexViewModel()
+            {
+                Brands = await _context.Brands.Include(d=>d.Image).ToListAsync(),
+                RecommendedProducts =  products,
+                RecommendedImages = images
+            };
 
 
             //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // will give the user's userId
@@ -42,8 +55,8 @@ namespace HardwareStore.Controllers
 
 
 
-            return RedirectToAction("Index", "Products");
-            //return View();
+            //return RedirectToAction("Index", "Products");
+            return View(model);
         }
 
         public IActionResult Privacy()

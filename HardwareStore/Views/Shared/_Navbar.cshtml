@@ -1,7 +1,9 @@
-﻿@using HardwareStore.Models.ModelsConfig
+﻿@using HardwareStore.Data
+@using HardwareStore.Models.ModelsConfig
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject ApplicationDbContext context
 @{
     //var ctx = new List<Section>();
     ////foreach (var section in new ApplicationDbContext().Sections)
@@ -21,14 +23,14 @@
             <a href="@Url.Action("Index", "Home")" class="logo">KompEX</a>
         </div>
 
-        @*@using (Html.BeginForm("Search", "Products", null, FormMethod.Get, new { @class = "searchForm", @autocomplete = "off" }))*@
-        @using (Html.BeginForm(null, null, null, FormMethod.Get, null, new {@class = "searchForm"}))
+        @*@using (Html.BeginForm(null, null, null, FormMethod.Get, null, new { @class = "searchForm" }))*@
+        @using (Html.BeginForm("Search", "Products", FormMethod.Get, new { @class = "searchForm", @autocomplete = "off" }))
         {
             <input type="text" name="Text" id="" class="searchTxt">
             <select name="Filter" class="searchSelect">
                 <option value="0">Wszystko</option>
 
-                @foreach (var item in Model)
+                @foreach (var item in context.Sections)
                 {
                     <option value="@item.SectionId">@item.Name</option>
                 }
@@ -36,42 +38,42 @@
             </select>
             <button type="submit" class="searchBtn"><i class="fas fa-search"></i></button>
         }
-    <div class="menuHolder">
-        <div class="menuItem"><i class="fas fa-search"></i></div>
+        <div class="menuHolder">
+            <div class="menuItem"><i class="fas fa-search"></i></div>
 
-        @if (SignInManager.IsSignedIn(User))
-        {
-    <form id="logoutForm" class="navbar-right" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
-
-        <a href="javascript:document.getElementById('logoutForm').submit()" class="menuItem"><i class="fas fa-sign-out-alt"></i></a>
-        @*<button class="menuItem" type="submit"><i class="fas fa-sign-out-alt"></i></button>*@
-    </form>
-            @*using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+            @if (SignInManager.IsSignedIn(User))
             {
-                @Html.AntiForgeryToken()
+                <form id="logoutForm" class="navbar-right" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
 
-                <a href="javascript:document.getElementById('logoutForm').submit()" class="menuItem"><i class="fas fa-sign-out-alt"></i></a>
-            }*@
-            if (User.IsInRole(AppRole.Admin))
-            {
-                <a href="@Url.Action("Index", "AdminMenu")" class="menuItem"><i class="fas fa-cogs"></i></a>
+                    <a href="javascript:document.getElementById('logoutForm').submit()" class="menuItem"><i class="fas fa-sign-out-alt"></i></a>
+                    @*<button class="menuItem" type="submit"><i class="fas fa-sign-out-alt"></i></button>*@
+                </form>
+                @*using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <a href="javascript:document.getElementById('logoutForm').submit()" class="menuItem"><i class="fas fa-sign-out-alt"></i></a>
+                    }*@
+                if (User.IsInRole(AppRole.Admin))
+                {
+                    <a href="@Url.Action("Index", "Admin")" class="menuItem"><i class="fas fa-cogs"></i></a>
+                }
             }
-        }
-        else
-        {
-            @*<a href="@Url.Action("Login", "Account", new {@asp-area: })" class="menuItem"><i class="fas fa-users"></i></a>*@
-            <a class="menuItem" asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-users"></i></a>
-        }
-        <a href="@Url.Action("Index", "Profile")" class="menuItem"><i class="far fa-user-circle"></i></a>
-        <a href="@Url.Action("Index", "ShoppingCart")" class="menuItem"><i class="fas fa-shopping-cart"></i></a>
-    </div>
+            else
+            {
+                @*<a href="@Url.Action("Login", "Account", new {@asp-area: })" class="menuItem"><i class="fas fa-users"></i></a>*@
+                <a class="menuItem" asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-users"></i></a>
+            }
+            <a href="@Url.Action("Index", "Profile")" class="menuItem"><i class="far fa-user-circle"></i></a>
+            <a href="@Url.Action("Index", "ShoppingCart")" class="menuItem"><i class="fas fa-shopping-cart"></i></a>
+        </div>
     </div>
 </nav>
 
 <div class="mobileSections">
-    @foreach (var item in Model)
+    @foreach (var item in context.Sections)
     {
-    <a href="#" class="mobileMenuLink"><i class="@item.Icon"></i>@item.Name</a>
+        <a href="#" class="mobileMenuLink"><i class="@item.Icon"></i>@item.Name</a>
     }
 
 </div>

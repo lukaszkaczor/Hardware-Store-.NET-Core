@@ -58,6 +58,13 @@ namespace HardwareStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ImageId,Name,Url")] Image image)
         {
+
+            if (await _context.Images.AnyAsync(d=>d.Url == image.Url))
+            {
+                ModelState.AddModelError("", DatabaseErrorMessage.ImageWithThatUrlAlreadyExists);
+                return View(image);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(image);

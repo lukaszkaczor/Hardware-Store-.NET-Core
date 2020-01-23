@@ -1,0 +1,105 @@
+﻿@model HardwareStore.ViewModels.Product.ProductListViewModel
+@{
+    ViewBag.Title = "Search";
+    Layout = "_UserLayout";
+}
+
+<div class="searchInfo">
+    <div class="path">
+        <a href="@Url.Action("Index", "Home")">Kompex</a>
+        <div class="break">></div>
+        <a href="">"@Model.SearchText"</a>
+    </div>
+    <div class="searchResults">
+        <h1 class="searchedPhrase">"@Model.SearchText"</h1>
+        <h1 class="quantity">(@Model.Products.Count wyników)</h1>
+    </div>
+</div>
+<div class="mobileFilterStrip">
+    <button id="showMobileFilters">Pokaż wszystkie filtry</button>
+
+    <select>
+        <option value="1">Trafność</option>
+        <option value="1">Cena rosnąco</option>
+        <option value="1">Cena malejąco</option>
+    </select>
+</div>
+<div class="productListContent">
+    <div class="filterHolder">
+        <!--temp  -->
+        <button id="closeFiltersBtn">X</button>
+        <!--  -->
+        <div class="filtersCaptionHolder">
+            <h1>Filtry</h1>
+            <button class="clearFiltersBtn">Wczyść filtry</button>
+        </div>
+        <button>Pokaż wszystkie filtry</button>
+
+        <div class="filterGroup">
+            <h2 class="filterGroupName">Producent</h2>
+
+            <div class="filter">
+                <input type="checkbox" name="" id="i1">
+                <label for="i1">Apple <span>(20)</span></label>
+            </div>
+            <div class="filter">
+                <input type="checkbox" name="" id="i2">
+                <label for="i2">Microsoft <span>(20)</span></label>
+            </div>
+            <div class="filter">
+                <input type="checkbox" name="" id="i3">
+                <label for="i3">Logitech <span>(20)</span></label>
+            </div>
+            <button>Pokaż więcej</button>
+        </div>
+        <div class="filterGroup">
+
+            <h2 class="filterGroupName">Cena</h2>
+            <div class="filter filterPrice">
+                <input type="number" name="" id="" placeholder="od"> <span>-</span><input type="number" name=""
+                                                                                          id="" placeholder="do">
+            </div>
+        </div>
+
+        <div class="filterGroup">
+            <h2 class="filterGroupName">Producent</h2>
+
+            <div class="filter">
+                <input type="checkbox" name="" id="i1">
+                <label for="i1">Apple <span>(20)</span></label>
+            </div>
+            <div class="filter">
+                <input type="checkbox" name="" id="i2">
+                <label for="i2">Microsoft <span>(20)</span></label>
+            </div>
+            <div class="filter">
+                <input type="checkbox" name="" id="i3">
+                <label for="i3">Logitech <span>(20)</span></label>
+            </div>
+        </div>
+    </div>
+    <div class="productList">
+
+        @for (int i = 0; i < Model.Products.Count; i++)
+        {
+            <a href="@Url.Action("Details", "Products", new { id = Model.Products[i].ProductId })" class="product">
+                <img src="@Model.Images[i].Url"
+                     alt="">
+                <h3>@Model.Products[i].Name</h3>
+
+                @for (int j = 0; j < Model.TagsValuesList[i].Count; j++)
+                {
+                    <h5>@Model.TagsValuesList[i][j].Name: @Model.TagsValuesList[i][j].Value</h5>
+                }
+
+
+                <h4>@(Model.Products[i].Price + "zł")</h4>
+            </a>
+        }
+
+
+    </div>
+</div>
+<footer>
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias, quos!
+</footer>

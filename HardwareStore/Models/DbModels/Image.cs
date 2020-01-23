@@ -13,6 +13,7 @@ namespace HardwareStore.Models.DbModels
         public string Name { get; set; }
 
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
+        [DataType(DataType.Url)]
         public string Url { get; set; }
 
         public virtual ICollection<ImageGallery> ImageGalleries { get; set; }

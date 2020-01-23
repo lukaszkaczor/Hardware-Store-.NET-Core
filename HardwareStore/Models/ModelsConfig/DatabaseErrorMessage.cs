@@ -10,6 +10,6 @@ namespace HardwareStore.Models.ModelsConfig
     {
         public const string MinimumStringLength = "To pole powinno zawierać minimum 3 znaki.";
         public const string FieldRequired = "To pole jest wymagane.";
-
+        public const string ImageWithThatUrlAlreadyExists = "Zdjęcie z tym Url już istnieje.";
     }
 }
