@@ -1,0 +1,106 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal
+@model List<HardwareStore.ViewModels.ShoppingCart.ShoppingCartViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="searchInfo">
+    <div class="path">
+        <div class="break"><i class="fas fa-chevron-left"></i></div>
+        <a href="@Url.Action("Index", "Home")">Strona Główna</a>
+    </div>
+</div>
+
+<h1>@ViewBag.User</h1>
+<div class="shoppingCartContent">
+
+    @if (!Model.Any())
+    {
+        <div class="emptyBasketInfo">
+            <h3>Twój koszyk jest pusty</h3>
+            <h5>Przejdź do <a href="@Url.Action("Index", "Home")">strony głównej</a> i wybierz coś dla siebie</h5>
+        </div>
+    }
+    else
+    {
+        <table>
+            <tr>
+                <th class="productHeader">Produkt</th>
+                <th class="priceHeader">Cena</th>
+                <th class="quantityHeader">Ilość</th>
+                <th class="totalHeader">Razem</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr class="rowWithProduct">
+                    <td class="productNameWithImg">
+                        <div class="productDsc">
+                            <img src="@item.Image.Url"
+                                 alt="@item.Image.Name">
+                            <a href="@Url.Action("Details", "Products", new { @id = item.Product.ProductId})">@item.Product.Name</a>
+                        </div>
+                    </td>
+                    <td class="priceContent"><span class="hideWhenResolutionIsHigherThan768">Cena za sztukę: </span><span class="price">@item.Product.Price</span>zł</td>
+                    <td class="formCell">
+
+                        @using (Html.BeginForm("AdjustQuantity", "ShoppingCart", FormMethod.Post))
+                        {
+                            @Html.Hidden("adjustType", false)
+                            @Html.Hidden("productId", item.Product.ProductId)
+
+                            if (item.Quantity <= 1)
+                            {
+                                <button class="hideOnMobile" type="submit" disabled><i class="fas fa-minus"></i></button>
+
+                            }
+                            else
+                            {
+                                <button class="hideOnMobile" type="submit"><i class="fas fa-minus"></i></button>
+
+                            }
+
+                        }
+                        <form class="adjustForm" action="">
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(d => item.Product.ProductId, new { @class = "productId" })
+                            <input class="inputQuantity" type="text" value="@item.Quantity">
+                        </form>
+                        @using (Html.BeginForm("AdjustQuantity", "ShoppingCart", FormMethod.Post))
+                        {
+                            @Html.Hidden("adjustType", true)
+                            @Html.Hidden("productId", item.Product.ProductId)
+                            <button class="hideOnMobile" type="submit"><i class="fas fa-plus"></i></button>
+                        }
+                        @using (Html.BeginForm("RemoveFromCart", "ShoppingCart", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("id", item.Product.ProductId)
+                            <button type="submit"><i class="fas fa-times"></i></button>
+                        }
+                    </td>
+                    <td><span class="hideWhenResolutionIsHigherThan768">Razem: </span><span class="priceTimesQuantity">@(item.Quantity*item.Product.Price)</span>zł</td>
+                </tr>
+            }
+            <tr>
+                <td>
+                    Wartość zakupów: <span class="total">{total}</span>zł
+
+                    <a href="@Url.Action("Index", "Orders")">Przejdź do płatności</a>
+                    @*@using (Html.BeginForm())
+                        {
+                            <button type="submit">Przejdź do płatności</button>
+                        }*@
+
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+
+
+@section Scripts
+{
+    <script src="~/js/shoppingCart.js"></script>
+}

@@ -282,10 +282,10 @@ namespace HardwareStore.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> Search(string Text, int Filter)
+        public async Task<ActionResult> Search(string text, int filter)
         {
-            var products = _context.Products.Where(d => d.Name.Contains(Text.Trim())).ToList();
-            products.AddRange(_context.Products.Include(d => d.Brand).Where(d => d.Brand.Name.Contains(Text.Trim())));
+            var products = _context.Products.Where(d => d.Name.Contains(text.Trim())).ToList();
+            products.AddRange(_context.Products.Include(d => d.Brand).Where(d => d.Brand.Name.Contains(text.Trim())));
             products = products.Distinct().ToList();
            
             var imageList = new List<Image>();
@@ -294,12 +294,13 @@ namespace HardwareStore.Controllers
             foreach (var item in products)
             {
                 imageList.Add(await ImageManager.GetFirstImageForProduct(_context, item.ProductId));
-                tagList.Add(await TagManager.GetTagNameWithValues(_context, item));
+                var tags = await TagManager.GetTagNameWithValues(_context, item);
+                tagList.Add(tags.Take(4).ToList());
             }
 
             var model = new ProductListViewModel()
             {
-                SearchText = Text,
+                SearchText = text,
                 Products = products,
                 Images = imageList,
                 TagsValuesList = tagList
