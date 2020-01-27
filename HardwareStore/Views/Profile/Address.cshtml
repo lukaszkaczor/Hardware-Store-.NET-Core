@@ -1,8 +1,109 @@
-﻿
+﻿@model HardwareStore.Models.DbModels.Address
 @{
     ViewData["Title"] = "Address";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
-<h1>Address</h1>
+    <div class="settingsContent">
 
+        @await Html.PartialAsync("_settingsMenu")
+
+        <div class="settingPositions">
+
+            @using (Html.BeginForm("NewOrder", "Orders", FormMethod.Post, new { @class = "addressInfo" }))
+            {
+                <div class="inputHolder">
+
+                    <div class="inputLine">
+                        @Html.LabelFor(d => d.CustomerName)
+                        <div>
+                            @Html.TextBoxFor(d => d.CustomerName)
+                            @Html.ValidationMessageFor(d => d.CustomerName)
+                        </div>
+                    </div>
+
+                    <div class="inputLine">
+                        @Html.LabelFor(d => d.AddressLine)
+                        <div>
+                            @Html.TextBoxFor(d => d.AddressLine)
+                            @Html.ValidationMessageFor(d => d.AddressLine)
+                        </div>
+                    </div>
+
+                    <div class="inputLine">
+                        @Html.LabelFor(d => d.ZipCode)
+                        <div>
+                            @Html.TextBoxFor(d => d.ZipCode)
+                            @Html.ValidationMessageFor(d => d.ZipCode)
+                        </div>
+                    </div>
+
+                    <div class="inputLine">
+                        @Html.LabelFor(d => d.City)
+                        <div>
+                            @Html.TextBoxFor(d => d.City)
+                            @Html.ValidationMessageFor(d => d.City)
+                        </div>
+                    </div>
+
+                    <div class="inputLine">
+                        @Html.LabelFor(d => d.PhoneNumber)
+                        <div>
+                            @Html.TextBoxFor(d => d.PhoneNumber)
+                            @Html.ValidationMessageFor(d => d.PhoneNumber)
+                        </div>
+                    </div>
+
+
+                </div> 
+                <button type="submit" class="saveBtn">Zapisz</button>
+            }
+
+
+
+            @*<form class="addressInfo">
+            <div class="inputHolder">
+                <div class="inputLine">
+                    <label for="">Imię i nazwisko</label>
+                    <div>
+                        <input type="text">
+                        <span>To pole jest niepoprwane</span>
+                    </div>
+                </div>
+
+                <div class="inputLine">
+                    <label for="">Adres</label>
+                    <div>
+                        <input type="text">
+                        <span>To pole jest niepoprwane</span>
+                    </div>
+                </div>
+
+                <div class="inputLine">
+                    <label for="">Kod pocztowy</label>
+                    <div>
+                        <input type="text">
+                        <span>To pole jest niepoprwane</span>
+                    </div>
+                </div>
+
+                <div class="inputLine">
+                    <label for="">Miejscowość</label>
+                    <div>
+                        <input type="text">
+                        <span>To pole jest niepoprwane</span>
+                    </div>
+                </div>
+
+                <div class="inputLine">
+                    <label for="">Numer telefonu</label>
+                    <div>
+                        <input type="text">
+                        <span>To pole jest niepoprwane</span>
+                    </div>
+                </div>
+            </div>
+                <button type="submit" class="saveBtn">Zapisz</button>
+        </form>*@
+        </div>
+    </div>

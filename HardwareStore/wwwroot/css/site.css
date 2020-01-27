@@ -1522,6 +1522,128 @@ img {
         }
 }
 
+.settingsContent {
+    width: 90vw;
+    height: 100px;
+    margin-top: 100px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.settingsMenu {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+    .settingsMenu a {
+        padding: 20px;
+        text-decoration: none;
+        color: #444444;
+        width: 100%;
+        text-align: center;
+        border: 2px solid #444444;
+        font-size: 18px;
+    }
+
+.settingPositions {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.saveBtn {
+    width: 100px;
+    margin: 20px auto;
+    padding: 10px 20px;
+    border: 2px solid #444444;
+    background: none;
+    border-radius: 20px;
+}
+
+.tableWithOrders {
+    width: 100%;
+    margin-top: 20px;
+}
+
+@media (min-width: 768px) {
+    .settingsContent {
+        width: 700px;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+    }
+
+    .settingsMenu {
+        -ms-flex-preferred-size: 35%;
+        flex-basis: 35%;
+    }
+
+    .settingPositions {
+        -ms-flex-preferred-size: 65%;
+        flex-basis: 65%;
+    }
+
+    .tableWithOrders {
+        margin-left: 10px;
+        width: 450px;
+        margin-top: 0;
+    }
+}
+
+@media (min-width: 1000px) {
+    .settingsContent {
+        width: 950px;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+    }
+
+    .settingsMenu {
+        -ms-flex-preferred-size: 25%;
+        flex-basis: 25%;
+    }
+
+    .tableWithOrders {
+        margin-left: 10px;
+        width: 700px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .settingsContent {
+        width: 1150px;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        margin-top: 50px;
+    }
+
+    .tableWithOrders {
+        margin-left: 10px;
+        width: 900px;
+    }
+}
+
 * {
     margin: 0;
     padding: 0;

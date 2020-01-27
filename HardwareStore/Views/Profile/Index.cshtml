@@ -5,7 +5,85 @@
 }
 
 
-<a href="@Url.Action("Index", "Addresses")">Edytuj moje adresy</a>
-<a href="@Url.Action("MyOrders", "Orders")">Moje zamówienia</a>
-<h3>Zmień hasło</h3>
-<h3>Usuń konto</h3>
+<div class="settingsContent">
+
+    @await Html.PartialAsync("_settingsMenu")
+
+    <div class="settingPositions">
+        
+        
+        @*GOTOWA TABELA Z ZAMOWIENIAMI*@
+        @*<div class="tableWithOrders">
+            <table class="table">
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>
+                        Taktowanie procesora sad
+                    </td>
+                    <td>
+                        Taktowanie procesora
+                    </td>
+
+                    <td class="tableActions">
+                        Added
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>*@ 
+        <!-- GOTOWA ZMIANA ADRESU -->
+        <!-- <form class="addressInfo">
+            <div class="inputHolder">
+                <div class="inputLine">
+                    <label for="">Imię i nazwisko</label>
+                    <div>
+                        <input type="text">
+                        <span>To pole jest niepoprwane</span>
+                    </div>
+                </div>
+
+                <div class="inputLine">
+                    <label for="">Adres</label>
+                    <div>
+                        <input type="text">
+                        <span>To pole jest niepoprwane</span>
+                    </div>
+                </div>
+
+                <div class="inputLine">
+                    <label for="">Kod pocztowy</label>
+                    <div>
+                        <input type="text">
+                        <span>To pole jest niepoprwane</span>
+                    </div>
+                </div>
+
+                <div class="inputLine">
+                    <label for="">Miejscowość</label>
+                    <div>
+                        <input type="text">
+                        <span>To pole jest niepoprwane</span>
+                    </div>
+                </div>
+
+                <div class="inputLine">
+                    <label for="">Numer telefonu</label>
+                    <div>
+                        <input type="text">
+                        <span>To pole jest niepoprwane</span>
+                    </div>
+                </div>
+            </div>
+                <button type="submit" class="saveBtn">Zapisz</button>
+        </form> -->
+    </div>
+</div>
