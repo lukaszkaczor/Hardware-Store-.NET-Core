@@ -1,12 +1,57 @@
 ﻿@page
+@using System.Transactions
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Logowanie";
+    Layout = "_UserLayout";
+    ViewBag.DisableNavbar = true;
 }
 
-<h1>@ViewData["Title"]</h1>
-<div class="row">
+@Html.ActionLink("Strona główna", "Index", "Home", null, new { @class = "linkToIndex" })
+
+
+<div class="inputForm">
+    <h2>Zaloguj</h2>
+    <section id="loginForm">
+        <form id="account" method="post">
+
+            <div asp-validation-summary="All" class="warningText"></div>
+
+            <div class="inputGroup">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="textInput" />
+                <span asp-validation-for="Input.Email" class="warningText"></span>
+            </div>
+
+            <div class="inputGroup">
+                <label asp-for="Input.Password">Hasło</label>
+                <input asp-for="Input.Password" class="textInput" />
+                <span asp-validation-for="Input.Password" class="warningText"></span>
+            </div>
+
+            <div class="inputGroup">
+                <div class="checkbox">
+                    <input asp-for="Input.RememberMe" />
+                    <label asp-for="Input.RememberMe">Zapamiętaj mnie</label>
+                    @*@Html.DisplayNameFor(m => m.Input.RememberMe)*@
+                </div>
+            </div>
+
+            <div class="inputGroup">
+                <input type="submit" value="Zaloguj" class="btn" />
+            </div>
+
+            <a class="registerLink" asp-area="Identity" asp-page="/Account/Register">Rejestracja</a>
+        </form>
+    </section>
+</div>
+
+
+
+
+
+@*<div class="row">
     <div class="col-md-4">
         <section>
             <form id="account" method="post">
@@ -44,8 +89,8 @@
                 </div>
             </form>
         </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
+    </div>*@
+@*<div class="col-md-6 col-md-offset-2">
         <section>
             <h4>Use another service to log in.</h4>
             <hr />
@@ -74,8 +119,8 @@
                 }
             }
         </section>
-    </div>
-</div>
+    </div>*@
+@*</div>*@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

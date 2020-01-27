@@ -7,11 +7,13 @@ using HardwareStore.Data;
 using HardwareStore.Models;
 using HardwareStore.Models.DbModels;
 using HardwareStore.ViewModels.ShoppingCart;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HardwareStore.Controllers
 {
+    [Authorize]
     public class ShoppingCartController : Controller
     {
         private ApplicationDbContext _context;

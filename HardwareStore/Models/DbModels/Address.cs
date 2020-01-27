@@ -12,12 +12,12 @@ namespace HardwareStore.Models.DbModels
     {
         public int AddressId { get; set; }
 
-        [RegularExpression(@"^[a-zA-Z''-'\s]{1,50}$")]
+        //[RegularExpression(@"^[a-zA-Z''-'\s]{1,50}$")]
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         [Display(Name = "Imię i nazwisko")]
         public string CustomerName { get; set; }
 
-        [RegularExpression(@"^[a-zA-Z''-'\s]{1,50}$")]
+        //[RegularExpression(@"^[a-zA-Z''-'\s]{1,50}$")]
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         [Display(Name = "Miejscowość")]
         public string City { get; set; }
@@ -26,12 +26,12 @@ namespace HardwareStore.Models.DbModels
         [Display(Name = "Adres")]
         public string AddressLine { get; set; }
 
-        [RegularExpression(@"/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/")]
+        //[RegularExpression(@"/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/")]
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         [Display(Name = "Numer Telefonu")]
         public string PhoneNumber { get; set; }
 
-        [RegularExpression(@"[0-9]{2}-[0-9]{3}")]
+        //[RegularExpression(@"[0-9]{2}-[0-9]{3}")]
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         [Display(Name = "Kod pocztowy")]
         public string ZipCode { get; set; }

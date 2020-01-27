@@ -1,0 +1,113 @@
+﻿@model HardwareStore.ViewModels.Orders.OrderInfoViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+@using (Html.BeginForm("NewOrder", "Orders", FormMethod.Post, new { @class = "orderDetailsContent" }))
+{
+    @Html.AntiForgeryToken()
+
+    @*<form class="orderDetailsContent">*@
+
+    <div class="boxList">
+        <h1 class="caption">1. Wybierz sposób dostawy</h1>
+        <div class="boxes">
+            <div class="box boxActive">
+                <i class="fas fa-truck-moving"></i>
+                <h5>Dostawa kurierem</h5>
+                <h6>20,00 zł</h6>
+            </div>
+            <div class="box">
+                <i class="fas fa-store"></i>
+                <h5>Odbierz w salonie</h5>
+                <h6>0,00 zł</h6>
+            </div>
+            <div class="box">
+                <i class="fas fa-boxes"></i>
+                <h5>Odbiór w paczkomacie</h5>
+                <h6>9,90 zł</h6>
+            </div>
+        </div>
+    </div>
+
+    <div class="boxList">
+        <h1 class="caption">2. Wybierz sposób płatności</h1>
+        <div class="boxes">
+            <div class="box">
+                <i class="fas fa-box-open"></i>
+                <h5>Gotówka przy odbiorze</h5>
+                <h6>+5,00 zł</h6>
+            </div>
+            <div class="box boxActive">
+                <i class="fas fa-university"></i>
+                <h5>Przelew bankowy</h5>
+                <h6>0,00 zł</h6>
+            </div>
+            <div class="box">
+                <i class="fab fa-paypal"></i>
+                <h5>PayPal</h5>
+                <h6>0,00 zł</h6>
+            </div>
+            <div class="box">
+                <i class="fab fa-cc-visa"></i>
+                <h5>Płatność kartą</h5>
+                <h6>+5,00 zł</h6>
+            </div>
+        </div>
+    </div>
+
+    <div class="addressInfo">
+        <h1 class="caption">3. Wpisz swoje dane do wysyłki</h1>
+
+        <div class="inputHolder">
+
+            <div class="inputLine">
+                @Html.LabelFor(d => d.Address.CustomerName)
+                <div>
+                    @Html.TextBoxFor(d => d.Address.CustomerName)
+                    @Html.ValidationMessageFor(d => d.Address.CustomerName)
+                </div>
+            </div>
+
+            <div class="inputLine">
+                @Html.LabelFor(d => d.Address.AddressLine)
+                <div>
+                    @Html.TextBoxFor(d => d.Address.AddressLine)
+                    @Html.ValidationMessageFor(d => d.Address.AddressLine)
+                </div>
+            </div>
+
+            <div class="inputLine">
+                @Html.LabelFor(d => d.Address.ZipCode)
+                <div>
+                    @Html.TextBoxFor(d => d.Address.ZipCode)
+                    @Html.ValidationMessageFor(d => d.Address.ZipCode)
+                </div>
+            </div>
+
+            <div class="inputLine">
+                @Html.LabelFor(d => d.Address.City)
+                <div>
+                    @Html.TextBoxFor(d => d.Address.City)
+                    @Html.ValidationMessageFor(d => d.Address.City)
+                </div>
+            </div>
+
+            <div class="inputLine">
+                @Html.LabelFor(d => d.Address.PhoneNumber)
+                <div>
+                    @Html.TextBoxFor(d => d.Address.PhoneNumber)
+                    @Html.ValidationMessageFor(d => d.Address.PhoneNumber)
+                </div>
+            </div>
+
+            <div class="inputLine">
+                @Html.LabelFor(d => d.Order.Message)
+                @Html.TextAreaFor(d => d.Order.Message, new { @class = "message" })
+            </div>
+        </div>
+    </div>
+    <button class="buyBtn" type="submit">Kup</button>
+}

@@ -24,6 +24,10 @@
     <Compile Remove="Data\Migrations\20200110165744_AddPostsTalbe.Designer.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\favicon.ico" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
