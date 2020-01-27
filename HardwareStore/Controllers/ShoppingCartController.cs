@@ -79,6 +79,7 @@ namespace HardwareStore.Controllers
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var productToDelete = _context.ShoppingCarts.Where(d => d.IdentityUserId == _userId).SingleOrDefault(d => d.ProductId == id);
+            if (productToDelete == null) return NotFound();
 
             _context.ShoppingCarts.Remove(productToDelete);
 

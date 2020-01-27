@@ -284,8 +284,13 @@ namespace HardwareStore.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Search(string text, int filter)
         {
-            var products = _context.Products.Where(d => d.Name.Contains(text.Trim())).ToList();
+            if (string.IsNullOrWhiteSpace(text)) return NotFound();
+
+            var products = _context.Products.Include(d=>d.Category).Where(d => d.Name.Contains(text.Trim())).ToList();
             products.AddRange(_context.Products.Include(d => d.Brand).Where(d => d.Brand.Name.Contains(text.Trim())));
+
+            if (filter != 0) products = products.Where(d => d.Category.SectionId == filter).ToList();
+
             products = products.Distinct().ToList();
            
             var imageList = new List<Image>();

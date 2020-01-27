@@ -26,7 +26,7 @@
         @*@using (Html.BeginForm(null, null, null, FormMethod.Get, null, new { @class = "searchForm" }))*@
         @using (Html.BeginForm("Search", "Products", FormMethod.Get, new { @class = "searchForm", @autocomplete = "off" }))
         {
-            <input type="text" name="text" id="" class="searchTxt">
+            <input type="text" name="text" id="" class="searchTxt" required>
             <select name="filter" class="searchSelect">
                 <option value="0">Wszystko</option>
 
@@ -38,6 +38,7 @@
             </select>
             <button type="submit" class="searchBtn"><i class="fas fa-search"></i></button>
         }
+
         <div class="menuHolder">
             <div class="menuItem"><i class="fas fa-search"></i></div>
 
@@ -49,11 +50,11 @@
                     @*<button class="menuItem" type="submit"><i class="fas fa-sign-out-alt"></i></button>*@
                 </form>
                 @*using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-                    {
-                        @Html.AntiForgeryToken()
+                {
+                    @Html.AntiForgeryToken()
 
-                        <a href="javascript:document.getElementById('logoutForm').submit()" class="menuItem"><i class="fas fa-sign-out-alt"></i></a>
-                    }*@
+                    <a href="javascript:document.getElementById('logoutForm').submit()" class="menuItem"><i class="fas fa-sign-out-alt"></i></a>
+                }*@
                 if (User.IsInRole(AppRole.Admin))
                 {
                     <a href="@Url.Action("Index", "Admin")" class="menuItem"><i class="fas fa-cogs"></i></a>
