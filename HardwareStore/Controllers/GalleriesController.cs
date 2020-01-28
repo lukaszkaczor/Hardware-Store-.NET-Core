@@ -27,7 +27,7 @@ namespace HardwareStore.Controllers
         // GET: Galleries
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Galleries.ToListAsync());
+            return View(await _context.Galleries.OrderBy(d=>d.Name).ToListAsync());
         }
 
         // GET: Galleries/Details/5

@@ -46,5 +46,34 @@ namespace HardwareStore.Models
             return images.First();
         }
 
+        public static async Task<Image> GetFirstImageForPost(ApplicationDbContext context, int id)
+        {
+
+            var products = await context.Products.ToListAsync();
+            var imagesList = await context.Images.ToListAsync();
+            var galleriesList = await context.Galleries.ToListAsync();
+            var imageGalleryList = await context.ImageGalleries.ToListAsync();
+
+
+            var images =
+                from image in imagesList
+                join imgGallery in imageGalleryList on image.ImageId equals imgGallery.ImageId
+                join galleries in galleriesList on imgGallery.GalleryId equals galleries.GalleryId
+                join product in products on galleries.GalleryId equals product.GalleryId
+                where product.GalleryId == id
+                orderby imgGallery.Order
+                select image;
+
+            if (!images.ToList().Any())
+            {
+                images.ToList().Add(new Image()
+                {
+                    Url = null
+                });
+            }
+
+            return images.First();
+        }
+
     }
 }

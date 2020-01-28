@@ -60,7 +60,13 @@ namespace HardwareStore.Controllers
                 bestsellersImages.Add(await ImageManager.GetFirstImageForProduct(_context, item.ProductId));
             }
 
+            var posts = await _context.Posts.Include(d=>d.Gallery).Where(d => d.PublicationDate < DateTime.Now).Where(d=>d.IsActive).Take(5).ToListAsync();
+            //var postImages = new List<Image>();
 
+            //foreach (var post in posts)
+            //{
+            //    postImages.Add(await ImageManager.GetFirstImageForPost(_context, (int)post.GalleryId));
+            //}
 
             var model = new HomeIndexViewModel()
             {
@@ -68,7 +74,9 @@ namespace HardwareStore.Controllers
                 RecommendedProducts = recommendedProducts,
                 RecommendedImages = recommendedImages,
                 Bestsellers = bestsellersList,
-                BestsellersImages = bestsellersImages
+                BestsellersImages = bestsellersImages,
+                Posts = posts
+                //PostImages = postImages
             };
 
 

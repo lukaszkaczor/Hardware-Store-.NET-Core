@@ -9,7 +9,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "_UserLayout";
-
+    var cssClass = "imgShow";
 }
 @*@Html.Partial("_Navbar", Model.AllSections.ToList())*@
 
@@ -45,17 +45,17 @@
 
 
 
-        @*@foreach (var item in Model.Posts)
+        @foreach (var item in Model.Posts)
         {
-            if (item.Image != null)
+            if (item.Gallery!= null)
             {
                 <a href="@Url.Action("Details", "Posts", new {id = item.PostId})" class="imgHolder @cssClass">
-                    <img class="img" src="@item.Image.Value" alt="">
+                    <img class="img" src="@item.Gallery.ImageGalleries.First().Image.Url" alt="@item.Gallery.ImageGalleries.First().Image.Name">
                 </a>
 
                 cssClass = "imgHidden";
             }
-        }*@
+        }
 
        <div class="right-arrow">
             <div class="arrow"><i class="fas fa-angle-right"></i></div>
@@ -108,12 +108,12 @@
     <h1 class="postsCaption">Informacje</h1>
     <div class="posts">
 
-        @*@foreach (var post in Model.Posts)
+        @foreach (var post in Model.Posts)
         {
             <div class="post">
                 <h1>@post.Title<a href="@Url.Action("Details", "Posts", new { @id = post.PostId})">[>>]</a></h1>
             </div>
-        }*@
+        }
     
 
       <a href="" class="morePosts">Pokaż wszystkie</a>

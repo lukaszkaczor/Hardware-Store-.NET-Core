@@ -17,5 +17,9 @@ namespace HardwareStore.ViewModels.Home
         
         public List<Models.DbModels.Product> Bestsellers { get; set; }
         public List<Image> BestsellersImages { get; set; }
+
+        public List<Post> Posts { get; set; }
+
+
     }
 }
