@@ -48,8 +48,8 @@ namespace HardwareStore.Controllers
         //    return View();
         //}
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> NewOrder(OrderInfoViewModel model)
         {
             //if (!ModelState.IsValid) return View("Index", model);
@@ -91,13 +91,10 @@ namespace HardwareStore.Controllers
                     await _context.Orders.AddAsync(order);
                     await _context.SaveChangesAsync();
 
-                    //var orderDetailsList = new List<OrderDetails>();
-                    //var orderOrderDetailsList = new List<OrderDetailsOrder>();
-                    var maxId = await _context.OrderDetails.FirstOrDefaultAsync() == null ? 0 : await _context.OrderDetails.MaxAsync(d => d.OrderDetailsId);
+                    var orderDetailsList = new List<OrderDetails>();
 
                     foreach (var shoppingCart in productsInShoppingCart)
                     {
-                        maxId += 1;
                         var orderDetails = new OrderDetails()
                         {
                             OrderId = order.OrderId,
@@ -105,14 +102,23 @@ namespace HardwareStore.Controllers
                             PricePerItem = shoppingCart.Product.Price,
                             Quantity = shoppingCart.Quantity
                         };
-                        await _context.OrderDetails.AddAsync(orderDetails);
+                        orderDetailsList.Add(orderDetails);
+                    }
 
+                    await _context.OrderDetails.AddRangeAsync(orderDetailsList);
+
+                    await _context.SaveChangesAsync();
+
+                    foreach (var orderDetails in orderDetailsList)
+                    {
                         _context.OrderDetailsOrders.Add(new OrderDetailsOrder()
                         {
                             OrderId = order.OrderId,
-                            OrderDetailsId = maxId
+                            OrderDetailsId = orderDetails.OrderDetailsId
                         });
                     }
+
+                    await _context.SaveChangesAsync();
 
                     _context.ShoppingCarts.RemoveRange(productsInShoppingCart);
                     await _context.SaveChangesAsync();

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using HardwareStore.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -32,7 +33,7 @@ namespace HardwareStore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = await _context.Products.Where(d => d.IsRecommended).ToListAsync();
+            var products = await _context.Products.ToListAsync();
 
             var recommendedProducts = products.Where(d => d.IsRecommended).Take(8).ToList();
             var recommendedImages = new List<Image>();
@@ -43,37 +44,28 @@ namespace HardwareStore.Controllers
             }
 
 
-
-            /*temp*/
             var bestsellersList = new List<Product>();
+            var bestsellersImages = new List<Image>();
 
             var bestsellers = from items in _context.OrderDetails
                               group items by new { items.ProductId }
-                into g
-                              select new { g.Key.ProductId, V = g.Sum(items => items.Quantity) };
+                              into g
+                              select new { g.Key.ProductId, totalQuantity = g.Sum(items => items.Quantity) };
 
-            bestsellers = bestsellers.OrderByDescending(d => d.V).Take(8);
+            var orderedBestsellers = bestsellers.OrderByDescending(d => d.totalQuantity).Take(8).ToList();
 
-
-            foreach (var item in bestsellers)
+            foreach (var item in orderedBestsellers)
             {
-                bestsellersList.Add(products.SingleOrDefault(d => d.ProductId == item.ProductId));
-            }
-
-            var bestsellersImages = new List<Image>();
-            foreach (var item in bestsellersList)
-            {
+                bestsellersList.Add(products.FirstOrDefault(d => d.ProductId == item.ProductId));
                 bestsellersImages.Add(await ImageManager.GetFirstImageForProduct(_context, item.ProductId));
             }
 
 
 
-
-
             var model = new HomeIndexViewModel()
             {
-                Brands = await _context.Brands.Include(d=>d.Image).ToListAsync(),
-                RecommendedProducts =  recommendedProducts,
+                Brands = await _context.Brands.Include(d => d.Image).ToListAsync(),
+                RecommendedProducts = recommendedProducts,
                 RecommendedImages = recommendedImages,
                 Bestsellers = bestsellersList,
                 BestsellersImages = bestsellersImages
