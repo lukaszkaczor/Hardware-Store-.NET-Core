@@ -66,14 +66,14 @@
 
     <h1 class="bestsellersCaption">Bestsellery</h1>
     <div class="bestsellers">
-        @*@for (int i = 0; i < Model.Bestsellers.Count; i++)
+        @for (int i = 0; i < Model.Bestsellers.Count; i++)
         {
-            <a href="@Url.Action("Details", "Products", new { @id = Model.Bestsellers[i].productId})" class="product">
-                <img src="@Model.BestsellersImages[i].Value" alt="@Model.BestsellersImages[i].Name">
+            <a href="@Url.Action("Details", "Products", new { @id = Model.Bestsellers[i].ProductId})" class="product">
+                <img src="@Model.BestsellersImages[i].Url" alt="@Model.BestsellersImages[i].Name">
                 <h3>@Model.Bestsellers[i].Name</h3>
                 <h4>@(Model.Bestsellers[i].Price)zł</h4>
             </a>
-        }*@
+        }
     </div>
 
     <h1 class="brandsCaption">Strefa Marek</h1>

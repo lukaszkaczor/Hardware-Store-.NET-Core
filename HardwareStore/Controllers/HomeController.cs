@@ -33,18 +33,50 @@ namespace HardwareStore.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await _context.Products.Where(d => d.IsRecommended).ToListAsync();
-            var images = new List<Image>();
 
-            foreach (var product in products)
+            var recommendedProducts = products.Where(d => d.IsRecommended).Take(8).ToList();
+            var recommendedImages = new List<Image>();
+
+            foreach (var product in recommendedProducts)
             {
-                images.Add(await ImageManager.GetFirstImageForProduct(_context, product.ProductId));
+                recommendedImages.Add(await ImageManager.GetFirstImageForProduct(_context, product.ProductId));
             }
+
+
+
+            /*temp*/
+            var bestsellersList = new List<Product>();
+
+            var bestsellers = from items in _context.OrderDetails
+                              group items by new { items.ProductId }
+                into g
+                              select new { g.Key.ProductId, V = g.Sum(items => items.Quantity) };
+
+            bestsellers = bestsellers.OrderByDescending(d => d.V).Take(8);
+
+
+            foreach (var item in bestsellers)
+            {
+                bestsellersList.Add(products.SingleOrDefault(d => d.ProductId == item.ProductId));
+            }
+
+            var bestsellersImages = new List<Image>();
+            foreach (var item in bestsellersList)
+            {
+                bestsellersImages.Add(await ImageManager.GetFirstImageForProduct(_context, item.ProductId));
+            }
+
+
+
+
 
             var model = new HomeIndexViewModel()
             {
                 Brands = await _context.Brands.Include(d=>d.Image).ToListAsync(),
-                RecommendedProducts =  products,
-                RecommendedImages = images
+                RecommendedProducts =  recommendedProducts,
+                RecommendedImages = recommendedImages,
+                Bestsellers = bestsellersList,
+                BestsellersImages = bestsellersImages
             };
 
 
