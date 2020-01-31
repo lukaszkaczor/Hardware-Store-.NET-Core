@@ -18,7 +18,8 @@ namespace HardwareStore.Data.Migrations
                     Quantity = table.Column<int>(nullable: false),
                     ItemsSold = table.Column<int>(nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
-                    DurationInHours = table.Column<int>(nullable: false)
+                    EndDate = table.Column<DateTime>(nullable: false),
+                    HasEnded = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

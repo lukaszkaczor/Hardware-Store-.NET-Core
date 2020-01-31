@@ -22,6 +22,18 @@
     <Compile Remove="Data\Migrations\20200110164824_AddOrderOrderDetailsOrderDetailsOrdersTablesAndMissingPriceColumnToProductsTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200110165744_AddPostsTalbe.cs" />
     <Compile Remove="Data\Migrations\20200110165744_AddPostsTalbe.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200131123442_AddHotShotsTable.cs" />
+    <Compile Remove="Data\Migrations\20200131123442_AddHotShotsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200131123526_AddHotShotsTable.cs" />
+    <Compile Remove="Data\Migrations\20200131123526_AddHotShotsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200131151711_AccountHotShotsTable.cs" />
+    <Compile Remove="Data\Migrations\20200131151711_AccountHotShotsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200131154808_AddHotShotsTable.cs" />
+    <Compile Remove="Data\Migrations\20200131154808_AddHotShotsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200131155052_ebe.cs" />
+    <Compile Remove="Data\Migrations\20200131155052_ebe.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200131155225_ebe.cs" />
+    <Compile Remove="Data\Migrations\20200131155225_ebe.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

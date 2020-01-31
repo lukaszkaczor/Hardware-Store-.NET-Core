@@ -12,7 +12,7 @@ namespace HardwareStore.ViewModels.Product
     {
         public Models.DbModels.Product Product { get; set; }
         public List<TagNameWithValue> Tags { get; set; }
-        public List<Image> Images { get; set; }     
+        public List<Image> Images { get; set; }
 
 
         //public int ProductId { get; set; }

@@ -19,7 +19,7 @@
 
         @using (Html.BeginForm("Search", "Products", FormMethod.Get, new { @class = "searchForm", @autocomplete = "off" }))
         {
-            <input type="text" name="text" id="" class="searchTxt" required>
+            <input type="text" name="SearchText" id="" class="searchTxt" required>
             <select name="filter" class="searchSelect">
                 <option value="0">Wszystko</option>
 

@@ -26,6 +26,8 @@ namespace HardwareStore.Data
         public DbSet<OrderDetails> OrderDetails { get; set; }
         public DbSet<OrderDetailsOrder> OrderDetailsOrders { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<HotShot> HotShots { get; set; }
+        public DbSet<AccountHotShot> AccountHotShots { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -43,6 +45,9 @@ namespace HardwareStore.Data
 
             builder.Entity<OrderDetailsOrder>()
                 .HasKey(d => new {d.OrderDetailsId, d.OrderId});
+
+            builder.Entity<AccountHotShot>()
+                .HasKey(d => new { d.IdentityUserId, d.HotShotId });
 
             base.OnModelCreating(builder);
         }

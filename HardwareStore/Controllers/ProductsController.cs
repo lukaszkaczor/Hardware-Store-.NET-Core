@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,6 +11,7 @@ using HardwareStore.Data;
 using HardwareStore.Models;
 using HardwareStore.Models.DbModels;
 using HardwareStore.Models.ModelsConfig;
+using HardwareStore.Models.SearchingAndFiltering;
 using HardwareStore.Models.TransferModels;
 using HardwareStore.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
@@ -61,7 +63,7 @@ namespace HardwareStore.Controllers
             {
                 Product = product,
                 Tags = await TagManager.GetTagNameWithValues(_context, product),
-                Images = await ImageManager.GetImagesForProduct(_context, (int)id)
+                Images = await ImageManager.GetImagesForProduct(_context, (int)id),
             };
 
             return View(model);
@@ -189,7 +191,7 @@ namespace HardwareStore.Controllers
 
         public IActionResult SetTags(int id, bool hasGallery)
         {
-            if (!_context.Products.Any(d=>d.ProductId == id))
+            if (!_context.Products.Any(d => d.ProductId == id))
             {
                 return NotFound();
             }
@@ -197,7 +199,7 @@ namespace HardwareStore.Controllers
             var model = new SetTagsToProductViewModel();
             var tags = _context.Tags.Include(d => d.TagValues).ToList();
             var tagValues = _context.TagValues.Where(d => d.ProductId == id).ToList();
-            
+
             var list = new List<TagTransferModel>();
 
             foreach (var tag in tags)
@@ -274,17 +276,18 @@ namespace HardwareStore.Controllers
 
             if (!model.HasGallery)
             {
-                return RedirectToAction("Create", "Galleries", new {id = model.ProductId});
+                return RedirectToAction("Create", "Galleries", new { id = model.ProductId });
             }
 
-            return RedirectToAction(nameof(Details), new{id = model.ProductId});
+            return RedirectToAction(nameof(Details), new { id = model.ProductId });
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> Search(string text, int filter)
+        //public async Task<ActionResult> Search(string text, int filter)
+        public async Task<ActionResult> Search(SearchModel searchModel)
         {
-            if (string.IsNullOrWhiteSpace(text)) return NotFound();
+            if (string.IsNullOrWhiteSpace(searchModel.SearchText)) return NotFound();
 
 
             var products = await _context.Products
@@ -293,17 +296,101 @@ namespace HardwareStore.Controllers
                 .ThenInclude(d => d.Image)
                 .Include(d => d.ProductTags)
                 .ThenInclude(d => d.Tag.TagValues)
-            .Where(d => d.Name.Contains(text.Trim()) || d.Brand.Name.Contains(text.Trim())).ToListAsync();
+                .Where(d => d.Name.Contains(searchModel.SearchText.Trim()) ||
+                            d.Brand.Name.Contains(searchModel.SearchText.Trim())
+                                                                       || d.Category.Name.Contains(searchModel.SearchText.Trim())).ToListAsync();
 
 
-            if (filter != 0) products = products.Where(d => d.Category.SectionId == filter).ToList();
+            if (searchModel.Filter != 0) products = products.Where(d => d.Category.SectionId == searchModel.Filter).ToList();
 
             products = products.Distinct().ToList();
-            
+
+            var brands = new List<Brand>();
+            var brandFilters = new List<BrandFilter>();
+            var filteredProducts = new List<Product>();
+
+            if (searchModel.BrandFilters == null)
+            {
+                foreach (var product in products)
+                {
+                    brands.Add(await _context.Brands.SingleOrDefaultAsync(d => d.BrandId == product.BrandId));
+                }
+
+                brands = brands.Distinct().ToList();
+                foreach (var brand in brands)
+                {
+                    brandFilters.Add(new BrandFilter()
+                    {
+                        Brand = brand,
+                        IsChecked = false
+                    });
+                }
+                searchModel.BrandFilters = brandFilters;
+                filteredProducts = products;
+            }
+            else
+            {
+                foreach (var filter in searchModel.BrandFilters)
+                {
+                    if (!searchModel.BrandFilters.Any(d => d.IsChecked))
+                    {
+                        filteredProducts = products;
+                        break;
+                    }
+                    if (filter.IsChecked)
+                    {
+                        filteredProducts.AddRange(products.Where(d => d.BrandId == filter.Brand.BrandId).ToList());
+                    }
+                }
+            }
+
+            var categories = new List<Category>();
+            var categoryFilters = new List<CategoryFilter>();
+
+
+            var dd = new List<Product>();
+
+            if (searchModel.CategoryFilters == null)
+            {
+                foreach (var product in products)
+                {
+                    categories.Add(await _context.Categories.SingleOrDefaultAsync(d => d.CategoryId == product.CategoryId));
+                }
+
+                categories = categories.Distinct().ToList();
+                foreach (var category in categories)
+                {
+                    categoryFilters.Add(new CategoryFilter()
+                    {
+                        Category = category,
+                        IsChecked = false
+                    });
+                }
+                searchModel.CategoryFilters = categoryFilters;
+                dd = filteredProducts;
+            }
+            else
+            {
+                foreach (var filter in searchModel.CategoryFilters)
+                {
+                    if (!searchModel.CategoryFilters.Any(d => d.IsChecked))
+                    {
+                        dd = filteredProducts;
+                        break;
+                    }
+                    if (filter.IsChecked)
+                    {
+                        dd.AddRange(filteredProducts.Where(d => d.CategoryId == filter.Category.CategoryId).ToList());
+                    }
+                }
+            }
+
+
+
             var model = new ProductListViewModel()
             {
-                SearchText = text,
-                Products = products,
+                Products = dd,
+                SearchModel = searchModel,
             };
 
             return View(model);

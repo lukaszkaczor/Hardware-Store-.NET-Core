@@ -38,13 +38,13 @@
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DurationInHours" class="control-label"></label>
-                <input asp-for="DurationInHours" class="form-control" />
-                <span asp-validation-for="DurationInHours" class="text-danger"></span>
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Finished" /> @Html.DisplayNameFor(model => model.Finished)
+                    <input class="form-check-input" asp-for="HasEnded" /> @Html.DisplayNameFor(model => model.HasEnded)
                 </label>
             </div>
             <div class="form-group">

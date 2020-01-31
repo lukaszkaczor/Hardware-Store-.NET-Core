@@ -34,6 +34,8 @@ namespace HardwareStore.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var products = await _context.Products
                 .Include(d => d.Gallery.ImageGalleries).ThenInclude(d => d.Image).ToListAsync();
 
@@ -55,21 +57,42 @@ namespace HardwareStore.Controllers
             }
 
             var posts = await _context.Posts
-                .Include(d=>d.Gallery.ImageGalleries)
-                .ThenInclude(d=>d.Image)
+                .Include(d => d.Gallery.ImageGalleries)
+                .ThenInclude(d => d.Image)
                 .Where(d => d.PublicationDate < DateTime.Now)
-                .Where(d=>d.IsActive)
+                .Where(d => d.IsActive)
                 .Take(5).ToListAsync();
+
+            var hotShot =
+                await _context.HotShots.Include(d => d.Product.Gallery.ImageGalleries)
+                    .ThenInclude(d => d.Image)
+                    .FirstOrDefaultAsync(d => d.StartDate < DateTime.Now && d.EndDate > DateTime.Now);
+            var formattedEndDate = string.Empty;
+            if (hotShot != null)
+            {
+                formattedEndDate = hotShot.EndDate.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+            //.FirstOrDefaultAsync(d => d.HasEnded == false || d.StartDate < DateTime.Now);
+
+
+
+            var hotShotAlreadyBought = false;
+            if (userId != null)
+            {
+                 hotShotAlreadyBought = await _context.AccountHotShots.Where(d => d.IdentityUserId == userId)
+                    .AnyAsync(d => d.HotShotId == hotShot.HotShotId.ToString());
+            }
 
             var model = new HomeIndexViewModel()
             {
                 Brands = await _context.Brands.Include(d => d.Image).ToListAsync(),
                 RecommendedProducts = recommendedProducts,
                 Bestsellers = bestsellersList,
-                Posts = posts
+                Posts = posts,
+                HotShot = hotShot,
+                AlreadyBought = hotShotAlreadyBought ,
+                FormattedEndDate = formattedEndDate
             };
-
-
             //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // will give the user's userId
             //var userName = User.FindFirstValue(ClaimTypes.Name); // will give the user's userName
             //var userEmail = User.FindFirstValue(ClaimTypes.Email); // will give the user's Email

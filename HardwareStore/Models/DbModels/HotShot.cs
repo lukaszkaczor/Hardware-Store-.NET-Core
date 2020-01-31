@@ -17,8 +17,10 @@ namespace HardwareStore.Models.DbModels
 
         public int Quantity { get; set; }
         public int ItemsSold { get; set; }
+
         public DateTime StartDate { get; set; }
-        public int DurationInHours { get; set; }
-        public bool Finished { get; set; }
+        public DateTime EndDate { get; set; }
+   
+        public bool HasEnded { get; set; }
     }
 }

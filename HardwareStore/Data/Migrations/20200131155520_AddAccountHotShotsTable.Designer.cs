@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HardwareStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200128122625_ChangeNewPriceToDecimalType")]
-    partial class ChangeNewPriceToDecimalType
+    [Migration("20200131155520_AddAccountHotShotsTable")]
+    partial class AddAccountHotShotsTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,24 @@ namespace HardwareStore.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.AccountHotShot", b =>
+                {
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("HotShotId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("HotShotId1")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdentityUserId", "HotShotId");
+
+                    b.HasIndex("HotShotId1");
+
+                    b.ToTable("AccountHotShots");
+                });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.Address", b =>
                 {
@@ -127,17 +145,17 @@ namespace HardwareStore.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("DurationInHours")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<bool>("Finished")
+                    b.Property<bool>("HasEnded")
                         .HasColumnType("bit");
 
                     b.Property<int>("ItemsSold")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("NewPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("NewPrice")
+                        .HasColumnType("float");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -652,6 +670,19 @@ namespace HardwareStore.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.AccountHotShot", b =>
+                {
+                    b.HasOne("HardwareStore.Models.DbModels.HotShot", "HotShot")
+                        .WithMany()
+                        .HasForeignKey("HotShotId1");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.Address", b =>

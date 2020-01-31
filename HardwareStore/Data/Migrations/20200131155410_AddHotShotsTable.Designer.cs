@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HardwareStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200128121922_AddHotShotsTable")]
+    [Migration("20200131155410_AddHotShotsTable")]
     partial class AddHotShotsTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,8 +127,11 @@ namespace HardwareStore.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("DurationInHours")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasEnded")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ItemsSold")
                         .HasColumnType("int");

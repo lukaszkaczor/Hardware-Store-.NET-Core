@@ -13,13 +13,13 @@ namespace HardwareStore.ViewModels.Home
     {
         public List<Brand> Brands { get; set; }
         public List<Models.DbModels.Product> RecommendedProducts { get; set; }
-        public List<Image> RecommendedImages { get; set; }       
         
         public List<Models.DbModels.Product> Bestsellers { get; set; }
-        public List<Image> BestsellersImages { get; set; }
 
         public List<Post> Posts { get; set; }
 
-
+        public HotShot HotShot { get; set; }
+        public string FormattedEndDate { get; set; }
+        public bool AlreadyBought { get; set; }
     }
 }

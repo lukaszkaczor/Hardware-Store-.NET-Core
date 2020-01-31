@@ -19,6 +19,24 @@ namespace HardwareStore.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("HardwareStore.Models.DbModels.AccountHotShot", b =>
+                {
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("HotShotId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("HotShotId1")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdentityUserId", "HotShotId");
+
+                    b.HasIndex("HotShotId1");
+
+                    b.ToTable("AccountHotShots");
+                });
+
             modelBuilder.Entity("HardwareStore.Models.DbModels.Address", b =>
                 {
                     b.Property<int>("AddressId")
@@ -116,6 +134,41 @@ namespace HardwareStore.Data.Migrations
                     b.HasKey("GalleryId");
 
                     b.ToTable("Galleries");
+                });
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.HotShot", b =>
+                {
+                    b.Property<int>("HotShotId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasEnded")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ItemsSold")
+                        .HasColumnType("int");
+
+                    b.Property<double>("NewPrice")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("HotShotId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("HotShots");
                 });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.Image", b =>
@@ -299,8 +352,8 @@ namespace HardwareStore.Data.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.HasKey("ProductId");
 
@@ -617,6 +670,19 @@ namespace HardwareStore.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("HardwareStore.Models.DbModels.AccountHotShot", b =>
+                {
+                    b.HasOne("HardwareStore.Models.DbModels.HotShot", "HotShot")
+                        .WithMany()
+                        .HasForeignKey("HotShotId1");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("HardwareStore.Models.DbModels.Address", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
@@ -640,6 +706,15 @@ namespace HardwareStore.Data.Migrations
                     b.HasOne("HardwareStore.Models.DbModels.Section", "Section")
                         .WithMany("Categories")
                         .HasForeignKey("SectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.HotShot", b =>
+                {
+                    b.HasOne("HardwareStore.Models.DbModels.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

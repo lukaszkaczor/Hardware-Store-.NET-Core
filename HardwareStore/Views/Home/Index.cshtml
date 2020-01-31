@@ -14,24 +14,25 @@
 
 <div class="content">
     <h1 class="hotShotCaption">Okazja Dnia</h1>
-    <a href="" class="hotShotBorder">
+    <a href="@Url.Action("Details", "Products", new {id = Model.HotShot?.ProductId })" class="hotShotBorder">
         <div class="hotShot">
-            <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRaEEJBB_Salbr9l971Pl3p1a3qVVbt2ZrwE1r3sGEVzIvRF1mTWMBbkV-IdwG8sNM7MzRKPDoMB5lBlyn8vzTjKvshJsnkpwI2YBCZTimbY9eOO8pnvp-d&usqp=CAc"
-                 alt="">
-            <h2 class="hotShotProductName">AMD Ryzen 1700</h2>
+            <img src="@Model.HotShot?.Product?.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Url"
+                 alt="@Model.HotShot?.Product?.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
+            <h2 class="hotShotProductName">@Model.HotShot?.Product?.Name</h2>
             <div class="prices">
-                <span class="oldPrice">1200zł</span>
-                <span class="newPrice">600zł</span>
+                <span class="oldPrice">@Model.HotShot?.Product?.Price zł</span>
+                <span class="newPrice">@Model.HotShot?.NewPrice zł</span>
             </div>
             <div class="info">
-                <span>sprzedano <span class="soldValue">43</span> </span>
-                <span>pozostało <span class="leftValue">100</span> </span>
+                <span>sprzedano <span class="soldValue">@Model.HotShot?.ItemsSold</span> </span>
+                <span>pozostało <span class="leftValue">@(Model.HotShot?.Quantity-Model.HotShot?.ItemsSold)</span> </span>
             </div>
             <div class="progressBar">
                 <div class="progress"></div>
             </div>
             <h2 class="timeCaption">Oferta kończy się za:</h2>
-            <h2 class="timeLeft">05:29:03</h2>
+            <h2 class="timeLeft">00:00:00</h2>
+            @Html.HiddenFor(d=>d.FormattedEndDate, new { id = "endDate"})
         </div>
     </a>
 
@@ -68,7 +69,7 @@
         {
             <a href="@Url.Action("Details", "Products", new { @id = item.ProductId })" class="product">
                 <img src="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Url" alt="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
-                <h3>@item.Name</h3>
+                <h3>@item.Brand.Name @item.Name</h3>
                 <h4>@(item.Price)zł</h4>
             </a>
         }
@@ -97,7 +98,7 @@
         {
             <a href="@Url.Action("Details", "Products", new {id = item.ProductId})" class="product">
                 <img src="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Url" alt="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
-                <h3>@item.Name</h3>
+                <h3>@item.Brand.Name @item.Name</h3>
                 <h4>@item.Price zł</h4>
             </a>
         }

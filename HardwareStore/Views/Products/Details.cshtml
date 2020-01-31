@@ -59,13 +59,15 @@
         </div>
         <h2 class="price">@(Model.Product.Price)zł</h2>
 
-
         @if (SignInManager.IsSignedIn(User))
         {
             @using (Html.BeginForm("AddToCart", "ShoppingCart", FormMethod.Post, new { @class = "form" }))
             {
                 @Html.AntiForgeryToken()
-                <input type="number" name="quantity" value="1">
+
+                    <input type="number" name="quantity" value="1" disabled>
+
+                    <input type="number" name="quantity" value="1">
                 @Html.HiddenFor(d => d.Product.ProductId)
                 <button type="submit">Dodaj do koszyka</button>
             }
