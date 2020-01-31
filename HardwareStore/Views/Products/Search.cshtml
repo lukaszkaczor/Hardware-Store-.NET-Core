@@ -80,20 +80,19 @@
     </div>
     <div class="productList">
 
-        @for (int i = 0; i < Model.Products.Count; i++)
+        @foreach (var item in Model.Products)
         {
-            <a href="@Url.Action("Details", "Products", new { id = Model.Products[i].ProductId })" class="product">
-                <img src="@Model.Images[i].Url"
-                     alt="">
-                <h3>@Model.Products[i].Name</h3>
+            <a href="@Url.Action("Details", "Products", new { id = item.ProductId })" class="product">
+                <img src="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Url"
+                     alt="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
+                <h3>@item.Name</h3>
 
-                @for (int j = 0; j < Model.TagsValuesList[i].Count; j++)
+                @for (int i = 0; i < 4; i++)
                 {
-                    <h5>@Model.TagsValuesList[i][j].Name: @Model.TagsValuesList[i][j].Value</h5>
+                    <h5>@item.ProductTags?.FirstOrDefault()?.Tag?.Name: @item.ProductTags?.FirstOrDefault()?.Tag?.TagValues?.FirstOrDefault()?.Value</h5>
                 }
 
-
-                <h4>@(Model.Products[i].Price + "zł")</h4>
+                <h4>@(item.Price + "zł")</h4>
             </a>
         }
 

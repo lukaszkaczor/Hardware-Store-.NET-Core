@@ -286,29 +286,24 @@ namespace HardwareStore.Controllers
         {
             if (string.IsNullOrWhiteSpace(text)) return NotFound();
 
-            var products = _context.Products.Include(d=>d.Category).Where(d => d.Name.Contains(text.Trim())).ToList();
-            products.AddRange(_context.Products.Include(d => d.Brand).Where(d => d.Brand.Name.Contains(text.Trim())));
+
+            var products = await _context.Products
+                .Include(d => d.Category)
+                .Include(d => d.Gallery.ImageGalleries)
+                .ThenInclude(d => d.Image)
+                .Include(d => d.ProductTags)
+                .ThenInclude(d => d.Tag.TagValues)
+            .Where(d => d.Name.Contains(text.Trim()) || d.Brand.Name.Contains(text.Trim())).ToListAsync();
+
 
             if (filter != 0) products = products.Where(d => d.Category.SectionId == filter).ToList();
 
             products = products.Distinct().ToList();
-           
-            var imageList = new List<Image>();
-            var tagList = new List<List<TagNameWithValue>>();
-
-            foreach (var item in products)
-            {
-                imageList.Add(await ImageManager.GetFirstImageForProduct(_context, item.ProductId));
-                var tags = await TagManager.GetTagNameWithValues(_context, item);
-                tagList.Add(tags.Take(4).ToList());
-            }
-
+            
             var model = new ProductListViewModel()
             {
                 SearchText = text,
                 Products = products,
-                Images = imageList,
-                TagsValuesList = tagList
             };
 
             return View(model);

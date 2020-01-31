@@ -15,6 +15,7 @@ using HardwareStore.ViewModels.Home;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace HardwareStore.Controllers
 {
@@ -33,20 +34,14 @@ namespace HardwareStore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = await _context.Products.ToListAsync();
+            var products = await _context.Products
+                .Include(d => d.Gallery.ImageGalleries).ThenInclude(d => d.Image).ToListAsync();
 
             var recommendedProducts = products.Where(d => d.IsRecommended).Take(8).ToList();
-            var recommendedImages = new List<Image>();
 
-            foreach (var product in recommendedProducts)
-            {
-                recommendedImages.Add(await ImageManager.GetFirstImageForProduct(_context, product.ProductId));
-            }
 
 
             var bestsellersList = new List<Product>();
-            var bestsellersImages = new List<Image>();
-
             var bestsellers = from items in _context.OrderDetails
                               group items by new { items.ProductId }
                               into g
@@ -57,26 +52,21 @@ namespace HardwareStore.Controllers
             foreach (var item in orderedBestsellers)
             {
                 bestsellersList.Add(products.FirstOrDefault(d => d.ProductId == item.ProductId));
-                bestsellersImages.Add(await ImageManager.GetFirstImageForProduct(_context, item.ProductId));
             }
 
-            var posts = await _context.Posts.Include(d=>d.Gallery).Where(d => d.PublicationDate < DateTime.Now).Where(d=>d.IsActive).Take(5).ToListAsync();
-            //var postImages = new List<Image>();
-
-            //foreach (var post in posts)
-            //{
-            //    postImages.Add(await ImageManager.GetFirstImageForPost(_context, (int)post.GalleryId));
-            //}
+            var posts = await _context.Posts
+                .Include(d=>d.Gallery.ImageGalleries)
+                .ThenInclude(d=>d.Image)
+                .Where(d => d.PublicationDate < DateTime.Now)
+                .Where(d=>d.IsActive)
+                .Take(5).ToListAsync();
 
             var model = new HomeIndexViewModel()
             {
                 Brands = await _context.Brands.Include(d => d.Image).ToListAsync(),
                 RecommendedProducts = recommendedProducts,
-                RecommendedImages = recommendedImages,
                 Bestsellers = bestsellersList,
-                BestsellersImages = bestsellersImages,
                 Posts = posts
-                //PostImages = postImages
             };
 
 
