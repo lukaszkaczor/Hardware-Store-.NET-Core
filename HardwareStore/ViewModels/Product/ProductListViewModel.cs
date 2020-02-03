@@ -15,5 +15,8 @@ namespace HardwareStore.ViewModels.Product
         public List<List<TagNameWithValue>> TagsValuesList { get; set; }
         public List<Image> Images { get; set; }
         public SearchModel SearchModel { get; set; }
+        public string SearchText { get; set; }
+        public string brands { get; set; }
+        public string categoriess { get; set; }
     }
 }

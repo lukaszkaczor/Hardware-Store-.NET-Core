@@ -19,11 +19,11 @@
         <div class="path">
             <a href="@Url.Action("Index", "Home")">Kompex</a>
             <div class="break">></div>
-            <a href="">@Model.Product.Brand.Name</a>
+            <a href="@Url.Action("Search", "Products", new { SearchText = Model.Product.Category.Section.Name})">@Model.Product.Category.Section.Name</a>
             <div class="break">></div>
-            <a href="">@Model.Product.Category.Name</a>
+            <a href="@Url.Action("Search", "Products", new { SearchText = Model.Product.Category.Name})">@Model.Product.Category.Name</a>
             <div class="break">></div>
-            <a href="">@Model.Product.Brand.Name</a>
+            <a href="@Url.Action("Search", "Products", new { SearchText = Model.Product.Brand.Name})">@Model.Product.Brand.Name</a>
         </div>
     </div>
 
@@ -64,10 +64,7 @@
             @using (Html.BeginForm("AddToCart", "ShoppingCart", FormMethod.Post, new { @class = "form" }))
             {
                 @Html.AntiForgeryToken()
-
-                    <input type="number" name="quantity" value="1" disabled>
-
-                    <input type="number" name="quantity" value="1">
+                <input type="number" name="quantity" value="1">
                 @Html.HiddenFor(d => d.Product.ProductId)
                 <button type="submit">Dodaj do koszyka</button>
             }

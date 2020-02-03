@@ -50,6 +50,7 @@ namespace HardwareStore.Controllers
             var product = await _context.Products
                 .Include(p => p.Brand)
                 .Include(p => p.Category)
+                .ThenInclude(d => d.Section)
                 .Include(p => p.Gallery)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
 
@@ -285,9 +286,9 @@ namespace HardwareStore.Controllers
         [HttpGet]
         [AllowAnonymous]
         //public async Task<ActionResult> Search(string text, int filter)
-        public async Task<ActionResult> Search(SearchModel searchModel)
+        public async Task<ActionResult> Search(string searchText, int filter, string brands, string categoriess)
         {
-            if (string.IsNullOrWhiteSpace(searchModel.SearchText)) return NotFound();
+            if (string.IsNullOrWhiteSpace(searchText)) return NotFound();
 
 
             var products = await _context.Products
@@ -296,101 +297,121 @@ namespace HardwareStore.Controllers
                 .ThenInclude(d => d.Image)
                 .Include(d => d.ProductTags)
                 .ThenInclude(d => d.Tag.TagValues)
-                .Where(d => d.Name.Contains(searchModel.SearchText.Trim()) ||
-                            d.Brand.Name.Contains(searchModel.SearchText.Trim())
-                                                                       || d.Category.Name.Contains(searchModel.SearchText.Trim())).ToListAsync();
+                .Where(d => d.Name.Contains(searchText.Trim()) ||
+                            d.Brand.Name.Contains(searchText.Trim())
+                                                                       || d.Category.Name.Contains(searchText.Trim())).ToListAsync();
 
-
-            if (searchModel.Filter != 0) products = products.Where(d => d.Category.SectionId == searchModel.Filter).ToList();
-
+            if (filter != 0) products = products.Where(d => d.Category.SectionId == filter).ToList();
             products = products.Distinct().ToList();
 
-            var brands = new List<Brand>();
-            var brandFilters = new List<BrandFilter>();
+            var brandsFromDb = await _context.Brands.ToListAsync();
+            var categoriesFromDb = await _context.Categories.ToListAsync();
+            
+            var searchModel = new SearchModel
+            {
+                BrandFilters = new List<BrandFilter>(),
+                CategoryFilters = new List<CategoryFilter>()
+            };
+
+
+            var fbList = new List<Brand>();
+
+
+            List<string> filteredBrands = null;
+            if (brands != null)
+            {
+                filteredBrands = brands.Split(',').ToList();
+            }
+
+            if (filteredBrands != null)
+            {
+                foreach (var filteredBrand in filteredBrands)
+                {
+                    fbList.Add(brandsFromDb.FirstOrDefault(d => d.BrandId.ToString() == filteredBrand));
+                }
+            }
+
+
+            List<string> filteredCategories = null;
+            var catList = new List<Category>();
+
+            if (categoriess != null)
+            {
+                filteredCategories = categoriess.Split(',').ToList();
+            }
+
+            if (filteredCategories != null)
+            {
+                foreach (var filteredCategory in filteredCategories)
+                {
+                    catList.Add(categoriesFromDb.FirstOrDefault(d => d.CategoryId.ToString() == filteredCategory));
+                }
+            }
+
+
+
+
+            var categoryList = new List<Category>();
+
+            var brandList = new List<Brand>();
             var filteredProducts = new List<Product>();
 
-            if (searchModel.BrandFilters == null)
+            foreach (var product in products)
             {
-                foreach (var product in products)
-                {
-                    brands.Add(await _context.Brands.SingleOrDefaultAsync(d => d.BrandId == product.BrandId));
-                }
-
-                brands = brands.Distinct().ToList();
-                foreach (var brand in brands)
-                {
-                    brandFilters.Add(new BrandFilter()
-                    {
-                        Brand = brand,
-                        IsChecked = false
-                    });
-                }
-                searchModel.BrandFilters = brandFilters;
-                filteredProducts = products;
+                brandList.Add(brandsFromDb.SingleOrDefault(d => d.BrandId == product.BrandId));
+                categoryList.Add(categoriesFromDb.SingleOrDefault(d => d.CategoryId == product.CategoryId));
             }
-            else
+            brandList = brandList.Distinct().ToList();
+            categoryList = categoryList.Distinct().ToList();
+
+            foreach (var brand in brandList)
             {
-                foreach (var filter in searchModel.BrandFilters)
+                searchModel.BrandFilters.Add(new BrandFilter()
                 {
-                    if (!searchModel.BrandFilters.Any(d => d.IsChecked))
-                    {
-                        filteredProducts = products;
-                        break;
-                    }
-                    if (filter.IsChecked)
-                    {
-                        filteredProducts.AddRange(products.Where(d => d.BrandId == filter.Brand.BrandId).ToList());
-                    }
-                }
+                    Brand = brand,
+                    IsChecked = fbList.Any(d => d.BrandId == brand.BrandId)
+                });
             }
 
-            var categories = new List<Category>();
-            var categoryFilters = new List<CategoryFilter>();
-
-
-            var dd = new List<Product>();
-
-            if (searchModel.CategoryFilters == null)
+            foreach (var category in categoryList)
             {
-                foreach (var product in products)
+                searchModel.CategoryFilters.Add(new CategoryFilter()
                 {
-                    categories.Add(await _context.Categories.SingleOrDefaultAsync(d => d.CategoryId == product.CategoryId));
-                }
-
-                categories = categories.Distinct().ToList();
-                foreach (var category in categories)
-                {
-                    categoryFilters.Add(new CategoryFilter()
-                    {
-                        Category = category,
-                        IsChecked = false
-                    });
-                }
-                searchModel.CategoryFilters = categoryFilters;
-                dd = filteredProducts;
-            }
-            else
-            {
-                foreach (var filter in searchModel.CategoryFilters)
-                {
-                    if (!searchModel.CategoryFilters.Any(d => d.IsChecked))
-                    {
-                        dd = filteredProducts;
-                        break;
-                    }
-                    if (filter.IsChecked)
-                    {
-                        dd.AddRange(filteredProducts.Where(d => d.CategoryId == filter.Category.CategoryId).ToList());
-                    }
-                }
+                    Category = category,
+                    IsChecked = catList.Any(d => d.CategoryId == category.CategoryId)
+                });
             }
 
+            var tej = new List<Product>();
+
+            if (fbList.Any())
+            {
+                foreach (var brand in fbList) filteredProducts.AddRange(products.Where(d => d.BrandId == brand.BrandId));
+            }
+
+
+
+            if (catList.Any())
+            {
+                foreach (var category in catList) tej.AddRange(filteredProducts.Where(d => d.CategoryId == category.CategoryId));
+            }
+
+
+
+
+            if (tej.Count == 0)
+            {
+                tej = products;
+            }
 
 
             var model = new ProductListViewModel()
             {
-                Products = dd,
+                Products = tej,
                 SearchModel = searchModel,
+                SearchText = searchText,
+                brands = brands,
+                categoriess = categoriess
             };
 
             return View(model);

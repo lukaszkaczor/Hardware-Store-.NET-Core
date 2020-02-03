@@ -90,7 +90,6 @@ namespace HardwareStore.Controllers
 
                     await _context.Orders.AddAsync(order);
                     await _context.SaveChangesAsync();
-
                     var orderDetailsList = new List<OrderDetails>();
 
                     foreach (var shoppingCart in productsInShoppingCart)

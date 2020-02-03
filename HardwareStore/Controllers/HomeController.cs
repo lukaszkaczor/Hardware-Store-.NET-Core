@@ -79,8 +79,8 @@ namespace HardwareStore.Controllers
             var hotShotAlreadyBought = false;
             if (userId != null)
             {
-                 hotShotAlreadyBought = await _context.AccountHotShots.Where(d => d.IdentityUserId == userId)
-                    .AnyAsync(d => d.HotShotId == hotShot.HotShotId.ToString());
+                 //hotShotAlreadyBought = await _context.AccountHotShots.Where(d => d.IdentityUserId == userId)
+                 //   .AnyAsync(d => d.HotShotId == hotShot.HotShotId.ToString());
             }
 
             var model = new HomeIndexViewModel()

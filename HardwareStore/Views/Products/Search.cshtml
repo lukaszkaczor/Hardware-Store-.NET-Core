@@ -8,10 +8,10 @@
     <div class="path">
         <a href="@Url.Action("Index", "Home")">Kompex</a>
         <div class="break">></div>
-        <a href="">"@Model.SearchModel.SearchText"</a>
+        <a href="">"@Model.SearchText"</a>
     </div>
     <div class="searchResults">
-        <h1 class="searchedPhrase">"@Model.SearchModel.SearchText"</h1>
+        <h1 class="searchedPhrase">"@Model.SearchText"</h1>
         <h1 class="quantity">(@Model.Products.Count wyników)</h1>
     </div>
 </div>
@@ -25,14 +25,14 @@
     </select>
 </div>
 <div class="productListContent">
-    <form class="filterHolder">
+    <div class="filterHolder">
         @Html.HiddenFor(d => d.SearchModel.SearchText)
         <!--temp  -->
         <button id="closeFiltersBtn">X</button>
         <!--  -->
         <div class="filtersCaptionHolder">
             <h1>Filtry</h1>
-            <a href="@Url.Action("Search", new{ SearchText = Model.SearchModel.SearchText})" class="clearFiltersBtn">Wczyść filtry</a>
+            <a href="@Url.Action("Search", new{ SearchText = Model.SearchText})" class="clearFiltersBtn">Wczyść filtry</a>
         </div>
 
         <div class="filterGroup">
@@ -41,9 +41,9 @@
             @for (int i = 0; i < Model.SearchModel.BrandFilters.Count; i++)
             {
                 <div class="filter">
-                    @Html.CheckBoxFor(d => Model.SearchModel.BrandFilters[i].IsChecked)
+                    @Html.CheckBoxFor(d => Model.SearchModel.BrandFilters[i].IsChecked, new { @class = "brandInput" })
                     @Html.LabelFor(d => Model.SearchModel.BrandFilters[i].IsChecked, Model.SearchModel.BrandFilters[i].Brand.Name)
-                    @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.BrandId)
+                    @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.BrandId, new { @class = "brandId" })
                     @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.Name)
                 </div>
             }
@@ -68,6 +68,15 @@
                        id="" placeholder="do">
             </div>
         </div>
+        <form class="filterGroup">
+            @Html.HiddenFor(d=>d.brands, new{ @id = "brandText"})
+            @Html.HiddenFor(d=>d.categoriess, new{ @id = "categoryText"})
+            @*<input name="brands" id="brandText" type="hidden">
+            <input name="categoriess" id="categoryText" type="hidden">*@
+            @Html.HiddenFor(d => d.SearchText)
+
+            <button type="submit">Filtruj</button>
+        </form>
 
         <div class="filterGroup">
             <h2 class="filterGroupName">Kategoria</h2>
@@ -75,16 +84,16 @@
             @for (int i = 0; i < Model.SearchModel.CategoryFilters.Count; i++)
             {
                 <div class="filter">
-                    @Html.CheckBoxFor(d => Model.SearchModel.CategoryFilters[i].IsChecked)
+                    @Html.CheckBoxFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, new{ @class = "categoryInput"})
                     @Html.LabelFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, Model.SearchModel.CategoryFilters[i].Category.Name)
-                    @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.CategoryId)
+                    @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.CategoryId, new { @class = "categoryId" })
                     @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.Name)
                 </div>
             }
 
         </div>
         <button type="submit">Filtruj</button>
-    </form>
+    </div>
     <div class="productList">
 
         @foreach (var item in Model.Products)

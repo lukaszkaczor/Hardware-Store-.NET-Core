@@ -48,16 +48,16 @@ function setProgressBarWidth() {
     }
 }
 
-setInterval(() => {
-    var endDate = new Date($("#endDate").val()).getTime() / 1000;
-    var now = new Date().getTime() / 1000;
+//setInterval(() => {
+//    var endDate = new Date($("#endDate").val()).getTime() / 1000;
+//    var now = new Date().getTime() / 1000;
 
-    var timeLeftInSeconds = endDate - now;
+//    var timeLeftInSeconds = endDate - now;
 
-    var time = new Date(timeLeftInSeconds * 1000).toISOString().substr(11, 8);
+//    var time = new Date(timeLeftInSeconds * 1000).toISOString().substr(11, 8);
 
-    $(".timeLeft").text(time);
-}, 1000);
+//    $(".timeLeft").text(time);
+//}, 1000);
 
 //Disable transitions on resize
 let resizeTimer;
