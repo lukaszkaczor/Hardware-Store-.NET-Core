@@ -34,31 +34,24 @@
             <h1>Filtry</h1>
             <a href="@Url.Action("Search", new{ SearchText = Model.SearchText})" class="clearFiltersBtn">Wczyść filtry</a>
         </div>
+        
+        @if (Model.SearchModel.BrandFilters.Count > 1)
+        {
+            <div class="filterGroup">
+                <h2 class="filterGroupName">Producent</h2>
 
-        <div class="filterGroup">
-            <h2 class="filterGroupName">Producent</h2>
+                @for (int i = 0; i < Model.SearchModel.BrandFilters.Count; i++)
+                {
+                    <div class="filter">
+                        @Html.CheckBoxFor(d => Model.SearchModel.BrandFilters[i].IsChecked, new {@class = "brandInput"})
+                        @Html.LabelFor(d => Model.SearchModel.BrandFilters[i].IsChecked, (Model.SearchModel.BrandFilters[i].Brand.Name @*+" ("+Model.Products.Count(d => d.BrandId == Model.SearchModel.BrandFilters[i].Brand.BrandId)+")"*@))
+                        @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.BrandId, new {@class = "brandId"})
+                        @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.Name)
+                    </div>
+                }
 
-            @for (int i = 0; i < Model.SearchModel.BrandFilters.Count; i++)
-            {
-                <div class="filter">
-                    @Html.CheckBoxFor(d => Model.SearchModel.BrandFilters[i].IsChecked, new { @class = "brandInput" })
-                    @Html.LabelFor(d => Model.SearchModel.BrandFilters[i].IsChecked, Model.SearchModel.BrandFilters[i].Brand.Name)
-                    @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.BrandId, new { @class = "brandId" })
-                    @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.Name)
-                </div>
-            }
-
-
-            @*<div class="filter">
-                <input type="checkbox" name="" id="i2">
-                <label for="i2">Microsoft <span>(20)</span></label>
             </div>
-            <div class="filter">
-                <input type="checkbox" name="" id="i3">
-                <label for="i3">Logitech <span>(20)</span></label>
-            </div>*@
-            @*<button type="submit">Pokaż więcej</button>*@
-        </div>
+        }
         <div class="filterGroup">
 
             <h2 class="filterGroupName">Cena</h2>
@@ -68,31 +61,34 @@
                        id="" placeholder="do">
             </div>
         </div>
+
+        @if (Model.SearchModel.CategoryFilters.Count >1)
+        {
+
+
+            <div class="filterGroup">
+                <h2 class="filterGroupName">Kategoria</h2>
+
+                @for (int i = 0; i < Model.SearchModel.CategoryFilters.Count; i++)
+                {
+                    <div class="filter">
+                        @Html.CheckBoxFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, new {@class = "categoryInput"})
+                        @Html.LabelFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, Model.SearchModel.CategoryFilters[i].Category.Name)
+                        @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.CategoryId, new {@class = "categoryId"})
+                        @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.Name)
+                    </div>
+                }
+            </div>
+        }
         <form class="filterGroup">
-            @Html.HiddenFor(d=>d.brands, new{ @id = "brandText"})
-            @Html.HiddenFor(d=>d.categoriess, new{ @id = "categoryText"})
+            @Html.HiddenFor(d => d.brands, new { @id = "brandText" })
+            @Html.HiddenFor(d => d.categoriess, new { @id = "categoryText" })
             @*<input name="brands" id="brandText" type="hidden">
             <input name="categoriess" id="categoryText" type="hidden">*@
             @Html.HiddenFor(d => d.SearchText)
 
             <button type="submit">Filtruj</button>
         </form>
-
-        <div class="filterGroup">
-            <h2 class="filterGroupName">Kategoria</h2>
-
-            @for (int i = 0; i < Model.SearchModel.CategoryFilters.Count; i++)
-            {
-                <div class="filter">
-                    @Html.CheckBoxFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, new{ @class = "categoryInput"})
-                    @Html.LabelFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, Model.SearchModel.CategoryFilters[i].Category.Name)
-                    @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.CategoryId, new { @class = "categoryId" })
-                    @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.Name)
-                </div>
-            }
-
-        </div>
-        <button type="submit">Filtruj</button>
     </div>
     <div class="productList">
 
@@ -101,14 +97,14 @@
             <a href="@Url.Action("Details", "Products", new { id = item.ProductId })" class="product">
                 <img src="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Url"
                      alt="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
-                <h3>@item.Name</h3>
+                <h3>@item.Brand.Name @item.Name</h3>
 
                 @for (int i = 0; i < 4; i++)
                 {
                     <h5>@item.ProductTags?.FirstOrDefault()?.Tag?.Name: @item.ProductTags?.FirstOrDefault()?.Tag?.TagValues?.FirstOrDefault()?.Value</h5>
                 }
 
-                <h4>@(item.Price + "zł")</h4>
+                <h4>@(item.Price.ToString("C"))</h4>
             </a>
         }
 

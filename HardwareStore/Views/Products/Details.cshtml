@@ -57,7 +57,7 @@
         <div class="ratings">
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(21 opinii)</span>
         </div>
-        <h2 class="price">@(Model.Product.Price)zł</h2>
+        <h2 class="price">@(Model.Product.Price.ToString("C"))</h2>
 
         @if (SignInManager.IsSignedIn(User))
         {

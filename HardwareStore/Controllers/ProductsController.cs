@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -283,9 +284,9 @@ namespace HardwareStore.Controllers
             return RedirectToAction(nameof(Details), new { id = model.ProductId });
         }
 
+
         [HttpGet]
         [AllowAnonymous]
-        //public async Task<ActionResult> Search(string text, int filter)
         public async Task<ActionResult> Search(string searchText, int filter, string brands, string categoriess)
         {
             if (string.IsNullOrWhiteSpace(searchText)) return NotFound();
@@ -306,16 +307,14 @@ namespace HardwareStore.Controllers
 
             var brandsFromDb = await _context.Brands.ToListAsync();
             var categoriesFromDb = await _context.Categories.ToListAsync();
-            
+
             var searchModel = new SearchModel
             {
                 BrandFilters = new List<BrandFilter>(),
                 CategoryFilters = new List<CategoryFilter>()
             };
 
-
             var fbList = new List<Brand>();
-
 
             List<string> filteredBrands = null;
             if (brands != null)
@@ -349,10 +348,7 @@ namespace HardwareStore.Controllers
             }
 
 
-
-
             var categoryList = new List<Category>();
-
             var brandList = new List<Brand>();
             var filteredProducts = new List<Product>();
 
@@ -382,32 +378,19 @@ namespace HardwareStore.Controllers
                 });
             }
 
-            var tej = new List<Product>();
+            var productList = new List<Product>();
 
-            if (fbList.Any())
-            {
-                foreach (var brand in fbList) filteredProducts.AddRange(products.Where(d => d.BrandId == brand.BrandId));
-            }
+            if (fbList.Any()) foreach (var brand in fbList) filteredProducts.AddRange(products.Where(d => d.BrandId == brand.BrandId));
+            else filteredProducts = products;
 
+            if (catList.Any()) foreach (var category in catList) productList.AddRange(filteredProducts.Where(d => d.CategoryId == category.CategoryId));
+            else productList = filteredProducts;
 
-
-            if (catList.Any())
-            {
-                foreach (var category in catList) tej.AddRange(filteredProducts.Where(d => d.CategoryId == category.CategoryId));
-            }
-
-
-
-
-            if (tej.Count == 0)
-            {
-                tej = products;
-            }
 
 
             var model = new ProductListViewModel()
             {
-                Products = tej,
+                Products = productList,
                 SearchModel = searchModel,
                 SearchText = searchText,
                 brands = brands,
