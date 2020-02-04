@@ -13,6 +13,7 @@ using HardwareStore.Models;
 using HardwareStore.Models.DbModels;
 using HardwareStore.Models.ModelsConfig;
 using HardwareStore.Models.SearchingAndFiltering;
+using HardwareStore.Models.SearchingAndFiltering.Interfaces;
 using HardwareStore.Models.TransferModels;
 using HardwareStore.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
@@ -287,10 +288,9 @@ namespace HardwareStore.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> Search(string searchText, int filter, string brands, string categoriess)
+        public async Task<ActionResult> Search(string searchText, int filter, string brands, string categories, double? minPrice, double? maxPrice)
         {
             if (string.IsNullOrWhiteSpace(searchText)) return NotFound();
-
 
             var products = await _context.Products
                 .Include(d => d.Category)
@@ -298,9 +298,9 @@ namespace HardwareStore.Controllers
                 .ThenInclude(d => d.Image)
                 .Include(d => d.ProductTags)
                 .ThenInclude(d => d.Tag.TagValues)
-                .Where(d => d.Name.Contains(searchText.Trim()) ||
-                            d.Brand.Name.Contains(searchText.Trim())
-                                                                       || d.Category.Name.Contains(searchText.Trim())).ToListAsync();
+                .Where(d => d.Name.Contains(searchText.Trim()) 
+                            || d.Brand.Name.Contains(searchText.Trim())
+                            || d.Category.Name.Contains(searchText.Trim())).ToListAsync();
 
             if (filter != 0) products = products.Where(d => d.Category.SectionId == filter).ToList();
             products = products.Distinct().ToList();
@@ -308,45 +308,13 @@ namespace HardwareStore.Controllers
             var brandsFromDb = await _context.Brands.ToListAsync();
             var categoriesFromDb = await _context.Categories.ToListAsync();
 
-            var searchModel = new SearchModel
-            {
-                BrandFilters = new List<BrandFilter>(),
-                CategoryFilters = new List<CategoryFilter>()
-            };
+            var searchModel = new SearchModel { BrandFilters = new List<BrandFilter>(), CategoryFilters = new List<CategoryFilter>() };
 
-            var fbList = new List<Brand>();
+            var brandFilters = new List<IModel>();
+            if (brands != null) brandFilters = SearchManager.GetFilters(brands, brandsFromDb);
 
-            List<string> filteredBrands = null;
-            if (brands != null)
-            {
-                filteredBrands = brands.Split(',').ToList();
-            }
-
-            if (filteredBrands != null)
-            {
-                foreach (var filteredBrand in filteredBrands)
-                {
-                    fbList.Add(brandsFromDb.FirstOrDefault(d => d.BrandId.ToString() == filteredBrand));
-                }
-            }
-
-
-            List<string> filteredCategories = null;
-            var catList = new List<Category>();
-
-            if (categoriess != null)
-            {
-                filteredCategories = categoriess.Split(',').ToList();
-            }
-
-            if (filteredCategories != null)
-            {
-                foreach (var filteredCategory in filteredCategories)
-                {
-                    catList.Add(categoriesFromDb.FirstOrDefault(d => d.CategoryId.ToString() == filteredCategory));
-                }
-            }
-
+            var categoryFilters = new List<IModel>();
+            if (categories != null) categoryFilters = SearchManager.GetFilters(categories, categoriesFromDb);
 
             var categoryList = new List<Category>();
             var brandList = new List<Brand>();
@@ -357,6 +325,7 @@ namespace HardwareStore.Controllers
                 brandList.Add(brandsFromDb.SingleOrDefault(d => d.BrandId == product.BrandId));
                 categoryList.Add(categoriesFromDb.SingleOrDefault(d => d.CategoryId == product.CategoryId));
             }
+
             brandList = brandList.Distinct().ToList();
             categoryList = categoryList.Distinct().ToList();
 
@@ -365,7 +334,7 @@ namespace HardwareStore.Controllers
                 searchModel.BrandFilters.Add(new BrandFilter()
                 {
                     Brand = brand,
-                    IsChecked = fbList.Any(d => d.BrandId == brand.BrandId)
+                    IsChecked = brandFilters.Any(d => d.Id == brand.BrandId)
                 });
             }
 
@@ -374,27 +343,31 @@ namespace HardwareStore.Controllers
                 searchModel.CategoryFilters.Add(new CategoryFilter()
                 {
                     Category = category,
-                    IsChecked = catList.Any(d => d.CategoryId == category.CategoryId)
+                    IsChecked = categoryFilters.Any(d => d.Id == category.CategoryId)
                 });
             }
+            
 
             var productList = new List<Product>();
 
-            if (fbList.Any()) foreach (var brand in fbList) filteredProducts.AddRange(products.Where(d => d.BrandId == brand.BrandId));
+            if (brandFilters.Any()) foreach (var brand in brandFilters) filteredProducts.AddRange(products.Where(d => d.BrandId == brand.Id));
             else filteredProducts = products;
 
-            if (catList.Any()) foreach (var category in catList) productList.AddRange(filteredProducts.Where(d => d.CategoryId == category.CategoryId));
+            if (categoryFilters.Any()) foreach (var category in categoryFilters) productList.AddRange(filteredProducts.Where(d => d.CategoryId == category.Id));
             else productList = filteredProducts;
 
-
+            if (minPrice > 0) productList = productList.Where(d => d.Price >= minPrice).ToList();
+            if (maxPrice > 0) productList = productList.Where(d => d.Price <= maxPrice).ToList();
 
             var model = new ProductListViewModel()
             {
                 Products = productList,
                 SearchModel = searchModel,
                 SearchText = searchText,
-                brands = brands,
-                categoriess = categoriess
+                Brands = brands,
+                Categories = categories,
+                MaxPrice = maxPrice,
+                MinPrice = minPrice
             };
 
             return View(model);

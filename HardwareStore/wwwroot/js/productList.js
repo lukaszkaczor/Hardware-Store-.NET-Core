@@ -18,24 +18,23 @@ $(window).resize(function () {
 
 var checkedInputs = $(".brandInput");
 var brandsId = $(".brandId");
-var str = new Set();
+var brandString = new Set();
 
 
 $(checkedInputs).on('click', function () {
     for (var i = 0; i < checkedInputs.length; i++) {
         if (checkedInputs[i].checked) {
-            str.add(brandsId[i].value);
+            brandString.add(brandsId[i].value);
             //continue;
         }
         else {
-            str.delete((brandsId[i].value));
+            brandString.delete(brandsId[i].value);
         }
     }
-    console.log(str);
-    var tej = Array.from(str).join(',');
+    console.log(brandString);
+    var brands = Array.from(brandString).join(',');
 
-    console.log(tej);
-    $("#brandText").val(tej);
+    $("#brandText").val(brands);
 });
 
 
@@ -51,12 +50,32 @@ $(categoryInputs).on('click', function () {
             //continue;
         }
         else {
-            categoryString.delete((categoryId[i].value));
+            categoryString.delete(categoryId[i].value);
         }
     }
     console.log(categoryString);
-    var teje = Array.from(categoryString).join(',');
+    var categories = Array.from(categoryString).join(',');
 
-    console.log(teje);
-    $("#categoryText").val(teje);
+    console.log(categories);
+    $("#categoryText").val(categories);
 });
+
+$("#maxPrice").on('change', function () {
+    $("#maxPriceText").val($("#maxPrice").val());
+
+});
+
+$("#minPrice").on('change', function () {
+    $("#minPriceText").val($("#minPrice").val());
+});
+
+//function checkPrices(min, max) {
+//    if (min > max) {
+//        $("#filterBtn").prop('disabled', true)
+//    } else {
+//        $("#filterBtn").prop('disabled', false)
+
+//    }
+
+
+//}

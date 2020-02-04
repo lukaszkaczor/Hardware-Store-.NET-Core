@@ -83,7 +83,7 @@
 
         @foreach (var item in Model.Brands)
         {
-            <a href="@Url.Action("Search", "Products", new { Text = item.Name, @Filter = 0})" class="brand">
+            <a href="@Url.Action("Search", "Products", new { SearchText = item.Name, @Filter = 0})" class="brand">
                 <img src="@item.Image.Url"
                      alt="@item.Name">
             </a>

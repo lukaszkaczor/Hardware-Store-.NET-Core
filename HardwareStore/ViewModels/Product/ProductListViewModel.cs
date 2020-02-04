@@ -16,7 +16,9 @@ namespace HardwareStore.ViewModels.Product
         public List<Image> Images { get; set; }
         public SearchModel SearchModel { get; set; }
         public string SearchText { get; set; }
-        public string brands { get; set; }
-        public string categoriess { get; set; }
+        public string Brands { get; set; }
+        public string Categories { get; set; }
+        public double? MinPrice { get; set; }
+        public double? MaxPrice { get; set; }
     }
 }

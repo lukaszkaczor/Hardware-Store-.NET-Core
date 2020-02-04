@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using HardwareStore.Models.ModelsConfig;
+using HardwareStore.Models.SearchingAndFiltering.Interfaces;
 
 namespace HardwareStore.Models.DbModels
 {
-    public class Category
+    public class Category : IModel
     {
         public int CategoryId { get; set; }
 
@@ -19,5 +21,15 @@ namespace HardwareStore.Models.DbModels
         public int SectionId { get; set; }
         public Section Section { get; set; }
 
+        [NotMapped]
+        public int Id
+        {
+            get => CategoryId;
+            set
+            {
+                if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value));
+                Id = CategoryId;
+            }
+        }
     }
 }

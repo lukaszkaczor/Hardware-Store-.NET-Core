@@ -34,7 +34,7 @@
             <h1>Filtry</h1>
             <a href="@Url.Action("Search", new{ SearchText = Model.SearchText})" class="clearFiltersBtn">Wczyść filtry</a>
         </div>
-        
+
         @if (Model.SearchModel.BrandFilters.Count > 1)
         {
             <div class="filterGroup">
@@ -43,9 +43,9 @@
                 @for (int i = 0; i < Model.SearchModel.BrandFilters.Count; i++)
                 {
                     <div class="filter">
-                        @Html.CheckBoxFor(d => Model.SearchModel.BrandFilters[i].IsChecked, new {@class = "brandInput"})
-                        @Html.LabelFor(d => Model.SearchModel.BrandFilters[i].IsChecked, (Model.SearchModel.BrandFilters[i].Brand.Name @*+" ("+Model.Products.Count(d => d.BrandId == Model.SearchModel.BrandFilters[i].Brand.BrandId)+")"*@))
-                        @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.BrandId, new {@class = "brandId"})
+                        @Html.CheckBoxFor(d => Model.SearchModel.BrandFilters[i].IsChecked, new { @class = "brandInput" })
+                        @Html.LabelFor(d => Model.SearchModel.BrandFilters[i].IsChecked, (Model.SearchModel.BrandFilters[i].Brand.Name@*+" ("+Model.Products.Count(d => d.BrandId == Model.SearchModel.BrandFilters[i].Brand.BrandId)+")"*@))
+                        @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.BrandId, new { @class = "brandId" })
                         @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.Name)
                     </div>
                 }
@@ -56,13 +56,13 @@
 
             <h2 class="filterGroupName">Cena</h2>
             <div class="filter filterPrice">
-                <input type="number" name="" id="" placeholder="od"> <span>-</span>
-                <input type="number" name=""
-                       id="" placeholder="do">
+                @Html.TextBoxFor(d => d.MinPrice, new { Placeholder = "od", type = "number", id = "minPrice" })
+                <span>-</span>
+                @Html.TextBoxFor(d => d.MaxPrice, new { Placeholder = "do", type = "number", id = "maxPrice" })
             </div>
         </div>
 
-        @if (Model.SearchModel.CategoryFilters.Count >1)
+        @if (Model.SearchModel.CategoryFilters.Count > 1)
         {
 
 
@@ -72,22 +72,22 @@
                 @for (int i = 0; i < Model.SearchModel.CategoryFilters.Count; i++)
                 {
                     <div class="filter">
-                        @Html.CheckBoxFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, new {@class = "categoryInput"})
+                        @Html.CheckBoxFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, new { @class = "categoryInput" })
                         @Html.LabelFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, Model.SearchModel.CategoryFilters[i].Category.Name)
-                        @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.CategoryId, new {@class = "categoryId"})
+                        @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.CategoryId, new { @class = "categoryId" })
                         @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.Name)
                     </div>
                 }
             </div>
         }
         <form class="filterGroup">
-            @Html.HiddenFor(d => d.brands, new { @id = "brandText" })
-            @Html.HiddenFor(d => d.categoriess, new { @id = "categoryText" })
-            @*<input name="brands" id="brandText" type="hidden">
-            <input name="categoriess" id="categoryText" type="hidden">*@
+            @Html.HiddenFor(d => d.Brands, new { @id = "brandText" })
+            @Html.HiddenFor(d => d.Categories, new { @id = "categoryText" })
+            @Html.HiddenFor(d=>d.MaxPrice, new { @id = "maxPriceText"})
+            @Html.HiddenFor(d=>d.MinPrice, new { @id = "minPriceText"})
             @Html.HiddenFor(d => d.SearchText)
 
-            <button type="submit">Filtruj</button>
+            <button id="filterBtn" type="submit">Filtruj</button>
         </form>
     </div>
     <div class="productList">
