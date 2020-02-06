@@ -7,7 +7,7 @@
 @model HardwareStore.ViewModels.Home.HomeIndexViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Kompex";
     Layout = "_UserLayout";
     var cssClass = "imgShow";
 }
@@ -25,14 +25,14 @@
             </div>
             <div class="info">
                 <span>sprzedano <span class="soldValue">@Model.HotShot?.ItemsSold</span> </span>
-                <span>pozostało <span class="leftValue">@(Model.HotShot?.Quantity-Model.HotShot?.ItemsSold)</span> </span>
+                <span>pozostało <span class="leftValue">@(Model.HotShot?.Quantity - Model.HotShot?.ItemsSold)</span> </span>
             </div>
             <div class="progressBar">
                 <div class="progress"></div>
             </div>
             <h2 class="timeCaption">Oferta kończy się za:</h2>
             <h2 class="timeLeft">00:00:00</h2>
-            @Html.HiddenFor(d=>d.FormattedEndDate, new { id = "endDate"})
+            @Html.HiddenFor(d => d.FormattedEndDate, new { id = "endDate" })
         </div>
     </a>
 
@@ -46,7 +46,7 @@
 
         @foreach (var item in Model.Posts)
         {
-            if (item.Gallery!= null)
+            if (item.Gallery != null)
             {
                 <a href="@Url.Action("Details", "Posts", new {id = item.PostId})" class="imgHolder @cssClass">
                     <img class="img" src="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Url" alt="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
@@ -56,7 +56,7 @@
             }
         }
 
-       <div class="right-arrow">
+        <div class="right-arrow">
             <div class="arrow"><i class="fas fa-angle-right"></i></div>
         </div>
         <div class="dotHolder">
@@ -113,9 +113,14 @@
                 <h1>@post.Title<a href="@Url.Action("Details", "Posts", new { @id = post.PostId})">[>>]</a></h1>
             </div>
         }
-    
 
-      <a href="" class="morePosts">Pokaż wszystkie</a>
+
+        <a href="" class="morePosts">Pokaż wszystkie</a>
     </div>
 
 </div>
+
+@section Scripts
+{
+    <script src="~/js/hotShot.js"></script>
+}

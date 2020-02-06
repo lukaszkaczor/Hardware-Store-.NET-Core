@@ -9,19 +9,19 @@ namespace HardwareStore.Models.SearchingAndFiltering
 {
     public class SearchManager
     {
-        public static List<IModel> GetFilters<T>(string text, IList<T> modelList) where T : IModel
+        public static List<IModel> GetFilters<T>(string text, IList<T> iModelList) where T : IModel
         {
             if (String.IsNullOrWhiteSpace(text)) throw new ArgumentNullException();
             
             var filteredText = text.Split(',').ToList();
-            var fbList = new List<IModel>();
+            var objectList = new List<IModel>();
 
             foreach (var item in filteredText)
             {
-                fbList.Add(modelList.FirstOrDefault(d => d.Id.ToString() == item));
+                objectList.Add(iModelList.FirstOrDefault(d => d.Id.ToString() == item));
             }
 
-            return fbList;
+            return objectList;
         }
     }
 }

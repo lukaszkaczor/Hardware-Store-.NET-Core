@@ -1,0 +1,24 @@
+﻿@model HardwareStore.ViewModels.Admin.UserRolesViewModel
+
+@{
+
+}
+
+
+<h1>@Model.User.Email</h1>
+
+@Html.ActionLink("Dodaj rolę", "AssignRoleToUser", new{ id = Model.User.Id})
+
+<table class="table">
+    @foreach (var role in Model.Roles)
+    {
+        <tr>
+            <td>
+                @role.Name
+            </td>
+            <td>
+                @Html.ActionLink("Usuń", "DeleteRoleFromUser", new { roleId = role.Id, userId = Model.User.Id})
+            </td>
+        </tr>
+    }
+</table>

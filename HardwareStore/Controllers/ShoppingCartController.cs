@@ -45,7 +45,6 @@ namespace HardwareStore.Controllers
             }
 
             return View(model);
-            //return View(model);
         }
 
         [HttpPost]

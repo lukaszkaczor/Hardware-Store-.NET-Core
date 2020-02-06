@@ -25,7 +25,6 @@ $(checkedInputs).on('click', function () {
     for (var i = 0; i < checkedInputs.length; i++) {
         if (checkedInputs[i].checked) {
             brandString.add(brandsId[i].value);
-            //continue;
         }
         else {
             brandString.delete(brandsId[i].value);
@@ -47,7 +46,6 @@ $(categoryInputs).on('click', function () {
     for (var i = 0; i < categoryInputs.length; i++) {
         if (categoryInputs[i].checked) {
             categoryString.add(categoryId[i].value);
-            //continue;
         }
         else {
             categoryString.delete(categoryId[i].value);
@@ -67,6 +65,15 @@ $("#maxPrice").on('change', function () {
 
 $("#minPrice").on('change', function () {
     $("#minPriceText").val($("#minPrice").val());
+});
+
+
+$("#showBrands").on('click', function () {
+    $(".brandFilter").slice(5).toggleClass("displayNone");
+});
+
+$("#showCategories").on('click', function () {
+    $(".categoryFilter").slice(5).toggleClass("displayNone");
 });
 
 //function checkPrices(min, max) {

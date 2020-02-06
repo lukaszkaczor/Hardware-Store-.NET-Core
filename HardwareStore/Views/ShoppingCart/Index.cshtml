@@ -80,7 +80,7 @@
                             <button type="submit"><i class="fas fa-times"></i></button>
                         }
                     </td>
-                    <td><span class="hideWhenResolutionIsHigherThan768">Razem: </span><span class="priceTimesQuantity">@(item.Quantity*item.Product.Price)</span>zł</td>
+                    <td><span class="hideWhenResolutionIsHigherThan768">Razem: </span><span class="priceTimesQuantity">@(item.Quantity * item.Product.Price)</span>zł</td>
                 </tr>
             }
             <tr>
@@ -99,8 +99,8 @@
     }
 </div>
 
-
 @section Scripts
 {
     <script src="~/js/shoppingCart.js"></script>
 }
+

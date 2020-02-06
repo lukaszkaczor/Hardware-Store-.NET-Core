@@ -1,0 +1,38 @@
+﻿@using System.Linq
+@model HardwareStore.ViewModels.Admin.AssignRoleToUserViewModel
+@{
+    ViewData["Title"] = "Panel Admina";
+}
+
+
+<h4>Dodaj rolę do użytkownika</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AssignRoleToUser">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @Html.LabelFor(d => d.Email, new { @class = "control-label" })
+                @Html.TextBoxFor(d => d.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.Email, null, new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(d => d.ConfirmEmail, new { @class = "control-label" })
+                @Html.TextBoxFor(d => d.ConfirmEmail, new { @class = "form-control" })
+                @Html.ValidationMessageFor(d => d.ConfirmEmail, null, new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(d => d.IdentityRoles, new { @class = "control-label" })
+                    @Html.DropDownListFor(d=>d.Role.Id, new SelectList(Model.IdentityRoles, "Id", "Name"), "Wybierz rolę")
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

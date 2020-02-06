@@ -1,22 +1,68 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Panel Admina";
 }
 
-<h1>Index</h1>
+<h1>Panel Admina</h1>
 
-@*<div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            @Url.Action("EbeEbe");
-        </div>
-    </div>
+<nav class="nav nav-pills flex-column">
 
 
-    @Url.Action("EbeEbe");
-    @Url.Action("EbeEbe");
-    @Url.Action("EbeEbe");
-    @Url.Action("EbeEbe");
-    @Url.Action("EbeEbe");
+    @Html.ActionLink("Dodaj użytkownika do roli", "AssignRoleToUser", "Admin", null, new { @class = "nav-link" })
+    @Html.ActionLink("Lista użytkowników", "StaffList", "Admin", null, new { @class = "nav-link" })
 
-</div>*@
+
+
+
+
+
+
+    @*@Html.ActionLink("Zamówienia", "Index", "Sections", null, new { @class = "nav-link" })
+        <nav class="nav nav-pills flex-column">
+            @Html.ActionLink("DOKONCZYC", "Create", "Sections", null, new { @class = "nav-link ml-3 my-1" })
+        </nav>
+
+
+        @Html.ActionLink("Posty", "Index", "Posts", null, new { @class = "nav-link" })
+        <nav class="nav nav-pills flex-column">
+            @Html.ActionLink("Dodaj post", "Create", "Posts", null, new { @class = "nav-link ml-3 my-1" })
+        </nav>
+
+        @Html.ActionLink("Okazje dnia", "Index", "HotShots", null, new { @class = "nav-link" })
+        <nav class="nav nav-pills flex-column">
+            @Html.ActionLink("Dodaj okazję dnia", "Create", "HotShots", null, new { @class = "nav-link ml-3 my-1" })
+        </nav>
+
+        @Html.ActionLink("Galerie", "Index", "Galleries", null, new { @class = "nav-link" })
+        <nav class="nav nav-pills flex-column">
+            @Html.ActionLink("Dodaj galerię", "Create", "Galleries", null, new { @class = "nav-link ml-3 my-1" })
+            @Html.ActionLink("Zdjęcia", "Index", "Images", null, new { @class = "nav-link ml-3 my-1" })
+            @Html.ActionLink("Dodaj zdjęcie", "Create", "Images", null, new { @class = "nav-link ml-3 my-1" })
+        </nav>
+
+        @Html.ActionLink("Marki", "Index", "Brands", null, new { @class = "nav-link" })
+        <nav class="nav nav-pills flex-column">
+            @Html.ActionLink("Dodaj markę", "Create", "Brands", null, new { @class = "nav-link ml-3 my-1" })
+        </nav>
+
+        @Html.ActionLink("Produkty", "Index", "Products", null, new { @class = "nav-link" })
+        <nav class="nav nav-pills flex-column">
+            @Html.ActionLink("Dodaj produkt", "Create", "Products", null, new { @class = "nav-link ml-3 my-1" })
+        </nav>
+
+        @Html.ActionLink("Tagi", "Index", "Tags", null, new { @class = "nav-link" })
+        <nav class="nav nav-pills flex-column">
+            @Html.ActionLink("Dodaj tag", "Create", "Tags", null, new { @class = "nav-link ml-3 my-1" })
+        </nav>
+
+        @Html.ActionLink("Sekcje", "Index", "Sections", null, new { @class = "nav-link" })
+        <nav class="nav nav-pills flex-column">
+            @Html.ActionLink("Dodaj sekcję", "Create", "Sections", null, new { @class = "nav-link ml-3 my-1" })
+        </nav>
+
+        @Html.ActionLink("Kategorie", "Index", "Categories", null, new { @class = "nav-link" })
+        <nav class="nav nav-pills flex-column">
+            @Html.ActionLink("Dodaj sekcję", "Create", "Categories", null, new { @class = "nav-link ml-3 my-1" })
+        </nav>*@
+
+</nav>

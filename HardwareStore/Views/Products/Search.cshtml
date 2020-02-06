@@ -2,6 +2,8 @@
 @{
     ViewBag.Title = "Search";
     Layout = "_UserLayout";
+    var brandFilterDisplayNone = "";
+    var categoryFilterDisplayNone = "";
 }
 
 <div class="searchInfo">
@@ -37,20 +39,28 @@
 
         @if (Model.SearchModel.BrandFilters.Count > 1)
         {
-            <div class="filterGroup">
-                <h2 class="filterGroupName">Producent</h2>
+    <div class="filterGroup">
+        <h2 class="filterGroupName">Producent</h2>
 
-                @for (int i = 0; i < Model.SearchModel.BrandFilters.Count; i++)
-                {
-                    <div class="filter">
-                        @Html.CheckBoxFor(d => Model.SearchModel.BrandFilters[i].IsChecked, new { @class = "brandInput" })
-                        @Html.LabelFor(d => Model.SearchModel.BrandFilters[i].IsChecked, (Model.SearchModel.BrandFilters[i].Brand.Name@*+" ("+Model.Products.Count(d => d.BrandId == Model.SearchModel.BrandFilters[i].Brand.BrandId)+")"*@))
-                        @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.BrandId, new { @class = "brandId" })
-                        @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.Name)
-                    </div>
-                }
-
+        @for (int i = 0; i < Model.SearchModel.BrandFilters.Count; i++)
+        {
+            <div class="filter brandFilter @brandFilterDisplayNone">
+                @Html.CheckBoxFor(d => Model.SearchModel.BrandFilters[i].IsChecked, new { @class = "brandInput" })
+                @Html.LabelFor(d => Model.SearchModel.BrandFilters[i].IsChecked, (Model.SearchModel.BrandFilters[i].Brand.Name@*+" ("+Model.Products.Count(d => d.BrandId == Model.SearchModel.BrandFilters[i].Brand.BrandId)+")"*@))
+                @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.BrandId, new { @class = "brandId" })
+                @Html.HiddenFor(d => Model.SearchModel.BrandFilters[i].Brand.Name)
             </div>
+
+            if (i == 4)
+            {
+                brandFilterDisplayNone = "displayNone";
+            }
+        }
+        @if (Model.SearchModel.BrandFilters.Count > 5)
+        {
+            <button id="showBrands" class="expandListBtn">Pokaż więcej</button>
+        }
+    </div>
         }
         <div class="filterGroup">
 
@@ -66,19 +76,27 @@
         {
 
 
-            <div class="filterGroup">
-                <h2 class="filterGroupName">Kategoria</h2>
+    <div class="filterGroup">
+        <h2 class="filterGroupName">Kategoria</h2>
 
-                @for (int i = 0; i < Model.SearchModel.CategoryFilters.Count; i++)
-                {
-                    <div class="filter">
-                        @Html.CheckBoxFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, new { @class = "categoryInput" })
-                        @Html.LabelFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, Model.SearchModel.CategoryFilters[i].Category.Name)
-                        @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.CategoryId, new { @class = "categoryId" })
-                        @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.Name)
-                    </div>
-                }
+        @for (int i = 0; i < Model.SearchModel.CategoryFilters.Count; i++)
+        {
+            <div class="filter categoryFilter @categoryFilterDisplayNone">
+                @Html.CheckBoxFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, new { @class = "categoryInput" })
+                @Html.LabelFor(d => Model.SearchModel.CategoryFilters[i].IsChecked, Model.SearchModel.CategoryFilters[i].Category.Name)
+                @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.CategoryId, new { @class = "categoryId" })
+                @Html.HiddenFor(d => Model.SearchModel.CategoryFilters[i].Category.Name)
             </div>
+            if (i == 4)
+            {
+                categoryFilterDisplayNone = "displayNone";
+            }
+        }
+        @if (Model.SearchModel.CategoryFilters.Count > 5)
+        {
+            <button id="showCategories" class="expandListBtn">Pokaż więcej</button>
+        }
+        </div>
         }
         <form class="filterGroup">
             @Html.HiddenFor(d => d.Brands, new { @id = "brandText" })

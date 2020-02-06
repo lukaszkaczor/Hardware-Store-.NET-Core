@@ -24,12 +24,14 @@ namespace HardwareStore.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private IHttpContextAccessor _httpContextAccessor;
+        private RoleManager<IdentityRole> _roleManager;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _roleManager = roleManager;
         }
 
         public async Task<IActionResult> Index()
@@ -41,6 +43,7 @@ namespace HardwareStore.Controllers
 
             var recommendedProducts = products.Where(d => d.IsRecommended).Take(8).ToList();
 
+            var roles = _roleManager.Roles.ToList();
 
 
             var bestsellersList = new List<Product>();
@@ -96,7 +99,6 @@ namespace HardwareStore.Controllers
             //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // will give the user's userId
             //var userName = User.FindFirstValue(ClaimTypes.Name); // will give the user's userName
             //var userEmail = User.FindFirstValue(ClaimTypes.Email); // will give the user's Email
-
 
 
 

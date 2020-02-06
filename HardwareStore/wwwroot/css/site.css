@@ -638,6 +638,7 @@ img {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
+    margin-top: 10px;
 }
 
 .filterHolder {
@@ -651,10 +652,10 @@ img {
     -ms-flex-preferred-size: 25%;
     flex-basis: 25%;
     padding: 5px 20px 20px 20px;
-    position: fixed;
+    position: absolute;
     background: white;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     left: -100vw;
     top: 75px;
     -webkit-transition: .2s all;
@@ -668,10 +669,18 @@ img {
         -ms-grid-row-align: center;
         align-self: center;
         border-radius: 20px;
-        margin: 20px 0;
+        margin: 10px 0 0 0;
         outline: none;
         cursor: pointer;
         background: whitesmoke;
+    }
+
+    .filterHolder .expandListBtn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-top: 10px;
+        padding: 5px;
     }
 
     .filterHolder h1 {
@@ -685,6 +694,8 @@ img {
         font-size: 12px;
         background: rgba(0, 0, 0, 0);
         padding: 8px;
+        text-decoration: none;
+        color: #444444;
     }
 
 .filterGroup {
@@ -698,16 +709,18 @@ img {
     margin: 10px 0;
 }
 
-    .filterGroup button {
-        margin: 10px;
-        padding: 0;
-        border-radius: 0;
-        width: 100%;
-    }
+.filterForm {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
 
 .filterGroupName {
     font-size: 20px;
-    padding: 10px 0;
+    padding: 0 0 10px 0;
 }
 
 .filter {
@@ -816,6 +829,10 @@ img {
         margin-left: 0;
     }
 
+    .filterHolder {
+        min-height: auto;
+    }
+
     .productList {
         display: -ms-grid;
         display: grid;
@@ -887,8 +904,17 @@ img {
 
     .filterGroupName {
         font-size: 20px;
-        padding: 10px 0;
+        padding: 0 0 10px 0;
     }
+}
+
+.displayNone {
+    display: none;
+}
+
+.ebe {
+    background: #000;
+    height: 200px;
 }
 
 .inputForm {

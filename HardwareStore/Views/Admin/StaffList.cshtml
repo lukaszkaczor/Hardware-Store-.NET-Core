@@ -1,0 +1,26 @@
+﻿@model List<HardwareStore.ViewModels.Admin.StaffListViewModel>
+
+@{
+    ViewData["Title"] = "Lista pracowników";
+}
+
+@foreach (var item in Model)
+{
+    <h3>@item.Role.Name</h3>
+    <table class="table">
+        
+        <tbody>
+            @foreach (var user in item.Users)
+            {
+                <tr>
+                    <td>
+                        <h5>@user.Email</h5>
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edytuj", "Edit", "Admin", new { id = user.Id})
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
