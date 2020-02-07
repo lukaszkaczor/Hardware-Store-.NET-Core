@@ -976,9 +976,9 @@ img {
     display: block;
     text-decoration: none;
     font-size: 14px;
-    padding: 10px;
+    /*padding: 10px;*/
     margin: 0 auto 20px;
-    width: 100px;
+    width: 200px;
     color: #444444;
     text-align: center;
 }

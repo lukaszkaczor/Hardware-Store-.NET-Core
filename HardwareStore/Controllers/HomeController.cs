@@ -43,9 +43,6 @@ namespace HardwareStore.Controllers
 
             var recommendedProducts = products.Where(d => d.IsRecommended).Take(8).ToList();
 
-            var roles = _roleManager.Roles.ToList();
-
-
             var bestsellersList = new List<Product>();
             var bestsellers = from items in _context.OrderDetails
                               group items by new { items.ProductId }
@@ -70,21 +67,13 @@ namespace HardwareStore.Controllers
                 await _context.HotShots.Include(d => d.Product.Gallery.ImageGalleries)
                     .ThenInclude(d => d.Image)
                     .FirstOrDefaultAsync(d => d.StartDate < DateTime.Now && d.EndDate > DateTime.Now);
+
             var formattedEndDate = string.Empty;
             if (hotShot != null)
             {
                 formattedEndDate = hotShot.EndDate.ToString("yyyy-MM-dd HH:mm:ss");
             }
-            //.FirstOrDefaultAsync(d => d.HasEnded == false || d.StartDate < DateTime.Now);
 
-
-
-            var hotShotAlreadyBought = false;
-            if (userId != null)
-            {
-                 //hotShotAlreadyBought = await _context.AccountHotShots.Where(d => d.IdentityUserId == userId)
-                 //   .AnyAsync(d => d.HotShotId == hotShot.HotShotId.ToString());
-            }
 
             var model = new HomeIndexViewModel()
             {
@@ -93,7 +82,6 @@ namespace HardwareStore.Controllers
                 Bestsellers = bestsellersList,
                 Posts = posts,
                 HotShot = hotShot,
-                AlreadyBought = hotShotAlreadyBought ,
                 FormattedEndDate = formattedEndDate
             };
             //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // will give the user's userId

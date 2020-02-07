@@ -53,11 +53,19 @@
     </div>
 
     <div class="productNameHolder">
-        <h1 class="productName">@Model.Product.Name</h1>
+        <h1 class="productName">@Model.Product.Brand.Name @Model.Product.Name</h1>
         <div class="ratings">
             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(21 opinii)</span>
         </div>
-        <h2 class="price">@(Model.Product.Price.ToString("C"))</h2>
+        @if (Model.IsHotShot)
+        {
+            <h2 class="price">@(Model.HotShot.NewPrice.ToString("F")) zł</h2>
+        }
+        else
+        { 
+            <h2 class="price">@(Model.Product.Price.ToString("F")) zł</h2>
+        }
+
 
         @if (SignInManager.IsSignedIn(User))
         {
@@ -89,8 +97,17 @@
             <div class="row">
                 <div class="iconHolder"><i class="far fa-clock"></i></div>
                 <div class="info">
-                    <h3>Kup teraz, otrzymasz jutro</h3>
-                    <h4>Zapłać w ciągu 35min 25sek.</h4>
+                    @if (Model.IsHotShot)
+                    {
+                        <h3>Do końca promocji pozostało</h3>
+                        <h4 class="timeLeft">00:00:00</h4>
+                        @Html.HiddenFor(d => d.HotShot.EndDate, new { id = "endDate" })
+                    }
+                    else
+                    {
+                        <h3>Kup teraz, otrzymasz jutro</h3>
+                        <h4>Zapłać w ciągu 35min 25sek.</h4>
+                    }
                 </div>
             </div>
 
@@ -133,4 +150,7 @@
     </table>
 </div>
 
-
+@section Scripts
+{
+    <script src="~/js/hotShot.js"></script>
+}

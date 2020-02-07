@@ -56,17 +56,29 @@ namespace HardwareStore.Controllers
                 .Include(p => p.Gallery)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
 
+            var isHotShot = _context.HotShots.Any(d => d.StartDate < DateTime.Now && d.EndDate > DateTime.Now
+                                                                                && d.Quantity > d.ItemsSold && d.ProductId == product.ProductId);
+            HotShot hotShot = null;
+            if (isHotShot)
+            {
+                hotShot = await _context.HotShots.Include(d => d.Product.Gallery.ImageGalleries)
+                    .ThenInclude(d => d.Image)
+                    .FirstOrDefaultAsync(d => d.StartDate < DateTime.Now && d.EndDate > DateTime.Now);
+            }
+
             if (product == null)
             {
                 return NotFound();
             }
-
 
             var model = new ProductDetailsViewModel()
             {
                 Product = product,
                 Tags = await TagManager.GetTagNameWithValues(_context, product),
                 Images = await ImageManager.GetImagesForProduct(_context, (int)id),
+                IsHotShot = isHotShot,
+                HotShot = hotShot,
+                FormattedDate = hotShot?.EndDate.ToString("yyyy-MM-dd HH:mm:ss")
             };
 
             return View(model);
@@ -298,7 +310,7 @@ namespace HardwareStore.Controllers
                 .ThenInclude(d => d.Image)
                 .Include(d => d.ProductTags)
                 .ThenInclude(d => d.Tag.TagValues)
-                .Where(d => d.Name.Contains(searchText.Trim()) 
+                .Where(d => d.Name.Contains(searchText.Trim())
                             || d.Brand.Name.Contains(searchText.Trim())
                             || d.Category.Name.Contains(searchText.Trim())).ToListAsync();
 
@@ -346,7 +358,7 @@ namespace HardwareStore.Controllers
                     IsChecked = categoryFilters.Any(d => d.Id == category.CategoryId)
                 });
             }
-            
+
 
             var productList = new List<Product>();
 

@@ -41,6 +41,9 @@ namespace HardwareStore.Models.DbModels
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         public PayingMethod PayingMethod { get; set; }
 
+        public virtual IdentityUser Employee { get; set; }
+        public string EmployeeId { get; set; }
+
         public virtual ICollection<OrderDetailsOrder> OrderDetailsOrder { get; set; }
     }
 }

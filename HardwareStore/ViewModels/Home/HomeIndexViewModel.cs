@@ -20,6 +20,5 @@ namespace HardwareStore.ViewModels.Home
 
         public HotShot HotShot { get; set; }
         public string FormattedEndDate { get; set; }
-        public bool AlreadyBought { get; set; }
     }
 }

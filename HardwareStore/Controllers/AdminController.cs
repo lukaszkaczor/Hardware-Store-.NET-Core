@@ -4,13 +4,17 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using HardwareStore.Areas.Identity.Pages.Account;
 using HardwareStore.Data;
+using HardwareStore.Models;
+using HardwareStore.Models.DbModels.Enums;
 using HardwareStore.Models.ModelsConfig;
 using HardwareStore.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyModel.Resolution;
 
 namespace HardwareStore.Controllers
 {
@@ -51,7 +55,6 @@ namespace HardwareStore.Controllers
                     select user;
 
                 var identityUsers = userList.ToList();
-                var tt = identityUsers.ToList();
 
                 model.Add(new StaffListViewModel()
                 {
@@ -128,5 +131,44 @@ namespace HardwareStore.Controllers
 
             return RedirectToAction("Edit", new {id = userId});
         }
+
+        public async Task<ActionResult> AddRole(string name)
+        {
+            await _roleManager.CreateAsync(new IdentityRole()
+            {
+                Name = name,
+                NormalizedName = name.ToUpper()
+            });
+
+            return RedirectToAction("Index");
+        }
+
+        //public async Task<IActionResult> ResetPassword()
+        //{
+        //    var token = await _userManager.GeneratePasswordResetTokenAsync(_context.Users.SingleOrDefault(d => d.Email == "test@test.pl"));
+        //    var user = _context.Users.SingleOrDefault(d => d.Email == "test@test.pl");
+
+        //    //var token = "CfDJ8KR4g8VxvHdMixLRI64IJ3VZUK9XQuFYgzmXKWX/v/ssb07laPYUsR/MIjr1SP2kusg8/sa6CnD9+/J8vjBbD+QxryPSWKz1nr8YLwVzf/Q+bd2t6XY/wtkiQUaQsz6h1pKUP+aVMnoo0x3mOHZLKRhtHpoZWEw4KdqqipWwrYJC8WhP9JOEuumVdoWCtgsMAG30wT5Seztss5jkK/Fg3MMXTU/EReJ5ZASC5CUrOqMQ\r\n";
+
+        //    var ss = new EmailManager();
+        //    //ss.SendEmail("lukaszk9396@gmail.com", "t", token);
+        //    //_context.UserTokens.Add(new IdentityUserToken<string>()
+        //    //{
+        //    //});
+        //    //await _userManager.ResetPasswordAsync(user, token, "creative2");
+        //    //_context.UserTokens.Add(new IdentityUserToken<string>()
+        //    //{
+        //    //    LoginProvider = token,
+        //    //    UserId = user.Id,
+        //    //    Value = token,
+        //    //    Name = token
+        //    //});
+        //    _context.SaveChanges();
+
+        //    return RedirectToAction("Index");
+        //}
+
+
+
     }
 }

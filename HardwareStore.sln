@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardwareStore", "HardwareStore\HardwareStore.csproj", "{9D6827AD-8752-49E0-8E3D-AA24DB9C5263}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareStoreTests", "HardwareStoreTests\HardwareStoreTests.csproj", "{2BAEDD47-FC5D-4CC9-8D3F-B37D4327ACDA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{9D6827AD-8752-49E0-8E3D-AA24DB9C5263}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D6827AD-8752-49E0-8E3D-AA24DB9C5263}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D6827AD-8752-49E0-8E3D-AA24DB9C5263}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2BAEDD47-FC5D-4CC9-8D3F-B37D4327ACDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2BAEDD47-FC5D-4CC9-8D3F-B37D4327ACDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2BAEDD47-FC5D-4CC9-8D3F-B37D4327ACDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2BAEDD47-FC5D-4CC9-8D3F-B37D4327ACDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
