@@ -285,7 +285,6 @@ namespace HardwareStore.Controllers
                     value.Value = tagValue.Value;
                 }
 
-                //await _context.SaveChangesAsync();
                 _context.SaveChanges();
             }
 

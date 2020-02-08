@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using HardwareStore.Data;
 using HardwareStore.Models;
 using HardwareStore.ViewModels.Account;
 using HardwareStore.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +30,8 @@ namespace HardwareStore.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SendVerificationToken(ResetPasswordViewModel model)
         {
             var email = new EmailManager();
@@ -44,7 +48,8 @@ namespace HardwareStore.Controllers
 
             ////ZMIENIC JAK BEDZIE NA SERWERZE
             email.SendEmail(model.Email, "Resetowanie hasła", @"
-               <a href='https://localhost:44338/Account/ResetPassword?email="+ user.Email +"&token=" + token + @"'>Kliknij w ten link aby kontynuować resetowanie hasła</a>
+                Twój token: "+ token + @"
+               <a href='https://localhost:44338/Account/ResetPassword?email="+ user.Email +"&token=" + HttpUtility.UrlEncode(token)+ @"'>Kliknij w ten link aby kontynuować resetowanie hasła</a>
             ");
 
             return RedirectToAction("Index", "Home");
@@ -62,6 +67,7 @@ namespace HardwareStore.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (model.Password != model.ConfirmPassword)

@@ -132,16 +132,6 @@ namespace HardwareStore.Controllers
                 order.OrderStatus = OrderStatus.Accepted;
             }
 
-            //var orderDetails = _context.OrderDetails.Where(d => d.OrderId == orderId)
-            //    .FirstOrDefault(d => d.OrderDetailsId == orderDetailsId);
-
-            //if (orderDetails == null) return NotFound();
-
-            //orderDetails.IsCompleted = !orderDetails.IsCompleted;
-
-
-
-
             _context.SaveChanges();
 
             return RedirectToAction("ManageOrder", new { id = orderId });

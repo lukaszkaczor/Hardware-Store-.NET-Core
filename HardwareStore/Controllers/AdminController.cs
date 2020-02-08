@@ -85,6 +85,7 @@ namespace HardwareStore.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignRoleToUser(AssignRoleToUserViewModel model)
         {
             if (!model.Email.Equals(model.ConfirmEmail))
@@ -98,7 +99,6 @@ namespace HardwareStore.Controllers
             if (role is null || user is null) return NotFound();
 
             await _userManager.AddToRoleAsync(user, role.NormalizedName);
-            //var result = await _userManager.AddToRoleAsync()
             return View(nameof(Index));
         }
 
@@ -121,6 +121,8 @@ namespace HardwareStore.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteRoleFromUser(string roleId, string userId)
         {
             var roleToDelete = _context.UserRoles.Where(d => d.UserId == userId)
@@ -142,33 +144,5 @@ namespace HardwareStore.Controllers
 
             return RedirectToAction("Index");
         }
-
-        //public async Task<IActionResult> ResetPassword()
-        //{
-        //    var token = await _userManager.GeneratePasswordResetTokenAsync(_context.Users.SingleOrDefault(d => d.Email == "test@test.pl"));
-        //    var user = _context.Users.SingleOrDefault(d => d.Email == "test@test.pl");
-
-        //    //var token = "CfDJ8KR4g8VxvHdMixLRI64IJ3VZUK9XQuFYgzmXKWX/v/ssb07laPYUsR/MIjr1SP2kusg8/sa6CnD9+/J8vjBbD+QxryPSWKz1nr8YLwVzf/Q+bd2t6XY/wtkiQUaQsz6h1pKUP+aVMnoo0x3mOHZLKRhtHpoZWEw4KdqqipWwrYJC8WhP9JOEuumVdoWCtgsMAG30wT5Seztss5jkK/Fg3MMXTU/EReJ5ZASC5CUrOqMQ\r\n";
-
-        //    var ss = new EmailManager();
-        //    //ss.SendEmail("lukaszk9396@gmail.com", "t", token);
-        //    //_context.UserTokens.Add(new IdentityUserToken<string>()
-        //    //{
-        //    //});
-        //    //await _userManager.ResetPasswordAsync(user, token, "creative2");
-        //    //_context.UserTokens.Add(new IdentityUserToken<string>()
-        //    //{
-        //    //    LoginProvider = token,
-        //    //    UserId = user.Id,
-        //    //    Value = token,
-        //    //    Name = token
-        //    //});
-        //    _context.SaveChanges();
-
-        //    return RedirectToAction("Index");
-        //}
-
-
-
     }
 }

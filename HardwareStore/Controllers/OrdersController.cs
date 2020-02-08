@@ -40,20 +40,12 @@ namespace HardwareStore.Controllers
             return View(model);
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Index(OrderInfoViewModel model)
-        //{
 
-        //    return View();
-        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> NewOrder(OrderInfoViewModel model)
         {
-            //if (!ModelState.IsValid) return View("Index", model);
-
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var productsInShoppingCart = _context.ShoppingCarts.Include(d => d.Product).Where(d => d.IdentityUserId == _userId);

@@ -195,22 +195,13 @@ namespace HardwareStore.Controllers
             return _context.Galleries.Any(e => e.GalleryId == id);
         }
 
+
         public IActionResult AddImageToGallery(int id)
         {
             var editedGallery = _context.Galleries.Find(id);
 
             if (editedGallery == null)
                 return NotFound();
-
-            //var images =
-            //    from image in _context.Images
-            //    join imgGallery in _context.ImageGalleries on image.imageId equals imgGallery.imageId
-            //    join galleries in _context.Galleries on imgGallery.GalleryId equals galleries.GalleryId
-            //    where imgGallery.GalleryId == id
-            //    orderby imgGallery.Order
-            //    select image;
-
-            //var filteredImages = _context.Images.Where(d => images.All(s => s.imageId != d.imageId)).ToList();
 
             var orderValue = _context.ImageGalleries.Where(d => d.GalleryId == id).Max(d => d.Order) + 1 ?? 1;
 

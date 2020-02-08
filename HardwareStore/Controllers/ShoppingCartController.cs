@@ -89,6 +89,8 @@ namespace HardwareStore.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AdjustQuantity(int productId, bool adjustType)
         {
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

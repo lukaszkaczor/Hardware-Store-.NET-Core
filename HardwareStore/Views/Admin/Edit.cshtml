@@ -1,6 +1,7 @@
 ﻿@model HardwareStore.ViewModels.Admin.UserRolesViewModel
 
 @{
+    ViewData["Title"] = "Edytuj role użytkownika";
 
 }
 
@@ -17,7 +18,12 @@
                 @role.Name
             </td>
             <td>
-                @Html.ActionLink("Usuń", "DeleteRoleFromUser", new { roleId = role.Id, userId = Model.User.Id})
+                @using (Html.BeginForm("DeleteRoleFromUser", "Admin", FormMethod.Post))
+                {
+                    <button type="submit" class="btn btn-danger">Usuń</button>
+                    @Html.Hidden("roleId", role.Id)
+                    @Html.Hidden("userId", Model.User.Id)
+                }
             </td>
         </tr>
     }
