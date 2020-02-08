@@ -43,13 +43,12 @@ namespace HardwareStore.Controllers
                 return View("ForgotPassword");
             }
 
-
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             ////ZMIENIC JAK BEDZIE NA SERWERZE
             email.SendEmail(model.Email, "Resetowanie hasła", @"
                 Twój token: "+ token + @"
-               <a href='https://localhost:44338/Account/ResetPassword?email="+ user.Email +"&token=" + HttpUtility.UrlEncode(token)+ @"'>Kliknij w ten link aby kontynuować resetowanie hasła</a>
+               <a href='https://kompex.azurewebsites.net/Account/ResetPassword?email=" + user.Email +"&token=" + HttpUtility.UrlEncode(token)+ @"'>Kliknij w ten link aby kontynuować resetowanie hasła</a>
             ");
 
             return RedirectToAction("Index", "Home");
