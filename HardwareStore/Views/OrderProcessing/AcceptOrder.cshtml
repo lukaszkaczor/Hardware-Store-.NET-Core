@@ -1,17 +1,18 @@
 ﻿@model List<HardwareStore.Models.DbModels.Order>
 
 @{
-    ViewBag.Title = "Obsługa zamówień";
+    ViewBag.Title = "Zaakceptuj zamówienie";
     Layout = "_Layout";
 }
 
 
+
 <div class="orderProcessingContent">
     <ul class="list-group">
-        <li class="list-group-item active">
+        <li class="list-group-item ">
             @Html.ActionLink("Aktywne zamówienia", "Index", "OrderProcessing", null)
         </li>
-        <li class="list-group-item">
+        <li class="list-group-item active">
             @Html.ActionLink("Odbierz zamówienie", "AcceptOrder", "OrderProcessing")
         </li>
         <li class="list-group-item">
@@ -24,19 +25,27 @@
             <thead>
                 <tr>
                     <th>Id zamówienia</th>
+                    <th>Zamawiający</th>
                     <th>Data zamówienia</th>
-                    <th>Status</th>
-                    <th>Zarządzaj</th>
+                    @*<th>Status</th>*@
+                    <th>Przyjmij</th>
                 </tr>
             </thead>
             <tbody>
+                @Html.ValidationSummary(true, null, new { @class = "warning-text"})
+
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.OrderId</td>
-                        <td>@item.OrderDate</td>
-                        <td>@item.OrderStatus</td>
-                        <td>@Html.ActionLink("Zarządzaj", "ManageOrder", new { id = item.OrderId})</td>
+                        @using (Html.BeginForm("AcceptOrder", "OrderProcessing", FormMethod.Post))
+                        {
+                            <td>@item.OrderId</td>
+                            <td>@item.IdentityUser.Email</td>
+                            <td>@item.OrderDate</td>
+                            @*<td>@item.OrderStatus</td>*@
+                            <td><button class="btn btn-primary">Przyjmij</button></td>
+                            @Html.Hidden("orderId", item.OrderId)
+                        }
                     </tr>
                 }
             </tbody>
@@ -52,7 +61,7 @@
         .orderProcessingContent ul {
             flex-basis: 25%;
         }
-    
+
         .orderProcessingContent .orderList {
             flex-basis: 75%;
         }

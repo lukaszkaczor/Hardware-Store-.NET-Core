@@ -1,0 +1,24 @@
+﻿@model HardwareStore.ViewModels.OrderProcessing.ManageOrderViewModel
+
+@{
+    ViewBag.Title = "Obsługa zamówień";
+    Layout = "_Layout";
+}
+
+<h3>Dane do zamówienia nr @Model.Order.OrderId</h3>
+<h5>Email do kontaktu: @Model.Order.IdentityUser.Email</h5>
+<h5>Data zamówienia: @Model.Order.OrderDate</h5>
+<h5>Cena zamówienia: @Model.Order.TotalPrice zł</h5>
+<div class="border-top my-3"></div>
+<h4>Adres wysyłki</h4>
+<h5>Miejscowość: @Model.Order.Address.City</h5>
+<h5>Kod pocztowy: @Model.Order.Address.ZipCode</h5>
+<h5>Ulica: @Model.Order.Address.AddressLine</h5>
+<h5>Numer telefonu: @Model.Order.Address.PhoneNumber</h5>
+<div class="border-top my-3"></div>
+<h4>Zamówione produkty</h4>
+
+@foreach (var item in Model.OrderDetails)
+{
+    <h5>@item.Product.Name</h5>
+}

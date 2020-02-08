@@ -9,11 +9,15 @@ using System.Text;
 using System.Threading.Tasks;
 using HardwareStore.Data;
 using HardwareStore.Models;
+using HardwareStore.Models.DbModels;
 using HardwareStore.Models.DbModels.Enums;
 using HardwareStore.Models.ModelsConfig;
+using HardwareStore.ViewModels.OrderProcessing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 using Microsoft.VisualBasic;
 
 namespace HardwareStore.Controllers
@@ -31,58 +35,68 @@ namespace HardwareStore.Controllers
 
         public IActionResult Index()
         {
-            //NetworkCredential login;
-            //SmtpClient client;
-            //MailMessage message;
+            _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            //login = new NetworkCredential( "kompex.sklep@gmail.com", "4aSgSwGHbcc2WPk");
-            //client = new SmtpClient("smtp.gmail.com");
-            //client.Port = Convert.ToInt32("587");
-            //client.EnableSsl = true;
-            //client.Credentials = login;
-            //message = new MailMessage()
-            //{
-            //    From = new MailAddress("kompex.sklep@gmail.com", "kompex.sklep@gmail.com"),
-            //    Body = "ebebeb"
-            //};
+            var model = _context.Orders.Where(d => d.EmployeeId == _userId);
 
-            //message.To.Add(new MailAddress("lukaszk9396@gmail.com"));
-            //message.Subject = "ratunku";
-            //message.BodyEncoding = Encoding.UTF8;
-            //message.IsBodyHtml = true;
-            //message.Priority = MailPriority.Normal;
-            //message.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
-            //client.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
-
-            //client.Send(message);
-            var email = new EmailManager();
-            email.SendEmail("lukaszk9396@gmail.com", "Siema", @"dzien dobey panstu kochani moi
-                    <h1>elomordo</h1>
-                    <br/>
-                    <h2>dęczasześć</h2>
-            ");
-
-
-            //_userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            //var order = _context.Orders.Where(d => d.EmployeeId == _userId)
-            //    .FirstOrDefault(d => d.OrderStatus == OrderStatus.InProgress);
-
-
-            return View();
+            return View(model.ToList());
         }
 
-        private static void SendCompletedCallback(object sender, AsyncCompletedEventArgs args)
+        public IActionResult AcceptOrder()
         {
-            //if
+            var model = _context.Orders.Include(d => d.IdentityUser).Where(d => d.EmployeeId == null);
+            return View(model.ToList());
         }
 
-        [Authorize(Roles = AppRole.Admin + "," + AppRole.Manager + "," + AppRole.Support)]
-        public IActionResult OrderProcessing()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AcceptOrder(int orderId)
         {
-            var orders = _context.Orders.Where(d => d.OrderStatus == OrderStatus.Created).OrderByDescending(d => d.OrderDate).ToList();
+            _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return View();
+
+            var orderList = _context.Orders
+                .Include(d => d.IdentityUser)
+                .Where(d => d.EmployeeId == null);
+
+
+            var model = orderList.FirstOrDefault(d => d.OrderId == orderId);
+
+            if (model == null)
+            {
+                ModelState.AddModelError("", "Zamówienie zostało już odebrane");
+                return View(orderList.ToList());
+            }
+
+            model.EmployeeId = _userId;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("");
+        }
+
+        public IActionResult ManageOrder(int id)
+        {
+            _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var order = _context.Orders
+                .Include(d=>d.Address)
+                .Include(d=>d.IdentityUser)
+                .Include(d=>d.OrderDetailsOrder)
+                .ThenInclude(d=>d.OrderDetails)
+                .ThenInclude(d=>d.Product)
+                .ThenInclude(d=>d.Brand)
+                .FirstOrDefault(d => d.OrderId == id);
+
+            if (order==null)return NotFound();
+
+            var model = new ManageOrderViewModel()
+            {
+                Order = order,
+                OrderDetails = order.OrderDetailsOrder.Select(d => d.OrderDetails).ToList()
+            };
+
+            return View(model);
         }
     }
 }
