@@ -25,6 +25,8 @@ namespace HardwareStore.Models.DbModels
         [Required]
         public int Quantity { get; set; }
 
+        public bool IsCompleted { get; set; }
+
         public virtual ICollection<OrderDetailsOrder> OrderDetailsOrder { get; set; }
     }
 }

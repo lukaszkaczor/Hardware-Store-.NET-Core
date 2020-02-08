@@ -1,0 +1,16 @@
+﻿@model HardwareStore.Models.DbModels.Order
+
+@{
+    ViewBag.Title = "Anulowanie zamówienia";
+    Layout = "_Layout";
+}
+<h2>Czy na pewno chcesz anulować zamówienie nr @Model.OrderId?</h2>
+
+<div style="display: flex ">
+    @using (Html.BeginForm("DeleteConfirmed", "OrderProcessing", FormMethod.Post))
+    {
+        @Html.HiddenFor(d => d.OrderId)
+        <button type="submit" class="btn btn-danger" style="margin-right: 50px;">Anuluj zamówienie</button>
+    }
+    @Html.ActionLink("Wróć do zamówienia", "ManageOrder", new { id = Model.OrderId }, new { @class = "btn btn-primary" })
+</div>

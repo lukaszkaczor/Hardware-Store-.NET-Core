@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,8 +38,16 @@ namespace HardwareStore.Controllers
         {
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var model = _context.Orders.Where(d => d.EmployeeId == _userId);
+            var model = _context.Orders.Where(d => d.EmployeeId == _userId).Where(d=>d.OrderStatus != OrderStatus.Send && d.OrderStatus != OrderStatus.Cancelled);
 
+            return View(model.ToList());
+        }
+
+        public IActionResult History()
+        {
+            _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var model = _context.Orders.Where(d => d.EmployeeId == _userId).Where(d => d.OrderStatus == OrderStatus.Send || d.OrderStatus == OrderStatus.Cancelled);
             return View(model.ToList());
         }
 
@@ -69,6 +78,7 @@ namespace HardwareStore.Controllers
             }
 
             model.EmployeeId = _userId;
+            model.OrderStatus = OrderStatus.Accepted;
 
             _context.SaveChanges();
 
@@ -80,15 +90,15 @@ namespace HardwareStore.Controllers
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var order = _context.Orders
-                .Include(d=>d.Address)
-                .Include(d=>d.IdentityUser)
-                .Include(d=>d.OrderDetailsOrder)
-                .ThenInclude(d=>d.OrderDetails)
-                .ThenInclude(d=>d.Product)
-                .ThenInclude(d=>d.Brand)
+                .Include(d => d.Address)
+                .Include(d => d.IdentityUser)
+                .Include(d => d.OrderDetailsOrder)
+                .ThenInclude(d => d.OrderDetails)
+                .ThenInclude(d => d.Product)
+                .ThenInclude(d => d.Brand)
                 .FirstOrDefault(d => d.OrderId == id);
 
-            if (order==null)return NotFound();
+            if (order == null) return NotFound();
 
             var model = new ManageOrderViewModel()
             {
@@ -97,6 +107,75 @@ namespace HardwareStore.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ChangeStatus(int orderDetailsId, int orderId)
+        {
+            var orderDetails = _context.OrderDetails.Where(d => d.OrderId == orderId);
+
+            var detail = orderDetails.FirstOrDefault(d => d.OrderDetailsId == orderDetailsId);
+            var order = _context.Orders.FirstOrDefault(d => d.OrderId == orderId);
+            if (detail == null || order == null) return NotFound();
+
+            detail.IsCompleted = !detail.IsCompleted;
+
+            _context.SaveChanges();
+
+            if (!orderDetails.Any(d => d.IsCompleted == false))
+            {
+                order.OrderStatus = OrderStatus.Completed;
+            }
+            else
+            {
+                order.OrderStatus = OrderStatus.Accepted;
+            }
+
+            //var orderDetails = _context.OrderDetails.Where(d => d.OrderId == orderId)
+            //    .FirstOrDefault(d => d.OrderDetailsId == orderDetailsId);
+
+            //if (orderDetails == null) return NotFound();
+
+            //orderDetails.IsCompleted = !orderDetails.IsCompleted;
+
+
+
+
+            _context.SaveChanges();
+
+            return RedirectToAction("ManageOrder", new { id = orderId });
+        }
+
+        public IActionResult SetStatusToSend(Order order)
+        {
+            var orderToSet = _context.Orders.FirstOrDefault(d => d.OrderId == order.OrderId);
+
+            if (orderToSet is null)return NotFound();
+            
+
+            orderToSet.OrderStatus = OrderStatus.Send;
+            _context.SaveChanges();
+
+           return RedirectToAction("Index");
+        }
+
+        public IActionResult Cancel(Order order)
+        {
+            return View(order);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(Order order)
+        {
+            var orderToCancel = _context.Orders.FirstOrDefault(d => d.OrderId == order.OrderId);
+
+            if (orderToCancel != null) orderToCancel.OrderStatus = OrderStatus.Cancelled;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
     }
 }

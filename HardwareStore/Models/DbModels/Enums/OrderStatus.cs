@@ -8,8 +8,9 @@ namespace HardwareStore.Models.DbModels.Enums
     public enum OrderStatus
     {
         Created = 1,
-        InProgress = 2,
-        Send = 3,
-        Canceled = 4
+        Accepted = 2,
+        Completed = 3,
+        Send = 4,
+        Cancelled = 5
     }
 }

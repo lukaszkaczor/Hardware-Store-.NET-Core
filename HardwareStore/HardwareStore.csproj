@@ -34,6 +34,10 @@
     <Compile Remove="Data\Migrations\20200131155052_ebe.Designer.cs" />
     <Compile Remove="Data\Migrations\20200131155225_ebe.cs" />
     <Compile Remove="Data\Migrations\20200131155225_ebe.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200208144329_AddIsCompletedColumnToOrderDetailsTable.cs" />
+    <Compile Remove="Data\Migrations\20200208144329_AddIsCompletedColumnToOrderDetailsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200208144428_AddIsCompletedColumnToOrderDetailsTable.cs" />
+    <Compile Remove="Data\Migrations\20200208144428_AddIsCompletedColumnToOrderDetailsTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

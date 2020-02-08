@@ -8,7 +8,7 @@
 <h3>Dane do zamówienia nr @Model.Order.OrderId</h3>
 <h5>Email do kontaktu: @Model.Order.IdentityUser.Email</h5>
 <h5>Data zamówienia: @Model.Order.OrderDate</h5>
-<h5>Cena zamówienia: @Model.Order.TotalPrice zł</h5>
+<h5>Cena zamówienia: @Model.Order.TotalPrice.ToString("F") zł</h5>
 <div class="border-top my-3"></div>
 <h4>Adres wysyłki</h4>
 <h5>Miejscowość: @Model.Order.Address.City</h5>
@@ -17,8 +17,63 @@
 <h5>Numer telefonu: @Model.Order.Address.PhoneNumber</h5>
 <div class="border-top my-3"></div>
 <h4>Zamówione produkty</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Produkt</th>
+            <th>Cena za sztukę</th>
+            <th>Ilość</th>
+            <th>Czy skompletowany</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderDetails)
+        {
+            <tr>
+                <td>@item.Product.Brand.Name @item.Product.Name</td>
+                <td>@item.PricePerItem.ToString("F") zł</td>
+                <td>@item.Quantity</td>
+                <td style="display: flex; justify-content: space-around; align-items: center">
+                    @item.IsCompleted
 
-@foreach (var item in Model.OrderDetails)
-{
-    <h5>@item.Product.Name</h5>
-}
+                    @using (Html.BeginForm("ChangeStatus", "OrderProcessing", FormMethod.Post))
+                    {
+                        @Html.Hidden("orderDetailsId", item.OrderDetailsId)
+                        @Html.Hidden("orderId", item.OrderId)
+                        <button class="btn btn-primary" type="submit">Zmień status</button>
+                    }
+                </td>
+            </tr>
+        }
+
+        <tr>
+            <td>
+                @using (Html.BeginForm("SetStatusToSend", "OrderProcessing", FormMethod.Post))
+                {
+                    if (Model.OrderDetails.All(d => d.IsCompleted != false))
+                    {
+                        @*@Html.Hidden("orderId", Model.Order.OrderId)*@
+                        @Html.HiddenFor(d => d.Order.OrderId)
+                        <button type="submit" class="btn btn-primary">Zmień status na wysłany</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary disabled" disabled>Zmień status na wysłany</button>
+                    }
+                }
+
+            </td>
+            <td>
+                @using (Html.BeginForm("Cancel", "OrderProcessing"))
+                {
+                    @Html.HiddenFor(d => d.Order.OrderId)
+                    <button type="submit" class="btn btn-danger">Anuluj zamówienie</button>
+                }
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+@Html.ActionLink("Powrót", "Index")

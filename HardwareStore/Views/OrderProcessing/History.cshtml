@@ -8,13 +8,13 @@
 
 <div class="orderProcessingContent">
     <ul class="list-group">
-        <li class="list-group-item active">
+        <li class="list-group-item">
             @Html.ActionLink("Aktywne zamówienia", "Index", "OrderProcessing", null)
         </li>
         <li class="list-group-item">
             @Html.ActionLink("Odbierz zamówienie", "AcceptOrder", "OrderProcessing")
         </li>
-        <li class="list-group-item">
+        <li class="list-group-item active">
             @Html.ActionLink("Historia moich zamówień", "History", "OrderProcessing")
         </li>
     </ul>
@@ -22,23 +22,23 @@
     <div class="orderList">
         <table class="table">
             <thead>
-                <tr>
-                    <th>Id zamówienia</th>
-                    <th>Data zamówienia</th>
-                    <th>Status</th>
-                    <th>Zarządzaj</th>
-                </tr>
+            <tr>
+                <th>Id zamówienia</th>
+                <th>Data zamówienia</th>
+                <th>Status</th>
+                @*<th>Zarządzaj</th>*@
+            </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.OrderId</td>
-                        <td>@item.OrderDate</td>
-                        <td>@item.OrderStatus</td>
-                        <td>@Html.ActionLink("Zarządzaj", "ManageOrder", new { id = item.OrderId})</td>
-                    </tr>
-                }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.OrderId</td>
+                    <td>@item.OrderDate</td>
+                    <td>@item.OrderStatus</td>
+                    @*<td>@Html.ActionLink("Zarządzaj", "ManageOrder", new { id = item.OrderId })</td>*@
+                </tr>
+            }
             </tbody>
         </table>
     </div>
@@ -49,13 +49,13 @@
         display: flex;
     }
 
-        .orderProcessingContent ul {
-            flex-basis: 25%;
-        }
-    
-        .orderProcessingContent .orderList {
-            flex-basis: 75%;
-        }
+    .orderProcessingContent ul {
+        flex-basis: 25%;
+    }
+
+    .orderProcessingContent .orderList {
+        flex-basis: 75%;
+    }
 
 
     a {

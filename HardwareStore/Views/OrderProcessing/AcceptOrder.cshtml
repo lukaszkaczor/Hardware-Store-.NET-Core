@@ -16,38 +16,38 @@
             @Html.ActionLink("Odbierz zamówienie", "AcceptOrder", "OrderProcessing")
         </li>
         <li class="list-group-item">
-            @Html.ActionLink("Historia moich zamówień", "Index", "OrderProcessing")
+            @Html.ActionLink("Historia moich zamówień", "History", "OrderProcessing")
         </li>
     </ul>
 
     <div class="orderList">
         <table class="table">
             <thead>
-                <tr>
-                    <th>Id zamówienia</th>
-                    <th>Zamawiający</th>
-                    <th>Data zamówienia</th>
-                    @*<th>Status</th>*@
-                    <th>Przyjmij</th>
-                </tr>
+            <tr>
+                <th>Id zamówienia</th>
+                <th>Zamawiający</th>
+                <th>Data zamówienia</th>
+                @*<th>Status</th>*@
+                <th>Przyjmij</th>
+            </tr>
             </thead>
             <tbody>
-                @Html.ValidationSummary(true, null, new { @class = "warning-text"})
+            @Html.ValidationSummary(true, null, new { @class = "warning-text"})
 
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        @using (Html.BeginForm("AcceptOrder", "OrderProcessing", FormMethod.Post))
-                        {
-                            <td>@item.OrderId</td>
-                            <td>@item.IdentityUser.Email</td>
-                            <td>@item.OrderDate</td>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @using (Html.BeginForm("AcceptOrder", "OrderProcessing", FormMethod.Post))
+                    {
+                        <td>@item.OrderId</td>
+                        <td>@item.IdentityUser.Email</td>
+                        <td>@item.OrderDate</td>
                             @*<td>@item.OrderStatus</td>*@
-                            <td><button class="btn btn-primary">Przyjmij</button></td>
-                            @Html.Hidden("orderId", item.OrderId)
-                        }
-                    </tr>
-                }
+                        <td><button class="btn btn-primary">Przyjmij</button></td>
+                        @Html.Hidden("orderId", item.OrderId)
+                    }
+                </tr>
+            }
             </tbody>
         </table>
     </div>
