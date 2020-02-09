@@ -22,39 +22,20 @@ namespace HardwareStore.Controllers
             _context = context;
         }
 
-        // GET: Sections
+
         public async Task<IActionResult> Index()
         {
             return View(await _context.Sections.ToListAsync());
         }
 
-        // GET: Sections/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var section = await _context.Sections
-                .FirstOrDefaultAsync(m => m.SectionId == id);
-            if (section == null)
-            {
-                return NotFound();
-            }
 
-            return View(section);
-        }
 
-        // GET: Sections/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Sections/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SectionId,Name,Icon")] Section section)
@@ -68,7 +49,7 @@ namespace HardwareStore.Controllers
             return View(section);
         }
 
-        // GET: Sections/Edit/5
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,9 +65,7 @@ namespace HardwareStore.Controllers
             return View(section);
         }
 
-        // POST: Sections/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("SectionId,Name,Icon")] Section section)
@@ -119,7 +98,7 @@ namespace HardwareStore.Controllers
             return View(section);
         }
 
-        // GET: Sections/Delete/5
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,7 +116,7 @@ namespace HardwareStore.Controllers
             return View(section);
         }
 
-        // POST: Sections/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

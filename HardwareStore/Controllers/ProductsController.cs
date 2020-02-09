@@ -105,7 +105,7 @@ namespace HardwareStore.Controllers
         // POST: Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Price,IsRecommended,BrandId,GalleryId,CategoryId")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,Name,Price,QuantityInStock,IsActive,IsRecommended,BrandId,GalleryId,CategoryId")] Product product)
         {
             var hasGallery = false;
             if (ModelState.IsValid)
@@ -148,7 +148,7 @@ namespace HardwareStore.Controllers
         // POST: Products/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Price,IsRecommended,BrandId,GalleryId,CategoryId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Price,QuantityInStock,IsActive,IsRecommended,BrandId,GalleryId,CategoryId")] Product product)
         {
             if (id != product.ProductId)
             {

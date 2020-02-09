@@ -23,13 +23,20 @@ namespace HardwareStore.Controllers
             _context = context;
         }
         // GET: ShoppingCart
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string error)
         {
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var shoppingCarts = _context.ShoppingCarts.Where(d => d.IdentityUserId == _userId).ToList();
+            var shoppingCarts = _context.ShoppingCarts.Include(d=>d.Product).Where(d => d.IdentityUserId == _userId).ToList();
             var products = _context.Products.ToList();
             var model = new List<ShoppingCartViewModel>();
 
+            if (shoppingCarts.Any(d => d.Product.IsActive == false))
+            {
+                _context.ShoppingCarts.RemoveRange(shoppingCarts.Where(d => d.Product.IsActive == false));
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "ShoppingCart",
+                    new { error = "Niektóre przedmioty nie są już dostępne w sprzedaży i zostały z niego usunięte" });
+            }
 
             foreach (var item in shoppingCarts)
             {
@@ -40,9 +47,12 @@ namespace HardwareStore.Controllers
                     Product = productInCart,
                     Quantity = item.Quantity,
                     UserID = _userId,
-                    Image = await ImageManager.GetFirstImageForProduct(_context, productInCart.ProductId)
+                    Image = await ImageManager.GetFirstImageForProduct(_context, productInCart.ProductId),
                 });
             }
+
+            //model.FirstOrDefault().Error = error ?? String.Empty;
+            ViewBag.Error = error ?? String.Empty;
 
             return View(model);
         }
@@ -58,14 +68,17 @@ namespace HardwareStore.Controllers
             var carts = _context.ShoppingCarts;
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (!carts.Where(d => d.IdentityUserId == _userId).Any(d => d.ProductId == product.ProductId))
+            if (!carts.Where(d => d.IdentityUserId == _userId)
+                .Any(d => d.ProductId == product.ProductId))
             {
-                carts.Add(new ShoppingCart() { Quantity = quantity, ProductId = product.ProductId, IdentityUserId = _userId });
+                carts.Add(new ShoppingCart() { Quantity = quantity, 
+                    ProductId = product.ProductId, IdentityUserId = _userId });
             }
 
             else
             {
-                var cart = carts.Where(d => d.IdentityUserId == _userId).FirstOrDefault(d => d.ProductId == product.ProductId);
+                var cart = carts.Where(d => d.IdentityUserId == _userId)
+                    .FirstOrDefault(d => d.ProductId == product.ProductId);
                 cart.Quantity += quantity;
             }
             await _context.SaveChangesAsync();
@@ -79,7 +92,9 @@ namespace HardwareStore.Controllers
         {
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var productToDelete = _context.ShoppingCarts.Where(d => d.IdentityUserId == _userId).SingleOrDefault(d => d.ProductId == id);
+            var productToDelete = _context.ShoppingCarts
+                .Where(d => d.IdentityUserId == _userId)
+                .SingleOrDefault(d => d.ProductId == id);
             if (productToDelete == null) return NotFound();
 
             _context.ShoppingCarts.Remove(productToDelete);

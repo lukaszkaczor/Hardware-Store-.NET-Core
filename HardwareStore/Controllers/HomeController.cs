@@ -43,6 +43,7 @@ namespace HardwareStore.Controllers
 
             var recommendedProducts = products.Where(d => d.IsRecommended).Take(8).ToList();
 
+
             var bestsellersList = new List<Product>();
             var bestsellers = from items in _context.OrderDetails
                               group items by new { items.ProductId }
@@ -89,8 +90,6 @@ namespace HardwareStore.Controllers
             //var userEmail = User.FindFirstValue(ClaimTypes.Email); // will give the user's Email
 
 
-
-            //return RedirectToAction("Index", "Products");
             return View(model);
         }
 

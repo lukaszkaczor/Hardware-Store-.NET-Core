@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var sum = 0.0;
 }
 
 <div class="searchInfo">
@@ -15,6 +16,13 @@
 
 <h1>@ViewBag.User</h1>
 <div class="shoppingCartContent">
+    @if (!String.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="emptyBasketInfo">
+            <h3>@ViewBag.Error </h3>
+        </div>
+    }
+
 
     @if (!Model.Any())
     {
@@ -81,13 +89,22 @@
                         }
                     </td>
                     <td><span class="hideWhenResolutionIsHigherThan768">Razem: </span><span class="priceTimesQuantity">@(item.Quantity * item.Product.Price)</span>zł</td>
+                    @{
+                        sum += (item.Quantity * item.Product.Price);
+                    }
                 </tr>
             }
             <tr>
+                <td></td>
+                <td></td>
                 <td>
-                    Wartość zakupów: <span class="total">{total}</span>zł
+                    <div style="margin-top: 10px"></div>
+                    <a href="@Url.Action("Index", "Orders")" style="text-decoration: none; padding: 10px 20px; border-radius: 10px; background: #262626; color: white">Przejdź do płatności</a>
+                </td>
+                <td style="@*display: flex; flex-direction: column*@">
+                    Wartość zakupów: <span class="">@sum</span>zł
 
-                    <a href="@Url.Action("Index", "Orders")">Przejdź do płatności</a>
+                    @*<a href="@Url.Action("Index", "Orders")">Przejdź do płatności</a>*@
                     @*@using (Html.BeginForm())
                         {
                             <button type="submit">Przejdź do płatności</button>

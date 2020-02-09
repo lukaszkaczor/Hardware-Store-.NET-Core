@@ -33,6 +33,10 @@ namespace HardwareStore.Models.DbModels
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 
+        public bool IsActive { get; set; } = true;
+
+        public int QuantityInStock { get; set; }
+
         public virtual ICollection<ProductTags> ProductTags { get; set; }
     }
 }

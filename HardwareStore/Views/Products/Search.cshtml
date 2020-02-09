@@ -117,10 +117,10 @@
                      alt="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
                 <h3>@item.Brand.Name @item.Name</h3>
 
-                @for (int i = 0; i < 4; i++)
+                @*@for (int i = 0; i < 4; i++)
                 {
                     <h5>@item.ProductTags?.FirstOrDefault()?.Tag?.Name: @item.ProductTags?.FirstOrDefault()?.Tag?.TagValues?.FirstOrDefault()?.Value</h5>
-                }
+                }*@
 
                 <h4>@(item.Price.ToString("C"))</h4>
             </a>

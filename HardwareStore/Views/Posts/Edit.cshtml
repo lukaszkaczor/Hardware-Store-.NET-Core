@@ -1,12 +1,11 @@
 ﻿@model HardwareStore.Models.DbModels.Post
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edytuj";
 }
 
-<h1>Edit</h1>
+<h1>Edytuj</h1>
 
-<h4>Post</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,39 +13,41 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PostId" />
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+                <label asp-for="Title" class="control-label">Tytuł</label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
+                <label asp-for="Content" class="control-label">Zawartość</label>
                 @Html.TextAreaFor(d=>d.Content, new {@class = "form-control"})
                 @*<input asp-for="Content" class="form-control" />*@
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                    <input class="form-check-input" asp-for="IsActive" /> Czy aktywny
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="PublicationDate" class="control-label"></label>
+                <label asp-for="PublicationDate" class="control-label">Data publikacji</label>
                 <input asp-for="PublicationDate" class="form-control" />
                 <span asp-validation-for="PublicationDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="GalleryId" class="control-label"></label>
-                <select asp-for="GalleryId" class="form-control" asp-items="ViewBag.GalleryId"></select>
+                <label asp-for="GalleryId" class="control-label">Galeria</label>
+                <select asp-for="GalleryId" class="form-control" asp-items="ViewBag.GalleryId">
+                    <option></option>
+                </select>
                 <span asp-validation-for="GalleryId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Zapisz" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Wróć do listy</a>
 </div>
 

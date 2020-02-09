@@ -5,34 +5,34 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Okazje dnia</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Dodaj nową</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Product)
+                Produkt
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NewPrice)
+                Nowa cena
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
+                Ilość
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ItemsSold)
+                Sprzedanych
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                Data rozpoczęcia
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndDate)
+                Data zakończenia
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.HasEnded)
+                Zakończona
             </th>
             <th></th>
         </tr>
@@ -62,9 +62,9 @@
                 @Html.DisplayFor(modelItem => item.HasEnded)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.HotShotId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.HotShotId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.HotShotId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.HotShotId">Edytuj</a> |
+                <a asp-action="Details" asp-route-id="@item.HotShotId">Szczegóły</a> |
+                <a asp-action="Delete" asp-route-id="@item.HotShotId">Usuń</a>
             </td>
         </tr>
 }

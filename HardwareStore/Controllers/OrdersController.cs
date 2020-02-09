@@ -48,8 +48,19 @@ namespace HardwareStore.Controllers
         {
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var productsInShoppingCart = _context.ShoppingCarts.Include(d => d.Product).Where(d => d.IdentityUserId == _userId);
+            var products = _context.Products.ToList();
+
+            var productsInShoppingCart = _context.ShoppingCarts
+                .Include(d => d.Product).Where(d => d.IdentityUserId == _userId);
             var totalPrice = 0.0;
+
+            if (productsInShoppingCart.Any(d=>d.Product.IsActive == false))
+            {
+                _context.ShoppingCarts.RemoveRange(productsInShoppingCart.Where(d=>d.Product.IsActive == false));
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "ShoppingCart",
+                    new {error = "Niektóre przedmioty nie są już dostępne w sprzedaży i zostały z niego usunięte"});
+            }
 
             var hasAddress = await _context.Addresses.AnyAsync(d => d.IdentityUserId == _userId);
 
@@ -69,7 +80,8 @@ namespace HardwareStore.Controllers
             {
                 await using (var transaction = _context.Database.BeginTransaction())
                 {
-                    var address = await _context.Addresses.FirstOrDefaultAsync(d=>d.IdentityUserId == _userId);
+                    var address = await _context.Addresses
+                        .FirstOrDefaultAsync(d=>d.IdentityUserId == _userId);
 
                     var order = new Order()
                     {
@@ -93,6 +105,8 @@ namespace HardwareStore.Controllers
                             PricePerItem = shoppingCart.Product.Price,
                             Quantity = shoppingCart.Quantity
                         };
+                        var product = products.First(d => d.ProductId == shoppingCart.ProductId);
+                        product.QuantityInStock -= shoppingCart.Quantity;
                         orderDetailsList.Add(orderDetails);
                     }
 

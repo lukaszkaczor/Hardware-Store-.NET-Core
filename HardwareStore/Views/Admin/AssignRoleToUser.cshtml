@@ -18,13 +18,13 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(d => d.ConfirmEmail, new { @class = "control-label" })
+                @Html.LabelFor(d => d.ConfirmEmail,"Potwierdź email" , new { @class = "control-label" })
                 @Html.TextBoxFor(d => d.ConfirmEmail, new { @class = "form-control" })
                 @Html.ValidationMessageFor(d => d.ConfirmEmail, null, new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(d => d.IdentityRoles, new { @class = "control-label" })
-                    @Html.DropDownListFor(d=>d.Role.Id, new SelectList(Model.IdentityRoles, "Id", "Name"), "Wybierz rolę")
+                @Html.LabelFor(d => d.IdentityRoles, "Wybierz rolę" ,new { @class = "control-label" })
+                    @Html.DropDownListFor(d=>d.Role.Id, new SelectList(Model.IdentityRoles, "Id", "Name"), " ")
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -34,5 +34,5 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Powrót</a>
 </div>

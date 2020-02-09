@@ -23,32 +23,12 @@ namespace HardwareStore.Controllers
         {
             _context = context;
         }
-
-        // GET: Galleries
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.Galleries.OrderBy(d=>d.Name).ToListAsync());
         }
 
-        // GET: Galleries/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var gallery = await _context.Galleries
-                .FirstOrDefaultAsync(m => m.GalleryId == id);
-            if (gallery == null)
-            {
-                return NotFound();
-            }
-
-            return View(gallery);
-        }
-
-        // GET: Galleries/Create
         public async Task<IActionResult> Create(int? id)
         {
             if (id == null)

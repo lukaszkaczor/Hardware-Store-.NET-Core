@@ -20,8 +20,10 @@ namespace HardwareStore.Models
                 imageGallery.Order = 1;
 
 
-            var imageGalleries = context.ImageGalleries.Where(d => d.GalleryId == imageGallery.GalleryId).OrderBy(d => d.Order).ToList();
-            var thisGallery = imageGalleries.Where(d => d.ImageId == imageGallery.ImageId).SingleOrDefault(d => d.Order == imageGallery.Order);
+            var imageGalleries = context.ImageGalleries.Where(d => d.GalleryId == imageGallery.GalleryId)
+                .OrderBy(d => d.Order).ToList();
+            var thisGallery = imageGalleries.Where(d => d.ImageId == imageGallery.ImageId)
+                .SingleOrDefault(d => d.Order == imageGallery.Order);
 
             if (thisGallery == null) throw new NullReferenceException();
 

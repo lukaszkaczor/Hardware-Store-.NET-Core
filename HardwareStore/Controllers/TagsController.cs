@@ -22,37 +22,17 @@ namespace HardwareStore.Controllers
             _context = context;
         }
 
-        // GET: Tags
+
         public async Task<IActionResult> Index()
         {
             return View(await _context.Tags.ToListAsync());
         }
 
-        // GET: Tags/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tag = await _context.Tags
-                .FirstOrDefaultAsync(m => m.TagId == id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
-
-            return View(tag);
-        }
-
-        // GET: Tags/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Tags/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TagId,Name")] Tag tag)
@@ -66,7 +46,7 @@ namespace HardwareStore.Controllers
             return View(tag);
         }
 
-        // GET: Tags/Edit/5
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,7 +62,7 @@ namespace HardwareStore.Controllers
             return View(tag);
         }
 
-        // POST: Tags/Edit/5
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TagId,Name")] Tag tag)
@@ -115,7 +95,7 @@ namespace HardwareStore.Controllers
             return View(tag);
         }
 
-        // GET: Tags/Delete/5
+   
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,7 +113,7 @@ namespace HardwareStore.Controllers
             return View(tag);
         }
 
-        // POST: Tags/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

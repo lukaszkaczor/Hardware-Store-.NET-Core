@@ -29,29 +29,11 @@ namespace HardwareStore.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Brands/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var brand = await _context.Brands
-                .Include(b => b.Image)
-                .FirstOrDefaultAsync(m => m.BrandId == id);
-            if (brand == null)
-            {
-                return NotFound();
-            }
-
-            return View(brand);
-        }
 
         // GET: Brands/Create
         public IActionResult Create()
         {
-            ViewData["ImageId"] = new SelectList(_context.Images, "ImageId", "Url");
+            ViewData["ImageId"] = new SelectList(_context.Images.Where(d => d.Url.Contains("brands")), "ImageId", "Url");
             return View();
         }
 
@@ -66,7 +48,7 @@ namespace HardwareStore.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ImageId"] = new SelectList(_context.Images, "ImageId", "Url", brand.ImageId);
+            ViewData["ImageId"] = new SelectList(_context.Images.Where(d=>d.Url.Contains("brands")), "ImageId", "Url", brand.ImageId);
             return View(brand);
         }
 
@@ -83,7 +65,7 @@ namespace HardwareStore.Controllers
             {
                 return NotFound();
             }
-            ViewData["ImageId"] = new SelectList(_context.Images, "ImageId", "Url", brand.ImageId);
+            ViewData["ImageId"] = new SelectList(_context.Images.Where(d => d.Url.Contains("brands")), "ImageId", "Url", brand.ImageId);
             return View(brand);
         }
 
@@ -119,7 +101,7 @@ namespace HardwareStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ImageId"] = new SelectList(_context.Images, "ImageId", "Url", brand.ImageId);
+            ViewData["ImageId"] = new SelectList(_context.Images.Where(d => d.Url.Contains("brands")), "ImageId", "Url", brand.ImageId);
             return View(brand);
         }
 

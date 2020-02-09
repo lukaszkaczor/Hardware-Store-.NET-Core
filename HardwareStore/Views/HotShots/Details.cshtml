@@ -1,54 +1,54 @@
 ﻿@model HardwareStore.Models.DbModels.HotShot
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Szczegóły okazji dnia";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<h1>Szczegóły</h1>
 
 <div>
-    <h4>HotShot</h4>
+    <h4>Okazja dnia</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product)
+        <dt class="col-sm-2">
+            Produkt
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Product.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NewPrice)
+            Nowa cena
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.NewPrice)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Quantity)
+            Ilość
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Quantity)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ItemsSold)
+        <dt class="col-sm-2">
+            Ilość sprzedanych
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ItemsSold)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
+            Data rozpoczęcia
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.StartDate)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
+            Data zakończenia
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.EndDate)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HasEnded)
+        <dt class="col-sm-2">
+            Czy zakończona
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.HasEnded)
@@ -56,6 +56,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.HotShotId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.HotShotId">Edytuj</a> |
+    <a asp-action="Index">Wróć do listy</a>
 </div>

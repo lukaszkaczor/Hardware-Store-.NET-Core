@@ -1,22 +1,22 @@
 ﻿@model IEnumerable<HardwareStore.Models.DbModels.Section>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Sekcje";
 }
 
-<h1>Index</h1>
+<h1>Sekcje</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Dodaj nową</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Nazwa
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Icon)
+                Ikona
             </th>
             <th></th>
         </tr>
@@ -31,9 +31,8 @@
                 @Html.DisplayFor(modelItem => item.Icon)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.SectionId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SectionId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SectionId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.SectionId">Edytuj</a> |
+                <a asp-action="Delete" asp-route-id="@item.SectionId">Usuń</a>
             </td>
         </tr>
 }

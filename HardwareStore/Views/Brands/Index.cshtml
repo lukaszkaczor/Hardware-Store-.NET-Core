@@ -1,22 +1,22 @@
 ﻿@model IEnumerable<HardwareStore.Models.DbModels.Brand>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Marki";
 }
 
-<h1>Index</h1>
+<h1>Marki</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Dodaj nową</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Nazwa
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Image)
+                Zdjęcie
             </th>
             <th></th>
         </tr>
@@ -28,12 +28,11 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Image.Url)
+                <img src="@item.Image.Url" style="max-width: 100px"/>
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.BrandId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BrandId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BrandId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.BrandId">Edytuj</a> |
+                <a asp-action="Delete" asp-route-id="@item.BrandId">Usuń</a>
             </td>
         </tr>
 }
