@@ -55,14 +55,34 @@
     <div class="productNameHolder">
         <h1 class="productName">@Model.Product.Brand.Name @Model.Product.Name</h1>
         <div class="ratings">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(21 opinii)</span>
+            @for (int i = 0; i < 5; i++)
+            {
+                if (i < Model.Ratings)
+                {
+                    <button class="ratingStar"> <i class="fas fa-star"></i></button>
+                }
+                else
+                {
+                    <button class="ratingStar"> <i class="fas fa-star" style="color: red"></i></button>
+                }
+
+            }
+
+            @if (Model.RatingsCount == 0)
+            {
+                <span>Oceń ten produkt jako pierwszy!</span>
+            }
+            else
+            {
+                <span>(@Model.RatingsCount ocen)</span>
+            }
         </div>
         @if (Model.IsHotShot)
         {
             <h2 class="price">@(Model.HotShot.NewPrice.ToString("F")) zł</h2>
         }
         else
-        { 
+        {
             <h2 class="price">@(Model.Product.Price.ToString("F")) zł</h2>
         }
 
@@ -73,7 +93,7 @@
             {
                 @Html.AntiForgeryToken()
                 <input type="number" name="quantity" value="1">
-                @Html.HiddenFor(d => d.Product.ProductId)
+                @Html.HiddenFor(d => d.Product.ProductId, new { @id = "productId" })
                 <button type="submit">Dodaj do koszyka</button>
             }
         }
@@ -152,5 +172,6 @@
 
 @section Scripts
 {
-    <script src="~/js/hotShot.js"></script>
+    @*<script src="~/js/hotShot.js"></script>*@
+    <script src="~/js/product.js"></script>
 }

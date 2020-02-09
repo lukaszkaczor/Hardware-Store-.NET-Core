@@ -38,6 +38,8 @@
     <Compile Remove="Data\Migrations\20200208144329_AddIsCompletedColumnToOrderDetailsTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200208144428_AddIsCompletedColumnToOrderDetailsTable.cs" />
     <Compile Remove="Data\Migrations\20200208144428_AddIsCompletedColumnToOrderDetailsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200209145642_AddRatingsTable.cs" />
+    <Compile Remove="Data\Migrations\20200209145642_AddRatingsTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

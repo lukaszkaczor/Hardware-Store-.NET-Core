@@ -28,6 +28,7 @@ namespace HardwareStore.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<HotShot> HotShots { get; set; }
         public DbSet<AccountHotShot> AccountHotShots { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

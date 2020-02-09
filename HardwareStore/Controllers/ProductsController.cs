@@ -26,6 +26,7 @@ namespace HardwareStore.Controllers
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private string _userId;
 
         public ProductsController(ApplicationDbContext context)
         {
@@ -71,6 +72,12 @@ namespace HardwareStore.Controllers
                 return NotFound();
             }
 
+            var ratings = _context.Ratings.Where(d => d.ProductId == product.ProductId);
+            var sum = await ratings.SumAsync(d=>d.Value);
+            var ratingCount = await ratings.CountAsync();
+            var avg = 0;
+            if (ratingCount > 0) avg = sum / ratingCount;
+
             var model = new ProductDetailsViewModel()
             {
                 Product = product,
@@ -78,7 +85,9 @@ namespace HardwareStore.Controllers
                 Images = await ImageManager.GetImagesForProduct(_context, (int)id),
                 IsHotShot = isHotShot,
                 HotShot = hotShot,
-                FormattedDate = hotShot?.EndDate.ToString("yyyy-MM-dd HH:mm:ss")
+                FormattedDate = hotShot?.EndDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                Ratings = avg,
+                RatingsCount = ratingCount
             };
 
             return View(model);
@@ -382,6 +391,37 @@ namespace HardwareStore.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetRatings(int productId, int rating)
+        {
+            _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var ratingInDb =await _context.Ratings.Where(d => d.IdentityUserId == _userId)
+                .FirstOrDefaultAsync(d => d.ProductId == productId);
+
+            if (rating < 1 || rating > 5) throw new ArgumentOutOfRangeException();
+
+            if (ratingInDb == null)
+            {
+                _context.Ratings.Add(new Rating()
+                {
+                    IdentityUserId = _userId,
+                    ProductId = productId,
+                    Value = rating
+                });
+            }
+            else
+            {
+                ratingInDb.Value = rating;
+            }
+
+            _context.SaveChanges();
+
+
+            return RedirectToAction("Details", new {id = productId});
         }
 
         private bool ProductExists(int id)

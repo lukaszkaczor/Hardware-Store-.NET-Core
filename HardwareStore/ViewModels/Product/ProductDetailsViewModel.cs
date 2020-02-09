@@ -16,5 +16,7 @@ namespace HardwareStore.ViewModels.Product
         public bool IsHotShot { get; set; }
         public HotShot HotShot { get; set; }
         public string FormattedDate { get; set; }
+        public int Ratings { get; set; }
+        public int RatingsCount { get; set; }
     }
 }
