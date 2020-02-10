@@ -10,10 +10,10 @@
 
         <div class="settingPositions">
 
-            @using (Html.BeginForm("SaveAdress", "Profile", FormMethod.Post, new { @class = "addressInfo" }))
+            @using (Html.BeginForm("SaveAddress", "Profile", FormMethod.Post, new { @class = "addressInfo" }))
             {
                 <div class="inputHolder">
-
+                    @Html.HiddenFor(d=>d.AddressId)
                     <div class="inputLine">
                         @Html.LabelFor(d => d.CustomerName)
                         <div>

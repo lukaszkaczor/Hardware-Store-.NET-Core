@@ -38,7 +38,9 @@ namespace HardwareStore.Controllers
         {
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var model = _context.Orders.Where(d => d.EmployeeId == _userId).Where(d=>d.OrderStatus != OrderStatus.Send && d.OrderStatus != OrderStatus.Cancelled);
+            var model = _context.Orders
+                .Where(d => d.EmployeeId == _userId)
+                .Where(d=>d.OrderStatus != OrderStatus.Send && d.OrderStatus != OrderStatus.Cancelled);
 
             return View(model.ToList());
         }
@@ -47,7 +49,9 @@ namespace HardwareStore.Controllers
         {
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var model = _context.Orders.Where(d => d.EmployeeId == _userId).Where(d => d.OrderStatus == OrderStatus.Send || d.OrderStatus == OrderStatus.Cancelled);
+            var model = _context.Orders
+                .Where(d => d.EmployeeId == _userId)
+                .Where(d => d.OrderStatus == OrderStatus.Send || d.OrderStatus == OrderStatus.Cancelled);
             return View(model.ToList());
         }
 

@@ -20,11 +20,9 @@ function setPrices() {
 
 $(document).ready(function () {
     setPrices();
-    //var inputs = $(".inputQuantity");
     var products = $(".productId");
 
     $(inputs).change(function () {
-        //alert("Quantity: " + this.value + "\nIndexOf: " +inputs.index(this) + "\nProductId: " +products[inputs.index(this)].value );
         SetQuantity(products[inputs.index(this)].value, this.value);
         setPrices();
     });
@@ -35,7 +33,6 @@ function SetQuantity(id, quantity) {
     var token = $("[name='__RequestVerificationToken']").val();
 
     $.ajax({
-        //url: "@Url.Action('SetQuantity', 'ShoppingCart')",
         url: "/ShoppingCart/SetQuantity",
         type: 'POST',
         data: { ProductId: id, quantity: quantity, __RequestVerificationToken: token }

@@ -39,15 +39,18 @@ namespace HardwareStore.Controllers
             return View(model);
         }
 
-        public IActionResult SaveAdress(Address model)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SaveAddress(Address model)
         {
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var address = _context.Addresses.FirstOrDefault(d => d.IdentityUserId == _userId);
 
+            model.IdentityUserId = _userId;
+
 
             if (address == null)
             {
-                model.IdentityUserId = _userId;
                 _context.Addresses.Add(model);
             }
             else
