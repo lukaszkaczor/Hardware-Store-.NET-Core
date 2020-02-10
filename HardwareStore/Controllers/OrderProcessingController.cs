@@ -166,6 +166,7 @@ namespace HardwareStore.Controllers
             var orderToCancel = _context.Orders.FirstOrDefault(d => d.OrderId == order.OrderId);
 
             if (orderToCancel != null) orderToCancel.OrderStatus = OrderStatus.Cancelled;
+            else return NotFound();
 
             _context.SaveChanges();
 

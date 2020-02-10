@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using HardwareStore.Controllers;
 using HardwareStore.Models.ModelsConfig;
 using Microsoft.AspNetCore.Identity;
 
@@ -39,6 +40,10 @@ namespace HardwareStore.Models.DbModels
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         public string IdentityUserId { get; set; }
         public virtual IdentityUser IdentityUser { get; set; }
+
+        //[Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
+        //public string ApplicationUserId { get; set; }
+        //public virtual ApplicationUser ApplicationUser { get; set; }
 
         //public List<Order> Orders { get; set; }
     }

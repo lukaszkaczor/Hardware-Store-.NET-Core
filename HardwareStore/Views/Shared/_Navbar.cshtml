@@ -59,7 +59,7 @@
 <div class="mobileSections">
     @foreach (var item in context.Sections)
     {
-        <a href="#" class="mobileMenuLink"><i class="@item.Icon"></i>@item.Name</a>
+        <a href="@Url.Action("Search", "Products", new { SearchText = item.Name, Filter = item.SectionId})" class="mobileMenuLink"><i class="@item.Icon"></i>@item.Name</a>
     }
 
 </div>

@@ -313,14 +313,15 @@ namespace HardwareStore.Controllers
             if (string.IsNullOrWhiteSpace(searchText)) return NotFound();
 
             var products = await _context.Products
-                .Include(d => d.Category)
+                .Include(d => d.Category.Section)
                 .Include(d => d.Gallery.ImageGalleries)
                 .ThenInclude(d => d.Image)
                 .Include(d => d.ProductTags)
                 .ThenInclude(d => d.Tag.TagValues)
                 .Where(d => d.Name.Contains(searchText.Trim())
                             || d.Brand.Name.Contains(searchText.Trim())
-                            || d.Category.Name.Contains(searchText.Trim())).ToListAsync();
+                            || d.Category.Name.Contains(searchText.Trim())
+                            || d.Category.Section.Name.Contains(searchText.Trim())).ToListAsync();
 
             if (filter != 0) products = products.Where(d => d.Category.SectionId == filter).ToList();
             products = products.Distinct().ToList();

@@ -50,6 +50,7 @@ namespace HardwareStore.Data
             builder.Entity<AccountHotShot>()
                 .HasKey(d => new { d.IdentityUserId, d.HotShotId });
 
+
             base.OnModelCreating(builder);
         }
     }
