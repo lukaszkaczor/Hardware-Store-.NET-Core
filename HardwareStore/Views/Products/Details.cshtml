@@ -141,7 +141,7 @@
                     {
                         <h3>Do końca promocji pozostało</h3>
                         <h4 class="timeLeft">00:00:00</h4>
-                        @Html.HiddenFor(d => d.HotShot.EndDate, new { id = "endDate" })
+                        @Html.HiddenFor(d => d.FormattedDate, new { id = "endDate" })
                     }
                     else
                     {
@@ -154,7 +154,7 @@
             <div class="row">
                 <div class="iconHolder"><i class="fas fa-truck"></i></div>
                 <div class="info">
-                    <h3>Darmowa dostawa</h3>
+                    <h3>Gwarancja najtańszej dostawy</h3>
                     <h4>Dowiedz się więcej</h4>
                 </div>
             </div>
@@ -171,7 +171,7 @@
                 <div class="iconHolder"><i class="fas fa-headset"></i></div>
                 <div class="info">
                     <h3>Pomoc techniczna</h3>
-                    <h4>W razie jakichkolwiek pytań skontaktuj się z naszą <a href="#">pomocą techniczną</a></h4>
+                    <h4>W razie jakichkolwiek pytań skontaktuj się z naszą pomocą techniczną<a href="#"> kompex.sklep@gmail.com</a></h4>
                 </div>
             </div>
         </div>
@@ -192,5 +192,10 @@
 
 @section Scripts
 {
-    <script src="~/js/product.js"></script>
+    <script src="~/js/hotShot.js"></script>
 }
+
+@await Html.PartialAsync("_Footer")
+
+
+

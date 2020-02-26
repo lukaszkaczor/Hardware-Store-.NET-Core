@@ -84,6 +84,10 @@ namespace HardwareStore.Controllers
             var avg = 0;
             if (ratingCount > 0) avg = sum / ratingCount;
 
+
+            //formattedEndDate = hotShot.EndDate.ToString("yyyy-MM-dd HH:mm:ss");
+
+
             var model = new ProductDetailsViewModel()
             {
                 Product = product,
@@ -102,9 +106,9 @@ namespace HardwareStore.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "Name");
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name");
-            ViewData["GalleryId"] = new SelectList(_context.Galleries, "GalleryId", "Name");
+            ViewData["BrandId"] = new SelectList(_context.Brands.OrderBy(d => d.Name), "BrandId", "Name");
+            ViewData["CategoryId"] = new SelectList(_context.Categories.OrderBy(d => d.Name), "CategoryId", "Name");
+            ViewData["GalleryId"] = new SelectList(_context.Galleries.OrderBy(d=>d.Name), "GalleryId", "Name");
             return View();
         }
 
@@ -126,9 +130,9 @@ namespace HardwareStore.Controllers
 
                 return RedirectToAction("SetTags", new { id = product.ProductId, hasGallery });
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "Name", product.BrandId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
-            ViewData["GalleryId"] = new SelectList(_context.Galleries, "GalleryId", "Name", product.GalleryId);
+            ViewData["BrandId"] = new SelectList(_context.Brands.OrderBy(d => d.Name), "BrandId", "Name", product.BrandId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories.OrderBy(d => d.Name), "CategoryId", "Name", product.CategoryId);
+            ViewData["GalleryId"] = new SelectList(_context.Galleries.OrderBy(d => d.Name), "GalleryId", "Name", product.GalleryId);
             return View(product);
         }
 
@@ -145,9 +149,9 @@ namespace HardwareStore.Controllers
             {
                 return NotFound();
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "Name", product.BrandId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
-            ViewData["GalleryId"] = new SelectList(_context.Galleries, "GalleryId", "Name", product.GalleryId);
+            ViewData["BrandId"] = new SelectList(_context.Brands.OrderBy(d => d.Name), "BrandId", "Name", product.BrandId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories.OrderBy(d => d.Name), "CategoryId", "Name", product.CategoryId);
+            ViewData["GalleryId"] = new SelectList(_context.Galleries.OrderBy(d => d.Name), "GalleryId", "Name", product.GalleryId);
             return View(product);
         }
 
@@ -181,9 +185,9 @@ namespace HardwareStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "Name", product.BrandId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
-            ViewData["GalleryId"] = new SelectList(_context.Galleries, "GalleryId", "Name", product.GalleryId);
+            ViewData["BrandId"] = new SelectList(_context.Brands.OrderBy(d => d.Name), "BrandId", "Name", product.BrandId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories.OrderBy(d => d.Name), "CategoryId", "Name", product.CategoryId);
+            ViewData["GalleryId"] = new SelectList(_context.Galleries.OrderBy(d => d.Name), "GalleryId", "Name", product.GalleryId);
             return View(product);
         }
 
@@ -227,7 +231,7 @@ namespace HardwareStore.Controllers
             }
 
             var model = new SetTagsToProductViewModel();
-            var tags = _context.Tags.Include(d => d.TagValues).ToList();
+            var tags = _context.Tags.Include(d => d.TagValues).OrderBy(d=>d.Name).ToList();
             var tagValues = _context.TagValues.Where(d => d.ProductId == id).ToList();
 
             var list = new List<TagTransferModel>();

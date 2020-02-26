@@ -68,9 +68,9 @@
         @foreach (var item in Model.Bestsellers)
         {
             <a href="@Url.Action("Details", "Products", new { @id = item.ProductId })" class="product">
-                <img src="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Url" alt="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
+                <img src="@item.Gallery?.ImageGalleries?.OrderBy(d=>d.Order).FirstOrDefault()?.Image?.Url" alt="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
                 <h3>@item.Brand.Name @item.Name</h3>
-                <h4>@(item.Price)zł</h4>
+                <h4>@(item.Price.ToString("F")) zł</h4>
             </a>
         }
     </div>
@@ -97,9 +97,9 @@
         @foreach (var item in Model.RecommendedProducts)
         {
             <a href="@Url.Action("Details", "Products", new {id = item.ProductId})" class="product">
-                <img src="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Url" alt="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
+                <img src="@item.Gallery?.ImageGalleries?.OrderBy(d=>d.Order).FirstOrDefault()?.Image?.Url" alt="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
                 <h3>@item.Brand.Name @item.Name</h3>
-                <h4>@item.Price zł</h4>
+                <h4>@item.Price.ToString("F") zł</h4>
             </a>
         }
     </div>
@@ -119,6 +119,10 @@
     </div>
 
 </div>
+
+
+@await Html.PartialAsync("_Footer")
+
 
 @section Scripts
 {

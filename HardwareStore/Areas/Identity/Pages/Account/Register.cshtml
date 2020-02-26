@@ -4,11 +4,13 @@
 @{
     ViewData["Title"] = "Rejestracja";
     Layout = "_UserLayout";
-    ViewBag.DisableNavbar = true;
+    //ViewBag.DisableNavbar = true;
+    ViewBag.DisableFooter = true;
+
 }
 
 
-@Html.ActionLink("Strona główna", "Index", "Home", null, new { @class = "linkToIndex" })
+@*@Html.ActionLink("Strona główna", "Index", "Home", null, new { @class = "linkToIndex" })*@
 
     <form asp-route-returnUrl="@Model.ReturnUrl" method="post" class="inputForm">
         <h2>Utwórz nowe konto.</h2>

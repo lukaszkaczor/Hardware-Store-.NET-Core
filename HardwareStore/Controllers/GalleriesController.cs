@@ -271,7 +271,7 @@ namespace HardwareStore.Controllers
             _context.ImageGalleries.Remove(galleryToDelete);
             await _context.SaveChangesAsync();
 
-            var galleries = GalleryManager.Order(_context, _context.ImageGalleries.ToList());
+            var galleries = GalleryManager.Order(_context, _context.ImageGalleries.Where(d=>d.GalleryId == galleryId).ToList());
             await AddToDbContextAndSaveAsync(galleries);
 
 

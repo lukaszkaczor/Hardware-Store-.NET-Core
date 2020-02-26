@@ -23,5 +23,6 @@ setInterval(() => {
 
     var time = new Date(timeLeftInSeconds * 1000).toISOString().substr(11, 8);
 
+    //alert(timeLeftInSeconds);
     $(".timeLeft").text(time);
 }, 1000);

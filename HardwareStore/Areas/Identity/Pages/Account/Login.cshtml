@@ -5,10 +5,11 @@
 @{
     ViewData["Title"] = "Logowanie";
     Layout = "_UserLayout";
-    ViewBag.DisableNavbar = true;
+    //ViewBag.DisableNavbar = true;
+    ViewBag.DisableFooter = true;
 }
 
-@Html.ActionLink("Strona główna", "Index", "Home", null, new { @class = "linkToIndex" })
+@*@Html.ActionLink("Strona główna", "Index", "Home", null, new { @class = "linkToIndex" })*@
 
 
 <div class="inputForm">

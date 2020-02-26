@@ -123,7 +123,7 @@ namespace HardwareStore.Controllers
             var orderDetails = _context.OrderDetails.Where(d => d.OrderId == orderId);
 
             var detail = orderDetails.FirstOrDefault(d => d.OrderDetailsId == orderDetailsId);
-            var order = _context.Orders.FirstOrDefault(d => d.OrderId == orderId);
+            var order = _context.Orders.Include(d=>d.IdentityUser).FirstOrDefault(d => d.OrderId == orderId);
             if (detail == null || order == null) return NotFound();
 
             detail.IsCompleted = !detail.IsCompleted;
@@ -149,7 +149,7 @@ namespace HardwareStore.Controllers
 
         public IActionResult SetStatusToSend(Order order)
         {
-            var orderToSet = _context.Orders.FirstOrDefault(d => d.OrderId == order.OrderId);
+            var orderToSet = _context.Orders.Include(d=>d.IdentityUser).FirstOrDefault(d => d.OrderId == order.OrderId);
 
             if (orderToSet is null)return NotFound();
             
@@ -172,7 +172,7 @@ namespace HardwareStore.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Order order)
         {
-            var orderToCancel = _context.Orders.FirstOrDefault(d => d.OrderId == order.OrderId);
+            var orderToCancel = _context.Orders.Include(d=>d.IdentityUser).FirstOrDefault(d => d.OrderId == order.OrderId);
 
             if (orderToCancel != null) orderToCancel.OrderStatus = OrderStatus.Cancelled;
             else return NotFound();
