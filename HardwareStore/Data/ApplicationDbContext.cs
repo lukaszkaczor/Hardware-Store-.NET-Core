@@ -29,6 +29,9 @@ namespace HardwareStore.Data
         public DbSet<HotShot> HotShots { get; set; }
         public DbSet<AccountHotShot> AccountHotShots { get; set; }
         public DbSet<Rating> Ratings { get; set; }
+        public DbSet<PayingMethod> PayingMethods { get; set; }
+        public DbSet<ShippingMethod> ShippingMethods { get; set; }
+        public DbSet<PayingShippingMethods> PayingShippingMethods { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -49,6 +52,9 @@ namespace HardwareStore.Data
 
             builder.Entity<AccountHotShot>()
                 .HasKey(d => new { d.IdentityUserId, d.HotShotId });
+
+            builder.Entity<PayingShippingMethods>()
+                .HasKey(d => new { d.PayingMethodId, d.ShippingMethodId});
 
 
             base.OnModelCreating(builder);

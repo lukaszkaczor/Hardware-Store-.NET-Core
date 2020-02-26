@@ -5,6 +5,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
     var sum = 0.0;
+    var price = 0.0;
 }
 
 <div class="searchInfo">
@@ -42,6 +43,8 @@
             </tr>
             @foreach (var item in Model)
             {
+                price = item.IsHotShot ? item.HotShot.NewPrice : item.Product.Price;
+
                 <tr class="rowWithProduct">
                     <td class="productNameWithImg">
                         <div class="productDsc">
@@ -50,9 +53,8 @@
                             <a href="@Url.Action("Details", "Products", new { @id = item.Product.ProductId})">@item.Product.Name</a>
                         </div>
                     </td>
-                    <td class="priceContent"><span class="hideWhenResolutionIsHigherThan768">Cena za sztukę: </span><span class="price">@item.Product.Price</span>zł</td>
+                    <td class="priceContent"><span class="hideWhenResolutionIsHigherThan768">Cena za sztukę: </span><span class="price">@price</span>zł</td>
                     <td class="formCell">
-
                         @using (Html.BeginForm("AdjustQuantity", "ShoppingCart", FormMethod.Post))
                         {
                             @Html.Hidden("adjustType", false)
@@ -66,31 +68,47 @@
                             else
                             {
                                 <button class="hideOnMobile" type="submit"><i class="fas fa-minus"></i></button>
-
                             }
 
                         }
                         <form class="adjustForm" action="">
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(d => item.Product.ProductId, new { @class = "productId" })
-                            <input class="inputQuantity" type="text" value="@item.Quantity">
+                            @Html.Hidden("isHotShot", item.IsHotShot)
+                            @if (item.IsHotShot)
+                            {
+                                <input class="inputQuantity" disabled type="text" value="@item.Quantity">
+                            }
+                            else
+                            {
+                                <input class="inputQuantity" type="text" value="@item.Quantity">
+                            }
                         </form>
                         @using (Html.BeginForm("AdjustQuantity", "ShoppingCart", FormMethod.Post))
                         {
                             @Html.Hidden("adjustType", true)
                             @Html.Hidden("productId", item.Product.ProductId)
-                            <button class="hideOnMobile" type="submit"><i class="fas fa-plus"></i></button>
+                            @Html.Hidden("isHotShot", item.IsHotShot)
+                            @if (item.IsHotShot)
+                            {
+                                <button class="hideOnMobile" disabled type="submit"><i class="fas fa-plus"></i></button>
+                            }
+                            else
+                            {
+                                <button class="hideOnMobile" type="submit"><i class="fas fa-plus"></i></button>
+                            }
                         }
                         @using (Html.BeginForm("RemoveFromCart", "ShoppingCart", FormMethod.Post))
                         {
                             @Html.AntiForgeryToken()
                             @Html.Hidden("id", item.Product.ProductId)
+                            @Html.Hidden("isHotShot", item.IsHotShot)
                             <button type="submit"><i class="fas fa-times"></i></button>
                         }
                     </td>
-                    <td><span class="hideWhenResolutionIsHigherThan768">Razem: </span><span class="priceTimesQuantity">@(item.Quantity * item.Product.Price)</span>zł</td>
+                    <td><span class="hideWhenResolutionIsHigherThan768">Razem: </span><span class="priceTimesQuantity">@(item.Quantity * price)</span>zł</td>
                     @{
-                        sum += (item.Quantity * item.Product.Price);
+                        sum += (item.Quantity * price);
                     }
                 </tr>
             }

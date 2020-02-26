@@ -2,61 +2,62 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var displayNone = String.Empty;
+    var boxActive = "boxActive";
 }
 
 
 @using (Html.BeginForm("NewOrder", "Orders", FormMethod.Post, new { @class = "orderDetailsContent" }))
 {
     @Html.AntiForgeryToken()
+    @Html.Hidden("shippingId", Model.ShippingMethods.FirstOrDefault()?.ShippingMethod.ShippingMethodId, new { @id = "shippingId" })
+    @Html.Hidden("payingId", Model.ShippingMethods.FirstOrDefault()?.ShippingMethod.PayingShippingMethods.FirstOrDefault()?.PayingMethodId, new { @id = "payingId" })
 
     @*<form class="orderDetailsContent">*@
 
     <div class="boxList">
         <h1 class="caption">1. Wybierz sposób dostawy</h1>
         <div class="boxes">
-            <div class="box boxActive">
-                <i class="fas fa-truck-moving"></i>
-                <h5>Dostawa kurierem</h5>
-                <h6>20,00 zł</h6>
-            </div>
-            <div class="box">
-                <i class="fas fa-store"></i>
-                <h5>Odbierz w salonie</h5>
-                <h6>0,00 zł</h6>
-            </div>
-            <div class="box">
-                <i class="fas fa-boxes"></i>
-                <h5>Odbiór w paczkomacie</h5>
-                <h6>9,90 zł</h6>
-            </div>
+
+            @foreach (var item in Model.ShippingMethods)
+            {
+                <div class="box @boxActive shippingMethod">
+                    <i class="@item.ShippingMethod.Icon"></i>
+                    <h5>@item.ShippingMethod.Name</h5>
+                    <h6>@item.ShippingMethod.Cost.ToString("F") zł</h6>
+                    @Html.HiddenFor(d => item.ShippingMethod.ShippingMethodId, new { @class = "shippingInput" })
+                </div>
+                boxActive = String.Empty;
+            }
         </div>
     </div>
+    boxActive = "boxActive";
 
     <div class="boxList">
         <h1 class="caption">2. Wybierz sposób płatności</h1>
-        <div class="boxes">
-            <div class="box">
-                <i class="fas fa-box-open"></i>
-                <h5>Gotówka przy odbiorze</h5>
-                <h6>+5,00 zł</h6>
+        @foreach (var item in Model.ShippingMethods)
+        {
+            <div class="boxes payingMethods" style="@displayNone">
+                @foreach (var payingMethod in item.PayingMethods)
+                {
+                    <div class="box @boxActive payingBox">
+                        <i class="@payingMethod.Icon"></i>
+                        <h5>@payingMethod.Name</h5>
+                        <h6>@payingMethod.Cost.ToString("F") zł</h6>
+                        @Html.HiddenFor(d => payingMethod.PayingMethodId, new { @class = "payingInput" })
+                    </div>
+
+                    boxActive = String.Empty;
+                }
             </div>
-            <div class="box boxActive">
-                <i class="fas fa-university"></i>
-                <h5>Przelew bankowy</h5>
-                <h6>0,00 zł</h6>
-            </div>
-            <div class="box">
-                <i class="fab fa-paypal"></i>
-                <h5>PayPal</h5>
-                <h6>0,00 zł</h6>
-            </div>
-            <div class="box">
-                <i class="fab fa-cc-visa"></i>
-                <h5>Płatność kartą</h5>
-                <h6>+5,00 zł</h6>
-            </div>
-        </div>
+            boxActive = "boxActive";
+            displayNone = "display:none";
+        }
     </div>
+
+    @*<div class="boxList">
+            <h1 class="caption">Razem do zapłaty: 2100zł</h1>
+        </div>*@
 
     <div class="addressInfo">
         <h1 class="caption">3. Wpisz swoje dane do wysyłki</h1>
@@ -104,10 +105,15 @@
             </div>
 
             <div class="inputLine">
-                @Html.LabelFor(d => d.Order.Message)
+                @Html.LabelFor(d => d.Order.Message, "Uwagi")
                 @Html.TextAreaFor(d => d.Order.Message, new { @class = "message" })
             </div>
         </div>
     </div>
     <button class="buyBtn" type="submit">Kup</button>
+}
+
+@section Scripts
+{
+    <script src="~/js/order.js"></script>
 }

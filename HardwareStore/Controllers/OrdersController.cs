@@ -5,8 +5,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using HardwareStore.Data;
 using HardwareStore.Data.Migrations;
+using HardwareStore.Models;
 using HardwareStore.Models.DbModels;
 using HardwareStore.Models.DbModels.Enums;
+using HardwareStore.Models.ModelsConfig;
 using HardwareStore.ViewModels.Orders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +21,12 @@ namespace HardwareStore.Controllers
     {
         private readonly ApplicationDbContext _context;
         private string _userId;
+        private EmailManager _emailManager;
 
         public OrdersController(ApplicationDbContext context)
         {
             _context = context;
+            _emailManager = new EmailManager();
         }
 
         public ActionResult Index()
@@ -31,10 +35,31 @@ namespace HardwareStore.Controllers
 
             var address = _context.Addresses.Where(d => d.IdentityUserId == _userId);
 
+            var list = new List<ShippingMethodWithTheirPayingMethods>();
+            var shippingMethods = _context.ShippingMethods.ToList();
+            var payingMethods = _context.PayingMethods.ToList();
+            var shippingPaying = _context.PayingShippingMethods.ToList();
+
+            foreach (var shippingMethod in shippingMethods)
+            {
+                var result =
+                    from p in payingMethods
+                    join sp in shippingPaying on p.PayingMethodId equals sp.PayingMethodId
+                    join s in shippingMethods on sp.ShippingMethodId equals s.ShippingMethodId
+                    where s.ShippingMethodId == shippingMethod.ShippingMethodId
+                    select p;
+
+                list.Add(new ShippingMethodWithTheirPayingMethods()
+                {
+                    ShippingMethod = shippingMethod,
+                    PayingMethods = result.ToList()
+                });
+            }
 
             var model = new OrderInfoViewModel()
             {
-                Address = address.FirstOrDefault()
+                Address = address.FirstOrDefault(),
+                ShippingMethods = list
             };
 
             return View(model);
@@ -44,22 +69,53 @@ namespace HardwareStore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> NewOrder(OrderInfoViewModel model)
+        public async Task<ActionResult> NewOrder(OrderInfoViewModel model, int shippingId, int payingId)
         {
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
+            var user = await _context.Users.FirstOrDefaultAsync(d => d.Id == _userId);
             var products = _context.Products.ToList();
+            var totalPrice = 0.0;
+            var flag = false;
+            string error = null;
+
+            if (!await _context.PayingShippingMethods.AnyAsync(d => d.PayingMethodId == payingId && d.ShippingMethodId == shippingId))
+            {
+                return NotFound();
+            }
 
             var productsInShoppingCart = _context.ShoppingCarts
-                .Include(d => d.Product).Where(d => d.IdentityUserId == _userId);
-            var totalPrice = 0.0;
+                .Include(d => d.Product).Include(d => d.HotShot).Where(d => d.IdentityUserId == _userId).ToList();
 
-            if (productsInShoppingCart.Any(d=>d.Product.IsActive == false))
+            var hotShot = await _context.HotShots.Include(d => d.Product.Gallery.ImageGalleries)
+                .ThenInclude(d => d.Image)
+                .FirstOrDefaultAsync(d => d.StartDate < DateTime.Now && d.EndDate > DateTime.Now);
+
+            if (productsInShoppingCart.Any(d => d.HotShotId != null))
             {
-                _context.ShoppingCarts.RemoveRange(productsInShoppingCart.Where(d=>d.Product.IsActive == false));
+                if (_context.AccountHotShots.Where(d => d.IdentityUserId == _userId).Any(d => d.HotShotId == hotShot.HotShotId.ToString()))
+                {
+                    flag = true;
+                    error = AppErrorMessage.HotShotAlreadyBought;
+                }
+                if (hotShot.HasEnded || hotShot.Quantity <= hotShot.ItemsSold)
+                {
+                    _context.ShoppingCarts.RemoveRange(productsInShoppingCart.Where(d => d.HotShotId != null));
+                    error = AppErrorMessage.SaleHasEnded;
+                    flag = true;
+                }
+            }
+
+            if (productsInShoppingCart.Any(d => d.Product.IsActive == false))
+            {
+                _context.ShoppingCarts.RemoveRange(productsInShoppingCart.Where(d => d.Product.IsActive == false));
+                error = AppErrorMessage.ProductsDeletedFormCart;
+                flag = true;
+            }
+
+            if (flag)
+            {
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "ShoppingCart",
-                    new {error = "Niektóre przedmioty nie są już dostępne w sprzedaży i zostały z niego usunięte"});
+                return RedirectToAction("Index", "ShoppingCart", new { error = error });
             }
 
             var hasAddress = await _context.Addresses.AnyAsync(d => d.IdentityUserId == _userId);
@@ -73,7 +129,12 @@ namespace HardwareStore.Controllers
 
             foreach (var product in productsInShoppingCart)
             {
-                totalPrice += product.Quantity * product.Product.Price;
+                var price = product.Product.Price;
+                if (product.HotShotId != null)
+                {
+                    price = hotShot.NewPrice;
+                }
+                totalPrice += product.Quantity * price;
             }
 
             await using (_context)
@@ -81,7 +142,7 @@ namespace HardwareStore.Controllers
                 await using (var transaction = _context.Database.BeginTransaction())
                 {
                     var address = await _context.Addresses
-                        .FirstOrDefaultAsync(d=>d.IdentityUserId == _userId);
+                        .FirstOrDefaultAsync(d => d.IdentityUserId == _userId);
 
                     var order = new Order()
                     {
@@ -89,7 +150,9 @@ namespace HardwareStore.Controllers
                         OrderDate = DateTime.Now,
                         TotalPrice = totalPrice,
                         OrderStatus = OrderStatus.Created,
-                        AddressId = address.AddressId
+                        AddressId = address.AddressId,
+                        ShippingMethod = await _context.ShippingMethods.FirstOrDefaultAsync(d => d.ShippingMethodId == shippingId),
+                        PayingMethod = await _context.PayingMethods.FirstOrDefaultAsync(d => d.PayingMethodId == payingId)
                     };
 
                     await _context.Orders.AddAsync(order);
@@ -98,13 +161,32 @@ namespace HardwareStore.Controllers
 
                     foreach (var shoppingCart in productsInShoppingCart)
                     {
+                        double price = shoppingCart.Product.Price;
+
+
+                        if (shoppingCart.HotShotId != null)
+                        {
+                            price = shoppingCart.HotShot.NewPrice;
+                        }
+
                         var orderDetails = new OrderDetails()
                         {
                             OrderId = order.OrderId,
                             ProductId = shoppingCart.ProductId,
-                            PricePerItem = shoppingCart.Product.Price,
+                            PricePerItem = price,
                             Quantity = shoppingCart.Quantity
                         };
+
+                        if (shoppingCart.HotShotId != null)
+                        {
+                            hotShot.ItemsSold += shoppingCart.Quantity;
+                            _context.AccountHotShots.Add(new AccountHotShot()
+                            {
+                                HotShotId = hotShot.HotShotId.ToString(),
+                                IdentityUserId = _userId
+                            });
+                        }
+
                         var product = products.First(d => d.ProductId == shoppingCart.ProductId);
                         product.QuantityInStock -= shoppingCart.Quantity;
                         orderDetailsList.Add(orderDetails);
@@ -128,6 +210,7 @@ namespace HardwareStore.Controllers
                     _context.ShoppingCarts.RemoveRange(productsInShoppingCart);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    _emailManager.SendEmail(user.Email, "Zamówienie zostało złożone", EmailMessage.OrderCreated);
                 }
             }
             return RedirectToAction("Index", "Home");

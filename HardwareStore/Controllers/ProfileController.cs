@@ -51,11 +51,20 @@ namespace HardwareStore.Controllers
 
             if (address == null)
             {
+                model.CustomerName ??= String.Empty;
+                model.AddressLine ??= String.Empty;
+                model.City ??= String.Empty;
+                model.ZipCode ??= String.Empty;
+                model.PhoneNumber ??= String.Empty;
                 _context.Addresses.Add(model);
             }
             else
             {
-                address = model;
+                address.CustomerName = model.CustomerName ?? String.Empty;
+                address.AddressLine = model.AddressLine ?? String.Empty;
+                address.City = model.City ?? String.Empty;
+                address.ZipCode = model.ZipCode ?? String.Empty;
+                address.PhoneNumber = model.PhoneNumber ?? String.Empty;
             }
 
             _context.SaveChanges();

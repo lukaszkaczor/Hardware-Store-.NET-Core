@@ -44,7 +44,8 @@ namespace HardwareStore.Controllers
 
         // GET: Products/Details/5
         [AllowAnonymous]
-        public async Task<IActionResult> Details(int? id)
+        //public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, bool disableHotShot)
         {
             if (id == null)
             {
@@ -59,6 +60,11 @@ namespace HardwareStore.Controllers
 
             var isHotShot = _context.HotShots.Any(d => d.StartDate < DateTime.Now && d.EndDate > DateTime.Now
                                                                                 && d.Quantity > d.ItemsSold && d.ProductId == product.ProductId);
+
+            if (disableHotShot)
+            {
+                isHotShot = false;
+            }
             HotShot hotShot = null;
             if (isHotShot)
             {

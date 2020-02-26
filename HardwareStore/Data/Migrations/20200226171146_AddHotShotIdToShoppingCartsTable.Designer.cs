@@ -4,14 +4,16 @@ using HardwareStore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HardwareStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200226171146_AddHotShotIdToShoppingCartsTable")]
+    partial class AddHotShotIdToShoppingCartsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,10 +236,10 @@ namespace HardwareStore.Data.Migrations
                     b.Property<int>("OrderStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("PayingMethodId")
+                    b.Property<int>("PayingMethod")
                         .HasColumnType("int");
 
-                    b.Property<int>("ShippingMethodId")
+                    b.Property<int>("ShippingMethod")
                         .HasColumnType("int");
 
                     b.Property<double>("TotalPrice")
@@ -253,10 +255,6 @@ namespace HardwareStore.Data.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.HasIndex("IdentityUserId");
-
-                    b.HasIndex("PayingMethodId");
-
-                    b.HasIndex("ShippingMethodId");
 
                     b.ToTable("Orders");
                 });
@@ -305,42 +303,6 @@ namespace HardwareStore.Data.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderDetailsOrders");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.PayingMethod", b =>
-                {
-                    b.Property<int>("PayingMethodId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("Cost")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PayingMethodId");
-
-                    b.ToTable("PayingMethods");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.PayingShippingMethods", b =>
-                {
-                    b.Property<int>("PayingMethodId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShippingMethodId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PayingMethodId", "ShippingMethodId");
-
-                    b.HasIndex("ShippingMethodId");
-
-                    b.ToTable("PayingShippingMethods");
                 });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.Post", b =>
@@ -478,27 +440,6 @@ namespace HardwareStore.Data.Migrations
                     b.HasKey("SectionId");
 
                     b.ToTable("Sections");
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.ShippingMethod", b =>
-                {
-                    b.Property<int>("ShippingMethodId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("Cost")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ShippingMethodId");
-
-                    b.ToTable("ShippingMethods");
                 });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.ShoppingCart", b =>
@@ -856,18 +797,6 @@ namespace HardwareStore.Data.Migrations
                         .HasForeignKey("IdentityUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("HardwareStore.Models.DbModels.PayingMethod", "PayingMethod")
-                        .WithMany()
-                        .HasForeignKey("PayingMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HardwareStore.Models.DbModels.ShippingMethod", "ShippingMethod")
-                        .WithMany()
-                        .HasForeignKey("ShippingMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.OrderDetails", b =>
@@ -896,21 +825,6 @@ namespace HardwareStore.Data.Migrations
                     b.HasOne("HardwareStore.Models.DbModels.Order", "Order")
                         .WithMany("OrderDetailsOrder")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HardwareStore.Models.DbModels.PayingShippingMethods", b =>
-                {
-                    b.HasOne("HardwareStore.Models.DbModels.PayingMethod", "PayingMethod")
-                        .WithMany("PayingShippingMethods")
-                        .HasForeignKey("PayingMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HardwareStore.Models.DbModels.ShippingMethod", "ShippingMethod")
-                        .WithMany("PayingShippingMethods")
-                        .HasForeignKey("ShippingMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

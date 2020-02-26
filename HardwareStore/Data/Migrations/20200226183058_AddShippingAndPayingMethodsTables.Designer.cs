@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HardwareStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200210234747_test")]
-    partial class test
+    [Migration("20200226183058_AddShippingAndPayingMethodsTables")]
+    partial class AddShippingAndPayingMethodsTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,10 +50,6 @@ namespace HardwareStore.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -61,6 +57,10 @@ namespace HardwareStore.Data.Migrations
                     b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -72,8 +72,7 @@ namespace HardwareStore.Data.Migrations
 
                     b.HasKey("AddressId");
 
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique();
+                    b.HasIndex("IdentityUserId");
 
                     b.ToTable("Addresses");
                 });
@@ -237,10 +236,10 @@ namespace HardwareStore.Data.Migrations
                     b.Property<int>("OrderStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("PayingMethod")
+                    b.Property<int>("PayingMethodId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ShippingMethod")
+                    b.Property<int>("ShippingMethodId")
                         .HasColumnType("int");
 
                     b.Property<double>("TotalPrice")
@@ -256,6 +255,10 @@ namespace HardwareStore.Data.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.HasIndex("IdentityUserId");
+
+                    b.HasIndex("PayingMethodId");
+
+                    b.HasIndex("ShippingMethodId");
 
                     b.ToTable("Orders");
                 });
@@ -304,6 +307,42 @@ namespace HardwareStore.Data.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderDetailsOrders");
+                });
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.PayingMethod", b =>
+                {
+                    b.Property<int>("PayingMethodId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Cost")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Icon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PayingMethodId");
+
+                    b.ToTable("PayingMethods");
+                });
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.PayingShippingMethods", b =>
+                {
+                    b.Property<int>("PayingMethodId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShippingMethodId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PayingMethodId", "ShippingMethodId");
+
+                    b.HasIndex("ShippingMethodId");
+
+                    b.ToTable("PayingShippingMethods");
                 });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.Post", b =>
@@ -443,12 +482,36 @@ namespace HardwareStore.Data.Migrations
                     b.ToTable("Sections");
                 });
 
+            modelBuilder.Entity("HardwareStore.Models.DbModels.ShippingMethod", b =>
+                {
+                    b.Property<int>("ShippingMethodId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Cost")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Icon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ShippingMethodId");
+
+                    b.ToTable("ShippingMethods");
+                });
+
             modelBuilder.Entity("HardwareStore.Models.DbModels.ShoppingCart", b =>
                 {
                     b.Property<int>("ShoppingCartId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("HotShotId")
+                        .HasColumnType("int");
 
                     b.Property<string>("IdentityUserId")
                         .IsRequired()
@@ -461,6 +524,8 @@ namespace HardwareStore.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ShoppingCartId");
+
+                    b.HasIndex("HotShotId");
 
                     b.HasIndex("IdentityUserId");
 
@@ -575,10 +640,6 @@ namespace HardwareStore.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -630,8 +691,6 @@ namespace HardwareStore.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -718,13 +777,6 @@ namespace HardwareStore.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("HardwareStore.Controllers.ApplicationUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
-                });
-
             modelBuilder.Entity("HardwareStore.Models.DbModels.AccountHotShot", b =>
                 {
                     b.HasOne("HardwareStore.Models.DbModels.HotShot", "HotShot")
@@ -740,9 +792,9 @@ namespace HardwareStore.Data.Migrations
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.Address", b =>
                 {
-                    b.HasOne("HardwareStore.Controllers.ApplicationUser", "ApplicationUser")
-                        .WithOne("Address")
-                        .HasForeignKey("HardwareStore.Models.DbModels.Address", "ApplicationUserId")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -806,6 +858,18 @@ namespace HardwareStore.Data.Migrations
                         .HasForeignKey("IdentityUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("HardwareStore.Models.DbModels.PayingMethod", "PayingMethod")
+                        .WithMany()
+                        .HasForeignKey("PayingMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HardwareStore.Models.DbModels.ShippingMethod", "ShippingMethod")
+                        .WithMany()
+                        .HasForeignKey("ShippingMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.OrderDetails", b =>
@@ -834,6 +898,21 @@ namespace HardwareStore.Data.Migrations
                     b.HasOne("HardwareStore.Models.DbModels.Order", "Order")
                         .WithMany("OrderDetailsOrder")
                         .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HardwareStore.Models.DbModels.PayingShippingMethods", b =>
+                {
+                    b.HasOne("HardwareStore.Models.DbModels.PayingMethod", "PayingMethod")
+                        .WithMany("PayingShippingMethods")
+                        .HasForeignKey("PayingMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HardwareStore.Models.DbModels.ShippingMethod", "ShippingMethod")
+                        .WithMany("PayingShippingMethods")
+                        .HasForeignKey("ShippingMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -894,6 +973,10 @@ namespace HardwareStore.Data.Migrations
 
             modelBuilder.Entity("HardwareStore.Models.DbModels.ShoppingCart", b =>
                 {
+                    b.HasOne("HardwareStore.Models.DbModels.HotShot", "HotShot")
+                        .WithMany()
+                        .HasForeignKey("HotShotId");
+
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("IdentityUserId")

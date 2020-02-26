@@ -40,6 +40,32 @@
     <Compile Remove="Data\Migrations\20200208144428_AddIsCompletedColumnToOrderDetailsTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200209145642_AddRatingsTable.cs" />
     <Compile Remove="Data\Migrations\20200209145642_AddRatingsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226165039_test.cs" />
+    <Compile Remove="Data\Migrations\20200226165039_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226170153_DbFix.cs" />
+    <Compile Remove="Data\Migrations\20200226170153_DbFix.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226170300_ee.cs" />
+    <Compile Remove="Data\Migrations\20200226170300_ee.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226170546_FixDbAndAddHotShotIdToShoppingCartsTable.cs" />
+    <Compile Remove="Data\Migrations\20200226170546_FixDbAndAddHotShotIdToShoppingCartsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226170958_ebebe.cs" />
+    <Compile Remove="Data\Migrations\20200226170958_ebebe.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226171108_ebe.cs" />
+    <Compile Remove="Data\Migrations\20200226171108_ebe.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226181247_AddShippingAndPayingMethodsTables.cs" />
+    <Compile Remove="Data\Migrations\20200226181247_AddShippingAndPayingMethodsTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226181622_AddShippingAndPayingMethodsTables.cs" />
+    <Compile Remove="Data\Migrations\20200226181622_AddShippingAndPayingMethodsTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226181835_AddShippingAndPayingMethodsTables.cs" />
+    <Compile Remove="Data\Migrations\20200226181835_AddShippingAndPayingMethodsTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226181941_AddShippingAndPayingMethodsTables.cs" />
+    <Compile Remove="Data\Migrations\20200226181941_AddShippingAndPayingMethodsTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226182440_DelteteShippingAndPayingMethodsFromOrdersTable.cs" />
+    <Compile Remove="Data\Migrations\20200226182440_DelteteShippingAndPayingMethodsFromOrdersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226182515_DelteteShippingAndPayingMethodsFromOrdersTable.cs" />
+    <Compile Remove="Data\Migrations\20200226182515_DelteteShippingAndPayingMethodsFromOrdersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200226182551_ebebe.cs" />
+    <Compile Remove="Data\Migrations\20200226182551_ebebe.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

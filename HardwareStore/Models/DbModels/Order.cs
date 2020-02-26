@@ -36,9 +36,11 @@ namespace HardwareStore.Models.DbModels
         public string Message { get; set; }
 
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
+        public int ShippingMethodId { get; set; }
         public ShippingMethod ShippingMethod { get; set; }
 
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
+        public int PayingMethodId { get; set; }
         public PayingMethod PayingMethod { get; set; }
 
         public virtual IdentityUser Employee { get; set; }

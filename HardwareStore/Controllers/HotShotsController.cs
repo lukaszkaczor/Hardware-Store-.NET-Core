@@ -53,8 +53,6 @@ namespace HardwareStore.Controllers
         }
 
         // POST: HotShots/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("HotShotId,ProductId,NewPrice,Quantity,ItemsSold,StartDate,EndDate,HasEnded")] HotShot hotShot)
@@ -87,8 +85,6 @@ namespace HardwareStore.Controllers
         }
 
         // POST: HotShots/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("HotShotId,ProductId,NewPrice,Quantity,ItemsSold,StartDate,EndDate,HasEnded")] HotShot hotShot)
@@ -147,6 +143,8 @@ namespace HardwareStore.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var hotShot = await _context.HotShots.FindAsync(id);
+            var shoppingCarts = _context.ShoppingCarts.Where(d => d.HotShotId == hotShot.HotShotId);
+            _context.ShoppingCarts.RemoveRange(shoppingCarts);
             _context.HotShots.Remove(hotShot);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

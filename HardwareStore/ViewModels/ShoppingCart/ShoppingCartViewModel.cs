@@ -13,5 +13,6 @@ namespace HardwareStore.ViewModels.ShoppingCart
         public int Quantity { get; set; }
         public string UserID { get; set; }
         public string Error { get; set; }
+        public HotShot HotShot { get; set; }
     }
 }

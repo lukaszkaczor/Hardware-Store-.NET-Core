@@ -20,6 +20,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 using Microsoft.VisualBasic;
+using HardwareStore.Models.ModelsConfig;
 
 namespace HardwareStore.Controllers
 {
@@ -28,10 +29,12 @@ namespace HardwareStore.Controllers
     {
         private readonly ApplicationDbContext _context;
         private string _userId;
+        private EmailManager _emailManager;
 
         public OrderProcessingController(ApplicationDbContext context)
         {
             _context = context;
+            _emailManager = new EmailManager();
         }
 
         public IActionResult Index()
@@ -130,6 +133,9 @@ namespace HardwareStore.Controllers
             if (!orderDetails.Any(d => d.IsCompleted == false))
             {
                 order.OrderStatus = OrderStatus.Completed;
+
+                _emailManager.SendEmail(order.IdentityUser.Email,
+                    "Zmiana statusu zamówienia", EmailMessage.OrderCompleted);
             }
             else
             {
@@ -151,7 +157,10 @@ namespace HardwareStore.Controllers
             orderToSet.OrderStatus = OrderStatus.Send;
             _context.SaveChanges();
 
-           return RedirectToAction("Index");
+            _emailManager.SendEmail(orderToSet.IdentityUser.Email,
+                "Zamówienie zostało wysłane", EmailMessage.Send);
+
+            return RedirectToAction("Index");
         }
 
         public IActionResult Cancel(Order order)
@@ -169,6 +178,9 @@ namespace HardwareStore.Controllers
             else return NotFound();
 
             _context.SaveChanges();
+
+            _emailManager.SendEmail(orderToCancel.IdentityUser.Email,
+                "Zamówienie zostało anulowane", EmailMessage.Cancelled);
 
             return RedirectToAction("Index");
         }

@@ -23,5 +23,8 @@ namespace HardwareStore.Models.DbModels
         [Range(1, int.MaxValue)]
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         public int Quantity { get; set; }
+
+        public HotShot HotShot { get; set; }
+        public int? HotShotId { get; set; }
     }
 }

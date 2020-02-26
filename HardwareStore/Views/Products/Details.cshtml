@@ -70,7 +70,7 @@
 
             @if (Model.RatingsCount == 0)
             {
-                <br/>
+                <br />
                 <span>Oceń ten produkt jako pierwszy!</span>
             }
             else
@@ -95,17 +95,26 @@
                 @using (Html.BeginForm("AddToCart", "ShoppingCart", FormMethod.Post, new { @class = "form" }))
                 {
                     @Html.AntiForgeryToken()
-                    <input type="number" name="quantity" value="1">
+                    @Html.HiddenFor(d => d.IsHotShot)
+                    if (Model.IsHotShot)
+                    {
+                        <input type="number" name="quantity" value="1" max="1">
+                    }
+                    else
+                    {
+                        <input type="number" name="quantity" value="1">
+                    }
                     @Html.HiddenFor(d => d.Product.ProductId, new { @id = "productId" })
                     <button type="submit">Dodaj do koszyka</button>
                 }
+
             }
             else
             {
-            <div class="form">
-                <input type="number" name="quantity" value="1">
-                <button disabled>Produkt niedostępny</button>
-            </div>
+                <div class="form">
+                    <input type="number" name="quantity" value="1">
+                    <button disabled>Produkt niedostępny</button>
+                </div>
             }
 
         }
@@ -117,12 +126,11 @@
             </div>
         }
 
-        <div class="shortSpec">
-
-            @*<h1><span>Procesor:</span> Intel Core i7-9750H</h1>
-            <h1><span>Grafika:</span> NVIDIA GeForce GTX 1660Ti</h1>
-            <h1><span>Pamięć:</span> 16 GB</h1>
-            <h1><span>Typ ekranu:</span> Matowy, LED</h1>*@
+        <div class="shortSpec" style="width: 100%">
+            @if (Model.IsHotShot)
+            {
+                <a href="@Url.Action("Details", "Products", new { disableHotShot = true})" style="display: flex;width: 100%; padding: 10px 20px; background: #262626; color: whitesmoke;text-align: center; text-decoration: none">Pokaż regularną cenę</a>
+            }
         </div>
 
         <div class="additionalInfo">
@@ -184,6 +192,5 @@
 
 @section Scripts
 {
-    @*<script src="~/js/hotShot.js"></script>*@
     <script src="~/js/product.js"></script>
 }
