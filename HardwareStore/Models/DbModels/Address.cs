@@ -32,7 +32,7 @@ namespace HardwareStore.Models.DbModels
         [Display(Name = "Numer Telefonu")]
         public string PhoneNumber { get; set; }
 
-        //[RegularExpression(@"[0-9]{2}-[0-9]{3}")]
+        //[RegularExpression(@"[0-9]{2}-[0-9]{3}", ErrorMessage = "Siema mordo")]
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         [Display(Name = "Kod pocztowy")]
         public string ZipCode { get; set; }
@@ -40,11 +40,5 @@ namespace HardwareStore.Models.DbModels
         [Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
         public string IdentityUserId { get; set; }
         public virtual IdentityUser IdentityUser { get; set; }
-
-        //[Required(ErrorMessage = DatabaseErrorMessage.FieldRequired)]
-        //public string ApplicationUserId { get; set; }
-        //public virtual ApplicationUser ApplicationUser { get; set; }
-
-        //public List<Order> Orders { get; set; }
     }
 }

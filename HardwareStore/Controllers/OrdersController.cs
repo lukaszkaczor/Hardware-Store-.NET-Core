@@ -58,7 +58,7 @@ namespace HardwareStore.Controllers
 
             var model = new OrderInfoViewModel()
             {
-                Address = address.FirstOrDefault(),
+                //Address = address.FirstOrDefault(),
                 ShippingMethods = list
             };
 
@@ -71,6 +71,7 @@ namespace HardwareStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> NewOrder(OrderInfoViewModel model, int shippingId, int payingId)
         {
+
             _userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = await _context.Users.FirstOrDefaultAsync(d => d.Id == _userId);
             var products = _context.Products.ToList();

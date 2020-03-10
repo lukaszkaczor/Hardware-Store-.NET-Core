@@ -11,17 +11,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap&subset=latin-ext" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
-    @*<link rel="stylesheet" href="~/css/site.css" />*@
 </head>
 <body>
-@*@{
-    var ss = context.Sections.ToList();
-}
-
-@foreach (var tej in ss)
-    {
-        <h1>@tej.Name</h1>
-}*@
 
 <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -49,11 +40,6 @@
                         <li class="nav-item">
                             @Html.ActionLink("Marki", "Index", "Brands", null, new { @class = "nav-link text-dark" })
                         </li>
-
-                        @*<li class="nav-item">
-            @Html.ActionLink("Adresy", "Index", "Addresses", null, new { @class = "nav-link text-dark" })
-        </li>*@
-
 
                         <li class="nav-item">
                             @Html.ActionLink("Zdjęcia", "Index", "Images", null, new { @class = "nav-link text-dark" })

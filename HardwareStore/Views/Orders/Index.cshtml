@@ -13,7 +13,6 @@
     @Html.Hidden("shippingId", Model.ShippingMethods.FirstOrDefault()?.ShippingMethod.ShippingMethodId, new { @id = "shippingId" })
     @Html.Hidden("payingId", Model.ShippingMethods.FirstOrDefault()?.ShippingMethod.PayingShippingMethods.FirstOrDefault()?.PayingMethodId, new { @id = "payingId" })
 
-    @*<form class="orderDetailsContent">*@
 
     <div class="boxList">
         <h1 class="caption">1. Wybierz sposób dostawy</h1>
@@ -54,10 +53,6 @@
             displayNone = "display:none";
         }
     </div>
-
-    @*<div class="boxList">
-            <h1 class="caption">Razem do zapłaty: 2100zł</h1>
-        </div>*@
 
     <div class="addressInfo">
         <h1 class="caption">3. Wpisz swoje dane do wysyłki</h1>
@@ -113,7 +108,9 @@
     <button class="buyBtn" type="submit">Kup</button>
 }
 
-@section Scripts
+@section scripts
 {
     <script src="~/js/order.js"></script>
 }
+
+

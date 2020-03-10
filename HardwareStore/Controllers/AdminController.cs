@@ -21,15 +21,14 @@ namespace HardwareStore.Controllers
     [Authorize(Roles = AppRole.Admin)]
     public class AdminController : Controller
     {
-        private RoleManager<IdentityRole> _roleManager;
-        private UserManager<IdentityUser> _userManager;
+        //private UserManager<IdentityUser> _userManager;
         private ApplicationDbContext _context;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public AdminController(ApplicationDbContext context/*, UserManager<IdentityUser> userManager*/)
         {
-            _roleManager = roleManager;
+            //_roleManager = roleManager;
             _context = context;
-            _userManager = userManager;
+            //_userManager = userManager;
         }
 
 
@@ -71,7 +70,8 @@ namespace HardwareStore.Controllers
 
             var model = new AssignRoleToUserViewModel()
             {
-                IdentityRoles = await _roleManager.Roles.ToListAsync(),
+                IdentityRoles = await _context.Roles.ToListAsync()
+                //IdentityRoles = await _roleManager.Roles.ToListAsync(),
             };
 
             if (!String.IsNullOrEmpty(id))
@@ -93,12 +93,23 @@ namespace HardwareStore.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            var role = await _roleManager.FindByIdAsync(model.Role.Id);
+            var user = await _context.Users.FirstOrDefaultAsync(d=>d.Email == model.Email);
+
+            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var role = await _roleManager.FindByIdAsync(model.Role.Id);
+            var role = await _context.Roles.FirstOrDefaultAsync(d=>d.Id == model.Role.Id);
+
 
             if (role is null || user is null) return NotFound();
 
-            await _userManager.AddToRoleAsync(user, role.NormalizedName);
+            //await _userManager.AddToRoleAsync(user, role.NormalizedName);
+            _context.UserRoles.Add(new IdentityUserRole<string>()
+            {
+                RoleId = role.Id,
+                UserId = user.Id
+            });
+
+            await _context.SaveChangesAsync();
             return View(nameof(Index));
         }
 
@@ -136,11 +147,17 @@ namespace HardwareStore.Controllers
 
         public async Task<ActionResult> AddRole(string name)
         {
-            await _roleManager.CreateAsync(new IdentityRole()
+            _context.Roles.Add(new IdentityRole()
             {
                 Name = name,
                 NormalizedName = name.ToUpper()
             });
+            await _context.SaveChangesAsync();
+            //await _roleManager.CreateAsync(new IdentityRole()
+            //{
+            //    Name = name,
+            //    NormalizedName = name.ToUpper()
+            //});
 
             return RedirectToAction("Index");
         }
