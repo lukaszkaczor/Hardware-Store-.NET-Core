@@ -48,7 +48,8 @@
         {
             if (item.Gallery != null)
             {
-                <a href="@Url.Action("Details", "Posts", new {id = item.PostId})" class="imgHolder @cssClass">
+                @*<a href="@Url.Action("Details", "Posts", new {id = item.PostId})" class="imgHolder @cssClass">*@
+                <a href="" class="imgHolder @cssClass">
                     <img class="img" src="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Url" alt="@item.Gallery?.ImageGalleries?.FirstOrDefault()?.Image?.Name">
                 </a>
 

@@ -66,6 +66,16 @@
     <Compile Remove="Data\Migrations\20200226182515_DelteteShippingAndPayingMethodsFromOrdersTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200226182551_ebebe.cs" />
     <Compile Remove="Data\Migrations\20200226182551_ebebe.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200311074058_InsertImagesToDb.cs" />
+    <Compile Remove="Data\Migrations\20200311074058_InsertImagesToDb.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200311074206_InsertGalleriesAndImgGalleriesToDb.cs" />
+    <Compile Remove="Data\Migrations\20200311074206_InsertGalleriesAndImgGalleriesToDb.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200311074517_InsertGalleriesToDb.cs" />
+    <Compile Remove="Data\Migrations\20200311074517_InsertGalleriesToDb.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200311074614_InsertImageGalleriesToDb.cs" />
+    <Compile Remove="Data\Migrations\20200311074614_InsertImageGalleriesToDb.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200311082409_AddImagesWithGalleries.cs" />
+    <Compile Remove="Data\Migrations\20200311082409_AddImagesWithGalleries.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -85,6 +95,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Assets\IMG\" />
   </ItemGroup>
 
 </Project>
