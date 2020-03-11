@@ -9,3 +9,8 @@ How to run app on localhost?
 
 Requirements: 
 .NET Core 3.0
+
+To do:
+-Advanced admin panel
+-Add content framework to product/create
+-Change styles for posts views
