@@ -989,13 +989,19 @@ img {
     padding: 5px;
 }
 
-.linkToIndex {
-    position: absolute;
-    top: 20px;
-    left: 100px;
-    text-decoration: none;
-    color: #444444;
-}
+    .warningText ul li {
+        list-style: none;
+        color: crimson;
+        margin-left:15px;
+    }
+
+    .linkToIndex {
+        position: absolute;
+        top: 20px;
+        left: 100px;
+        text-decoration: none;
+        color: #444444;
+    }
 
 .tableContainer {
     margin-top: 100px;
