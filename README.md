@@ -11,6 +11,6 @@ Requirements:
 .NET Core 3.0
 
 To do:
--Advanced admin panel
--Add content framework to product/create
--Change styles for posts views
+1.Advanced admin panel
+2.Add content framework to product/create
+3.Change styles for posts views
