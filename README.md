@@ -10,7 +10,7 @@ How to run app on localhost?
 Requirements: 
 .NET Core 3.0
 
-To do:
+To do
 1.Advanced admin panel
 2.Add content framework to product/create
 3.Change styles for posts views
