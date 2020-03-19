@@ -15,66 +15,66 @@
 <body>
 
 <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Kompiutex</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Kompiutex</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <partial name="_LoginPartial" />
+                <ul class="navbar-nav flex-grow-1">
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Panel Admina", "Index", "Admin", null, new { @class = "nav-link text-dark" })
-                        </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Panel Admina", "Index", "Admin", null, new { @class = "nav-link text-dark" })
+                    </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Sekcje", "Index", "Sections", null, new { @class = "nav-link text-dark" })
-                        </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Sekcje", "Index", "Sections", null, new { @class = "nav-link text-dark" })
+                    </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Kategorie", "Index", "Categories", null, new { @class = "nav-link text-dark" })
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink("Marki", "Index", "Brands", null, new { @class = "nav-link text-dark" })
-                        </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Kategorie", "Index", "Categories", null, new { @class = "nav-link text-dark" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Marki", "Index", "Brands", null, new { @class = "nav-link text-dark" })
+                    </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Zdjęcia", "Index", "Images", null, new { @class = "nav-link text-dark" })
-                        </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Zdjęcia", "Index", "Images", null, new { @class = "nav-link text-dark" })
+                    </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Galerie", "Index", "Galleries", null, new { @class = "nav-link text-dark" })
-                        </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Galerie", "Index", "Galleries", null, new { @class = "nav-link text-dark" })
+                    </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Posty", "Index", "Posts", null, new { @class = "nav-link text-dark" })
-                        </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Posty", "Index", "Posts", null, new { @class = "nav-link text-dark" })
+                    </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Produkty", "Index", "Products", null, new { @class = "nav-link text-dark" })
-                        </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Produkty", "Index", "Products", null, new { @class = "nav-link text-dark" })
+                    </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Tagi", "Index", "Tags", null, new { @class = "nav-link text-dark" })
-                        </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Tagi", "Index", "Tags", null, new { @class = "nav-link text-dark" })
+                    </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Okazje dnia", "Index", "HotShots", null, new { @class = "nav-link text-dark" })
-                        </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Okazje dnia", "Index", "HotShots", null, new { @class = "nav-link text-dark" })
+                    </li>
 
-                    </ul>
-                </div>
+                </ul>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
+</header>
 <div class="container">
-        <main role="main" class="pb-3">
-@RenderBody()
-</main>
-    </div>
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
 
 <footer class="border-top footer text-muted">
     <div class="container">
@@ -85,7 +85,16 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 @*<script src="~/js/gallery.js" asp-append-version="true"></script>*@
 @RenderSection("Scripts", required: false)
 </body>
+
+<style>
+    .validation-summary-errors ul { 
+        list-style: none;
+        margin-left:-40px
+    }
+</style>
 </html>

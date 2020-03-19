@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using HardwareStore.Data;
+using HardwareStore.Models;
+using HardwareStore.Models.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,6 +47,9 @@ namespace HardwareStore
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddSingleton<IGalleryManager>(
+            //    x => new GalleryManager(x.GetRequiredService<ApplicationDbContext>()));
+            services.AddScoped<IGalleryManager, GalleryManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +73,7 @@ namespace HardwareStore
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseRequestLocalization("en-US");
 
             app.UseEndpoints(endpoints =>
             {

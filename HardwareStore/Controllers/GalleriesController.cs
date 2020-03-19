@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HardwareStore.Data;
 using HardwareStore.Models;
 using HardwareStore.Models.DbModels;
+using HardwareStore.Models.Interfaces;
 using HardwareStore.Models.ModelsConfig;
 using HardwareStore.ViewModels.Galleries;
 using Microsoft.AspNetCore.Authorization;
@@ -18,26 +19,30 @@ namespace HardwareStore.Controllers
     public class GalleriesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IGalleryManager _galleryManager;
 
-        public GalleriesController(ApplicationDbContext context)
+        public GalleriesController(ApplicationDbContext context, IGalleryManager galleryManager)
         {
             _context = context;
+            _galleryManager = galleryManager;
         }
-        
+
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Galleries.OrderBy(d=>d.Name).ToListAsync());
+            return View(await _context.Galleries.OrderBy(d => d.Name).ToListAsync());
         }
 
         public async Task<IActionResult> Create(int? id)
         {
-            if (id == null)
-            {
-
-                return View();
-            }
+            if (id == null) return View();
 
             var product = await _context.Products.SingleOrDefaultAsync(d => d.ProductId == id);
+
+            if (product == null)
+            {
+                ModelState.AddModelError("", DatabaseErrorMessage.ProductNotFound);
+                return View();
+            }
 
             var model = new CreateGalleryViewModel()
             {
@@ -46,13 +51,11 @@ namespace HardwareStore.Controllers
                     Name = product.Name + "_gallery"
                 },
                 ProductId = product.ProductId
-                //Product = product
             };
 
             return View(model);
         }
 
-        // POST: Galleries/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateGalleryViewModel model)
@@ -74,19 +77,13 @@ namespace HardwareStore.Controllers
             return View(model);
         }
 
-        // GET: Galleries/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var gallery = await _context.Galleries.FindAsync(id);
-            if (gallery == null)
-            {
-                return NotFound();
-            }
+
+            if (gallery == null) return NotFound();
 
             var images =
                 from image in _context.Images
@@ -113,10 +110,7 @@ namespace HardwareStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("GalleryId,Name")] Gallery gallery)
         {
-            if (id != gallery.GalleryId)
-            {
-                return NotFound();
-            }
+            if (id != gallery.GalleryId) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -141,25 +135,18 @@ namespace HardwareStore.Controllers
             return View(gallery);
         }
 
-        // GET: Galleries/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var gallery = await _context.Galleries
                 .FirstOrDefaultAsync(m => m.GalleryId == id);
-            if (gallery == null)
-            {
-                return NotFound();
-            }
+
+            if (gallery == null) return NotFound();
 
             return View(gallery);
         }
 
-        // POST: Galleries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -180,15 +167,13 @@ namespace HardwareStore.Controllers
         {
             var editedGallery = _context.Galleries.Find(id);
 
-            if (editedGallery == null)
-                return NotFound();
+            if (editedGallery == null) return NotFound();
 
             var orderValue = _context.ImageGalleries.Where(d => d.GalleryId == id).Max(d => d.Order) + 1 ?? 1;
 
             var model = new AddImageToGalleryViewModel()
             {
                 Gallery = editedGallery,
-                //Images = filteredImages,
                 ImageGallery = new ImageGallery()
                 {
                     Order = orderValue
@@ -211,7 +196,7 @@ namespace HardwareStore.Controllers
             var image = model.Image;
 
 
-            var imageFromDb = await _context.Images.FirstOrDefaultAsync(d=>d.Url == model.Image.Url);
+            var imageFromDb = await _context.Images.FirstOrDefaultAsync(d => d.Url == model.Image.Url);
 
             if (imageFromDb == null)
             {
@@ -233,10 +218,7 @@ namespace HardwareStore.Controllers
                 await _context.ImageGalleries.AddAsync(imgGallery);
                 await _context.SaveChangesAsync();
 
-
-                var orderedGalleries = GalleryManager.SetOrderOfImageGalleries(_context, imgGallery);
-
-                await AddToDbContextAndSaveAsync(orderedGalleries);
+                _galleryManager.SetOrderOfImageGalleries(imgGallery);
             }
 
             return RedirectToAction("Edit", new { id = model.Gallery.GalleryId });
@@ -253,8 +235,7 @@ namespace HardwareStore.Controllers
 
             thisGallery.Order = order;
 
-            var galleries = GalleryManager.SetOrderOfImageGalleries(_context, thisGallery);
-            await AddToDbContextAndSaveAsync(galleries);
+            _galleryManager.SetOrderOfImageGalleries(thisGallery);
 
             return RedirectToAction("Edit", new { id = galleryId });
         }
@@ -271,9 +252,7 @@ namespace HardwareStore.Controllers
             _context.ImageGalleries.Remove(galleryToDelete);
             await _context.SaveChangesAsync();
 
-            var galleries = GalleryManager.Order(_context, _context.ImageGalleries.Where(d=>d.GalleryId == galleryId).ToList());
-            await AddToDbContextAndSaveAsync(galleries);
-
+            _galleryManager.OrderAndSave(_context.ImageGalleries.Where(d => d.GalleryId == galleryId).ToList());
 
             return RedirectToAction("Edit", new { id = galleryId });
         }
@@ -289,7 +268,6 @@ namespace HardwareStore.Controllers
                 select image;
 
             var filteredImages = await _context.Images.Where(d => images.All(s => s.ImageId != d.ImageId)).ToListAsync();
-
 
             var imgGal = await _context.ImageGalleries.Where(d => d.GalleryId == id).OrderByDescending(d => d.Order)
                 .FirstOrDefaultAsync();
@@ -310,20 +288,7 @@ namespace HardwareStore.Controllers
                 ImageGallery = imgGal
             };
 
-            //return RedirectToAction(nameof(ImageList), filteredImages);
             return View(model);
-        }
-
-        public async Task AddToDbContextAndSaveAsync(List<ImageGallery> orderedGalleries)
-        {
-            foreach (var gallery in orderedGalleries)
-            {
-                var galleryToOverwrite = await _context.ImageGalleries.Where(d => d.GalleryId == gallery.GalleryId)
-                    .SingleOrDefaultAsync(d => d.ImageId == gallery.ImageId);
-
-                galleryToOverwrite = gallery;
-            }
-            await _context.SaveChangesAsync();
         }
     }
 }
