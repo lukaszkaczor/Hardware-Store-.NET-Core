@@ -1,0 +1,13 @@
+insert into Brands (Name, ImageID) values ('Apple', 1);
+insert into Brands (Name, ImageID) values ('Asus', 2);
+insert into Brands (Name, ImageID) values ('Dell', 3);
+insert into Brands (Name, ImageID) values ('Gigabyte', 4);
+insert into Brands (Name, ImageID) values ('Logitech', 5);
+insert into Brands (Name, ImageID) values ('Microsoft', 6);
+insert into Brands (Name, ImageID) values ('MSI', 7);
+insert into Brands (Name, ImageID) values ('Playstation', 8);
+insert into Brands (Name, ImageID) values ('Razer', 9);
+insert into Brands (Name, ImageID) values ('Switch', 10);
+insert into Brands (Name, ImageID) values ('Xbox', 11);
+insert into Brands (Name, ImageID) values ('Sony', 12);
+insert into Brands (Name, ImageID) values ('Panasonic', 13);
