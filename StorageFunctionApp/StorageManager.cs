@@ -21,7 +21,7 @@ namespace StorageFunctionApp
         }
 
         [FunctionName("StorageManager")]
-        public void Run([BlobTrigger("kompiutex/{name}", Connection = "")]Stream myBlob, string name, ILogger log)
+        public void Run([BlobTrigger("kompex/{name}", Connection = "")]Stream myBlob, string name, ILogger log)
         {
             var inFolder = name.Contains("/");
 
